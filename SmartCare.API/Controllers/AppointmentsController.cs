@@ -31,7 +31,7 @@ public class AppointmentsController(IAppointmentService appointmentService) : Ba
     {
         dto ??= new CancelAppointmentDto();
         dto.AppointmentId = id;
-
+//asdfasdfadsfa
         var requesterId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var requesterRole = User.FindFirstValue(ClaimTypes.Role)!;
 
