@@ -15,7 +15,7 @@ public class VisitSummaryConfiguration : IEntityTypeConfiguration<VisitSummary>
         builder.HasOne(v => v.Appointment)
             .WithOne(a => a.VisitSummary)
             .HasForeignKey<VisitSummary>(v => v.AppointmentId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(v => v.Symptoms).IsRequired().HasMaxLength(1000);
         builder.Property(v => v.SymptomDuration).HasMaxLength(200);

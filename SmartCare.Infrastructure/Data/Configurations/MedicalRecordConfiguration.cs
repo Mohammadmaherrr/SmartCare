@@ -12,14 +12,16 @@ public class MedicalRecordConfiguration : IEntityTypeConfiguration<MedicalRecord
 
         builder.HasIndex(m => m.PatientId).IsUnique();
 
+        // Restrict (not Cascade): a Patient delete must never silently wipe clinical history.
+        // Force the caller to handle records explicitly.
         builder.HasOne(m => m.Patient)
             .WithOne(p => p.MedicalRecord)
             .HasForeignKey<MedicalRecord>(m => m.PatientId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasMany(m => m.Prescriptions)
             .WithOne(p => p.MedicalRecord)
             .HasForeignKey(p => p.MedicalRecordId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

@@ -5,6 +5,7 @@
 /Users/mohammadmaher/Desktop/GraduationProject/SmartCare/SmartCare.Domain/obj/Debug/net9.0/SmartCare.Domain.AssemblyInfoInputs.cache
 /Users/mohammadmaher/Desktop/GraduationProject/SmartCare/SmartCare.Domain/obj/Debug/net9.0/SmartCare.Domain.AssemblyInfo.cs
 /Users/mohammadmaher/Desktop/GraduationProject/SmartCare/SmartCare.Domain/obj/Debug/net9.0/SmartCare.Domain.csproj.CoreCompileInputs.cache
+/Users/mohammadmaher/Desktop/GraduationProject/SmartCare/SmartCare.Domain/obj/Debug/net9.0/SmartCare.Domain.sourcelink.json
 /Users/mohammadmaher/Desktop/GraduationProject/SmartCare/SmartCare.Domain/obj/Debug/net9.0/SmartCare.Domain.dll
 /Users/mohammadmaher/Desktop/GraduationProject/SmartCare/SmartCare.Domain/obj/Debug/net9.0/refint/SmartCare.Domain.dll
 /Users/mohammadmaher/Desktop/GraduationProject/SmartCare/SmartCare.Domain/obj/Debug/net9.0/SmartCare.Domain.pdb

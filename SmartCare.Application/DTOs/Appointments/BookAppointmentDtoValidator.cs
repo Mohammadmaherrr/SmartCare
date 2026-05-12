@@ -1,4 +1,5 @@
 using FluentValidation;
+using SmartCare.Domain.Constants;
 using SmartCare.Domain.Enums;
 
 namespace SmartCare.Application.DTOs.Appointments;
@@ -31,17 +32,7 @@ public class BookAppointmentDtoValidator : AbstractValidator<BookAppointmentDto>
             .WithMessage("Invalid visit type.");
 
         RuleFor(x => x)
-            .Must(x =>
-            {
-                var duration = x.VisitType switch
-                {
-                    VisitType.GeneralConsultation => 30,
-                    VisitType.FollowUp            => 15,
-                    VisitType.AnnualCheckup        => 45,
-                    _                              => 0
-                };
-                return x.TimeSlot.AddMinutes(duration) <= WorkingEnd;
-            })
+            .Must(x => x.TimeSlot.AddMinutes(VisitTypeDurations.GetMinutes(x.VisitType)) <= WorkingEnd)
             .WithMessage("The appointment would end after working hours (17:00).")
             .When(x => x.VisitType is VisitType.GeneralConsultation
                             or VisitType.FollowUp

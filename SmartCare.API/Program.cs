@@ -13,6 +13,16 @@ builder.Services.AddIdentityServices(builder.Configuration);
 
 var app = builder.Build();
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "SmartCare API v1");
+        options.RoutePrefix = "swagger";
+    });
+}
+
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors(x => x
     .AllowAnyHeader()
@@ -29,6 +39,8 @@ try
     var context = services.GetRequiredService<AppDbContext>();
     await context.Database.MigrateAsync();
     await SmartCare.Infrastructure.Data.Seed.SeedUsersAsync(context);
+    await SmartCare.Infrastructure.Data.Seed.SeedClinicsAsync(context);
+    await SmartCare.Infrastructure.Data.Seed.SeedSystemSettingsAsync(context);
 }
 catch (Exception ex)
 {

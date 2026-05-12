@@ -31,6 +31,9 @@ namespace SmartCare.Infrastructure.Migrations
                     b.Property<DateOnly>("AppointmentDate")
                         .HasColumnType("date");
 
+                    b.Property<bool>("AppointmentReminderSent")
+                        .HasColumnType("boolean");
+
                     b.Property<Guid>("DoctorId")
                         .HasColumnType("uuid");
 
@@ -436,7 +439,7 @@ namespace SmartCare.Infrastructure.Migrations
                     b.HasOne("SmartCare.Domain.Entities.Patient", "Patient")
                         .WithMany("EmergencyRequests")
                         .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Patient");
@@ -447,7 +450,7 @@ namespace SmartCare.Infrastructure.Migrations
                     b.HasOne("SmartCare.Domain.Entities.Patient", "Patient")
                         .WithMany("LaboratoryResults")
                         .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Patient");
@@ -458,7 +461,7 @@ namespace SmartCare.Infrastructure.Migrations
                     b.HasOne("SmartCare.Domain.Entities.Patient", "Patient")
                         .WithOne("MedicalRecord")
                         .HasForeignKey("SmartCare.Domain.Entities.MedicalRecord", "PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Patient");
@@ -480,7 +483,7 @@ namespace SmartCare.Infrastructure.Migrations
                     b.HasOne("SmartCare.Domain.Entities.MedicalRecord", "MedicalRecord")
                         .WithMany("Prescriptions")
                         .HasForeignKey("MedicalRecordId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("MedicalRecord");
@@ -491,7 +494,7 @@ namespace SmartCare.Infrastructure.Migrations
                     b.HasOne("SmartCare.Domain.Entities.Appointment", "Appointment")
                         .WithOne("VisitSummary")
                         .HasForeignKey("SmartCare.Domain.Entities.VisitSummary", "AppointmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Appointment");

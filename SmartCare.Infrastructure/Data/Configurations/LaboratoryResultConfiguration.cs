@@ -14,7 +14,7 @@ public class LaboratoryResultConfiguration : IEntityTypeConfiguration<Laboratory
         builder.HasOne(l => l.Patient)
             .WithMany(p => p.LaboratoryResults)
             .HasForeignKey(l => l.PatientId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(l => l.TestName).IsRequired().HasMaxLength(200);
         builder.Property(l => l.ResultValue).IsRequired().HasMaxLength(500);

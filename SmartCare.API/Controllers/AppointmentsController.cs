@@ -1,7 +1,7 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using SmartCare.API.Extensions;
 using SmartCare.Application.Common;
 using SmartCare.Application.DTOs.Appointments;
 using SmartCare.Application.Interfaces;
@@ -16,8 +16,8 @@ public class AppointmentsController(IAppointmentService appointmentService) : Ba
     public async Task<ActionResult<ApiResponse<AppointmentResponseDto>>> BookAppointment(
         BookAppointmentDto dto)
     {
-        var requesterId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        var requesterRole = User.FindFirstValue(ClaimTypes.Role)!;
+        var requesterId = User.GetUserId();
+        var requesterRole = User.GetRole();
 
         var result = await appointmentService.BookAppointmentAsync(dto, requesterId, requesterRole);
         return Ok(ApiResponse<AppointmentResponseDto>.Ok(result, "Appointment booked successfully."));
@@ -31,23 +31,46 @@ public class AppointmentsController(IAppointmentService appointmentService) : Ba
     {
         dto ??= new CancelAppointmentDto();
         dto.AppointmentId = id;
-//asdfasdfadsfa
-        var requesterId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        var requesterRole = User.FindFirstValue(ClaimTypes.Role)!;
+
+        var requesterId = User.GetUserId();
+        var requesterRole = User.GetRole();
 
         var result = await appointmentService.CancelAppointmentAsync(dto, requesterId, requesterRole);
         return Ok(ApiResponse<AppointmentResponseDto>.Ok(result, "Appointment cancelled successfully."));
     }
 
+    [Authorize(Roles = "Patient,Doctor,Receptionist,Admin")]
+    [HttpGet("{id}")]
+    public async Task<ActionResult<ApiResponse<AppointmentResponseDto>>> GetById(Guid id)
+    {
+        var requesterId = User.GetUserId();
+        var requesterRole = User.GetRole();
+
+        var result = await appointmentService.GetByIdAsync(id, requesterId, requesterRole);
+        return Ok(ApiResponse<AppointmentResponseDto>.Ok(result));
+    }
+
+    [Authorize(Roles = "Doctor,Receptionist,Admin")]
+    [HttpGet("patient/{patientId}")]
+    public async Task<ActionResult<ApiResponse<IReadOnlyList<AppointmentResponseDto>>>> GetPatientAppointments(
+        Guid patientId)
+    {
+        var requesterId = User.GetUserId();
+        var requesterRole = User.GetRole();
+
+        var result = await appointmentService.GetPatientAppointmentsAsync(patientId, requesterId, requesterRole);
+        return Ok(ApiResponse<IReadOnlyList<AppointmentResponseDto>>.Ok(result));
+    }
+
     [Authorize(Roles = "Doctor,Receptionist,Admin")]
     [HttpGet("doctor/{doctorId}/schedule")]
     public async Task<ActionResult<ApiResponse<IReadOnlyList<AppointmentResponseDto>>>> GetDoctorSchedule(
-        Guid doctorId)
+        Guid doctorId, [FromQuery] DateOnly? from, [FromQuery] DateOnly? to)
     {
-        var requesterId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        var requesterRole = User.FindFirstValue(ClaimTypes.Role)!;
+        var requesterId = User.GetUserId();
+        var requesterRole = User.GetRole();
 
-        var result = await appointmentService.GetDoctorScheduleAsync(doctorId, requesterId, requesterRole);
+        var result = await appointmentService.GetDoctorScheduleAsync(doctorId, from, to, requesterId, requesterRole);
         return Ok(ApiResponse<IReadOnlyList<AppointmentResponseDto>>.Ok(result));
     }
 
@@ -58,8 +81,8 @@ public class AppointmentsController(IAppointmentService appointmentService) : Ba
     {
         dto.AppointmentId = id;
 
-        var requesterId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        var requesterRole = User.FindFirstValue(ClaimTypes.Role)!;
+        var requesterId = User.GetUserId();
+        var requesterRole = User.GetRole();
 
         var result = await appointmentService.UpdateAppointmentStatusAsync(dto, requesterId, requesterRole);
         return Ok(ApiResponse<AppointmentResponseDto>.Ok(result, "Appointment status updated."));
@@ -69,8 +92,8 @@ public class AppointmentsController(IAppointmentService appointmentService) : Ba
     [HttpGet("my")]
     public async Task<ActionResult<ApiResponse<IReadOnlyList<AppointmentResponseDto>>>> GetMyAppointments()
     {
-        var requesterId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        var requesterRole = User.FindFirstValue(ClaimTypes.Role)!;
+        var requesterId = User.GetUserId();
+        var requesterRole = User.GetRole();
 
         var result = await appointmentService.GetPatientAppointmentsAsync(requesterId, requesterId, requesterRole);
         return Ok(ApiResponse<IReadOnlyList<AppointmentResponseDto>>.Ok(result));

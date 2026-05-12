@@ -13,6 +13,7 @@ public class Appointment
     public VisitType VisitType { get; set; }
     public AppointmentStatus Status { get; set; } = AppointmentStatus.Pending;
     public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.OnHold;
+    public bool AppointmentReminderSent { get; set; }
 
     // Navigation properties
     [JsonIgnore]

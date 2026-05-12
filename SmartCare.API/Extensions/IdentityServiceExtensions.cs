@@ -12,15 +12,25 @@ public static class IdentityServiceExtensions
         var tokenKey = config["TokenKey"]
             ?? throw new Exception("TokenKey not found in configuration");
 
+        if (tokenKey.Length < 64)
+            throw new Exception("TokenKey must be at least 64 characters");
+
+        var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey));
+
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey)),
+                    IssuerSigningKey = signingKey,
                     ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    RequireExpirationTime = true,
+                    RequireSignedTokens = true,
+                    ValidAlgorithms = [SecurityAlgorithms.HmacSha512],
+                    ClockSkew = TimeSpan.Zero
                 };
             });
 

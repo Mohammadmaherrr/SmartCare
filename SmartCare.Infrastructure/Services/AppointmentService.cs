@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using SmartCare.Application.DTOs.Appointments;
 using SmartCare.Application.Exceptions;
 using SmartCare.Application.Interfaces;
+using SmartCare.Domain.Constants;
 using SmartCare.Domain.Entities;
 using SmartCare.Domain.Enums;
 using SmartCare.Infrastructure.Data;
@@ -10,25 +11,32 @@ namespace SmartCare.Infrastructure.Services;
 
 public class AppointmentService(AppDbContext context) : IAppointmentService
 {
-    private static readonly Dictionary<VisitType, int> VisitDurations = new()
-    {
-        [VisitType.GeneralConsultation] = 30,
-        [VisitType.FollowUp] = 15,
-        [VisitType.AnnualCheckup] = 45
-    };
-
     public async Task<AppointmentResponseDto> BookAppointmentAsync(
         BookAppointmentDto dto, Guid requesterId, string requesterRole)
     {
-        var patientId = requesterRole == "Patient"
-            ? requesterId
-            : dto.PatientId ?? throw new BadRequestException("PatientId is required when booking on behalf of a patient.");
+        Guid patientId;
+        if (requesterRole == "Patient")
+        {
+            patientId = requesterId;
+        }
+        else
+        {
+            if (dto.PatientId is null || dto.PatientId == Guid.Empty)
+                throw new BadRequestException("PatientId is required when booking on behalf of a patient.");
+            patientId = dto.PatientId.Value;
+        }
 
         var patient = await context.Patients.FindAsync(patientId)
             ?? throw new BadRequestException("Patient not found.");
 
+        if (patient.AccountStatus == AccountStatus.Blocked)
+            throw new BadRequestException("Patient account is blocked.");
+
         var doctor = await context.Doctors.FindAsync(dto.DoctorId)
             ?? throw new BadRequestException("Doctor not found.");
+
+        if (doctor.AccountStatus == AccountStatus.Blocked)
+            throw new BadRequestException("Doctor account is blocked.");
 
         var existingSlots = await context.Appointments
             .Where(a =>
@@ -39,10 +47,10 @@ public class AppointmentService(AppDbContext context) : IAppointmentService
             .Select(a => new { a.TimeSlot, a.VisitType })
             .ToListAsync();
 
-        var newEnd = dto.TimeSlot.AddMinutes(VisitDurations[dto.VisitType]);
+        var newEnd = dto.TimeSlot.AddMinutes(VisitTypeDurations.GetMinutes(dto.VisitType));
 
         var hasConflict = existingSlots.Any(e =>
-            dto.TimeSlot < e.TimeSlot.AddMinutes(VisitDurations[e.VisitType]) &&
+            dto.TimeSlot < e.TimeSlot.AddMinutes(VisitTypeDurations.GetMinutes(e.VisitType)) &&
             newEnd > e.TimeSlot);
 
         if (hasConflict)
@@ -59,7 +67,7 @@ public class AppointmentService(AppDbContext context) : IAppointmentService
             .ToListAsync();
 
         if (patientSlots.Any(e =>
-                dto.TimeSlot < e.TimeSlot.AddMinutes(VisitDurations[e.VisitType]) &&
+                dto.TimeSlot < e.TimeSlot.AddMinutes(VisitTypeDurations.GetMinutes(e.VisitType)) &&
                 newEnd > e.TimeSlot))
             throw new ConflictException("Patient already has an appointment at this time.");
 
@@ -94,6 +102,9 @@ public class AppointmentService(AppDbContext context) : IAppointmentService
     public async Task<AppointmentResponseDto> CancelAppointmentAsync(
         CancelAppointmentDto dto, Guid requesterId, string requesterRole)
     {
+        if (requesterRole is not ("Patient" or "Receptionist" or "Admin"))
+            throw new ForbiddenException("You are not authorized to cancel this appointment.");
+
         var appointment = await context.Appointments
             .Include(a => a.Patient)
             .Include(a => a.Doctor)
@@ -134,18 +145,29 @@ public class AppointmentService(AppDbContext context) : IAppointmentService
     }
 
     public async Task<IReadOnlyList<AppointmentResponseDto>> GetDoctorScheduleAsync(
-        Guid doctorId, Guid requesterId, string requesterRole)
+        Guid doctorId, DateOnly? from, DateOnly? to, Guid requesterId, string requesterRole)
     {
+        if (requesterRole is not ("Doctor" or "Receptionist" or "Admin"))
+            throw new ForbiddenException("You are not authorized to view this schedule.");
+
         if (requesterRole == "Doctor" && doctorId != requesterId)
             throw new ForbiddenException("You can only view your own schedule.");
+
+        if (from is not null && to is not null && from > to)
+            throw new BadRequestException("'from' date must be on or before 'to' date.");
 
         _ = await context.Doctors.FindAsync(doctorId)
             ?? throw new BadRequestException("Doctor not found.");
 
-        var appointments = await context.Appointments
+        var query = context.Appointments
             .Include(a => a.Patient)
             .Include(a => a.Doctor)
-            .Where(a => a.DoctorId == doctorId && a.Status != AppointmentStatus.Cancelled)
+            .Where(a => a.DoctorId == doctorId && a.Status != AppointmentStatus.Cancelled);
+
+        if (from is not null) query = query.Where(a => a.AppointmentDate >= from);
+        if (to is not null) query = query.Where(a => a.AppointmentDate <= to);
+
+        var appointments = await query
             .OrderBy(a => a.AppointmentDate)
             .ThenBy(a => a.TimeSlot)
             .ToListAsync();
@@ -156,6 +178,9 @@ public class AppointmentService(AppDbContext context) : IAppointmentService
     public async Task<IReadOnlyList<AppointmentResponseDto>> GetPatientAppointmentsAsync(
         Guid patientId, Guid requesterId, string requesterRole)
     {
+        if (requesterRole is not ("Patient" or "Doctor" or "Receptionist" or "Admin"))
+            throw new ForbiddenException("You are not authorized to view these appointments.");
+
         if (requesterRole == "Patient" && patientId != requesterId)
             throw new ForbiddenException("You can only view your own appointments.");
 
@@ -170,9 +195,33 @@ public class AppointmentService(AppDbContext context) : IAppointmentService
         return appointments.Select(a => ToDto(a, a.Patient.FullName, a.Doctor.FullName)).ToList();
     }
 
+    public async Task<AppointmentResponseDto> GetByIdAsync(
+        Guid appointmentId, Guid requesterId, string requesterRole)
+    {
+        if (requesterRole is not ("Patient" or "Doctor" or "Receptionist" or "Admin"))
+            throw new ForbiddenException("You are not authorized to view this appointment.");
+
+        var appointment = await context.Appointments
+            .Include(a => a.Patient)
+            .Include(a => a.Doctor)
+            .FirstOrDefaultAsync(a => a.Id == appointmentId)
+            ?? throw new BadRequestException("Appointment not found.");
+
+        if (requesterRole == "Patient" && appointment.PatientId != requesterId)
+            throw new ForbiddenException("You are not authorized to view this appointment.");
+
+        if (requesterRole == "Doctor" && appointment.DoctorId != requesterId)
+            throw new ForbiddenException("You are not authorized to view this appointment.");
+
+        return ToDto(appointment, appointment.Patient.FullName, appointment.Doctor.FullName);
+    }
+
     public async Task<AppointmentResponseDto> UpdateAppointmentStatusAsync(
         UpdateStatusDto dto, Guid requesterId, string requesterRole)
     {
+        if (requesterRole is not ("Doctor" or "Receptionist" or "Admin"))
+            throw new ForbiddenException("You are not authorized to update appointment status.");
+
         var appointment = await context.Appointments
             .Include(a => a.Patient)
             .Include(a => a.Doctor)
@@ -187,7 +236,7 @@ public class AppointmentService(AppDbContext context) : IAppointmentService
         appointment.Status = dto.NewStatus;
         appointment.PaymentStatus = dto.NewStatus switch
         {
-            AppointmentStatus.Completed => PaymentStatus.Refunded,
+            AppointmentStatus.Completed => PaymentStatus.Charged,
             AppointmentStatus.NoShow    => PaymentStatus.Charged,
             _                           => appointment.PaymentStatus
         };
@@ -240,7 +289,7 @@ public class AppointmentService(AppDbContext context) : IAppointmentService
         DoctorName = doctorName,
         AppointmentDate = a.AppointmentDate,
         TimeSlot = a.TimeSlot,
-        EndTime = a.TimeSlot.AddMinutes(VisitDurations[a.VisitType]),
+        EndTime = a.TimeSlot.AddMinutes(VisitTypeDurations.GetMinutes(a.VisitType)),
         VisitType = a.VisitType,
         Status = a.Status,
         PaymentStatus = a.PaymentStatus

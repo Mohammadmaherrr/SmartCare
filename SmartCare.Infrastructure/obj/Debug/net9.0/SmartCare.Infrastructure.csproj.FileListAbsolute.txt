@@ -10,6 +10,7 @@
 /Users/mohammadmaher/Desktop/GraduationProject/SmartCare/SmartCare.Infrastructure/obj/Debug/net9.0/SmartCare.Infrastructure.AssemblyInfoInputs.cache
 /Users/mohammadmaher/Desktop/GraduationProject/SmartCare/SmartCare.Infrastructure/obj/Debug/net9.0/SmartCare.Infrastructure.AssemblyInfo.cs
 /Users/mohammadmaher/Desktop/GraduationProject/SmartCare/SmartCare.Infrastructure/obj/Debug/net9.0/SmartCare.Infrastructure.csproj.CoreCompileInputs.cache
+/Users/mohammadmaher/Desktop/GraduationProject/SmartCare/SmartCare.Infrastructure/obj/Debug/net9.0/SmartCare.Infrastructure.sourcelink.json
 /Users/mohammadmaher/Desktop/GraduationProject/SmartCare/SmartCare.Infrastructure/obj/Debug/net9.0/SmartCar.3E84BC99.Up2Date
 /Users/mohammadmaher/Desktop/GraduationProject/SmartCare/SmartCare.Infrastructure/obj/Debug/net9.0/SmartCare.Infrastructure.dll
 /Users/mohammadmaher/Desktop/GraduationProject/SmartCare/SmartCare.Infrastructure/obj/Debug/net9.0/refint/SmartCare.Infrastructure.dll

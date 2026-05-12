@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using SmartCare.Domain.Enums;
 
@@ -10,6 +11,7 @@ public class EmergencyRequest
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     public DateTime RequestTime { get; set; } = DateTime.UtcNow;
+    [ConcurrencyCheck]
     public EmergencyStatus Status { get; set; } = EmergencyStatus.Pending;
 
     // Navigation properties

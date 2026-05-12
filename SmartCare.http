@@ -106,3 +106,414 @@ Authorization: Bearer {{token}}
   "role": "Admin",
   "adminLevel": 2
 }
+
+### ── APPOINTMENTS ──────────────────────────────────────────────────────────
+###
+### After logging in (above), set @token to the returned JWT.
+### Fill these in with real GUIDs from your DB (or copy from a booking response).
+
+@appointmentId = 00000000-0000-0000-0000-000000000000
+@doctorId      = 00000000-0000-0000-0000-000000000000
+@patientId     = 00000000-0000-0000-0000-000000000000
+
+### Book appointment – Patient (PatientId is ignored; taken from JWT)
+POST {{baseUrl}}/api/appointments
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "doctorId": "{{doctorId}}",
+  "appointmentDate": "2026-05-15",
+  "timeSlot": "10:00:00",
+  "visitType": "GeneralConsultation"
+}
+
+###
+
+### Book appointment – Receptionist / Admin (PatientId required)
+POST {{baseUrl}}/api/appointments
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "patientId": "{{patientId}}",
+  "doctorId": "{{doctorId}}",
+  "appointmentDate": "2026-05-15",
+  "timeSlot": "10:20:00",
+  "visitType": "FollowUp"
+}
+
+###
+
+### Get my appointments – Patient
+GET {{baseUrl}}/api/appointments/my
+Authorization: Bearer {{token}}
+
+###
+
+### Get appointment by id – any authenticated role (filtered server-side)
+GET {{baseUrl}}/api/appointments/{{appointmentId}}
+Authorization: Bearer {{token}}
+
+###
+
+### Get appointments for a patient – Doctor / Receptionist / Admin
+GET {{baseUrl}}/api/appointments/patient/{{patientId}}
+Authorization: Bearer {{token}}
+
+###
+
+### Get doctor schedule (full) – Doctor / Receptionist / Admin
+GET {{baseUrl}}/api/appointments/doctor/{{doctorId}}/schedule
+Authorization: Bearer {{token}}
+
+###
+
+### Get doctor schedule – daily view (?from=&to= same date)
+GET {{baseUrl}}/api/appointments/doctor/{{doctorId}}/schedule?from=2026-05-15&to=2026-05-15
+Authorization: Bearer {{token}}
+
+###
+
+### Get doctor schedule – weekly view
+GET {{baseUrl}}/api/appointments/doctor/{{doctorId}}/schedule?from=2026-05-11&to=2026-05-17
+Authorization: Bearer {{token}}
+
+###
+
+### Cancel appointment (no reason) – Patient (own) / Receptionist / Admin
+PUT {{baseUrl}}/api/appointments/{{appointmentId}}/cancel
+Authorization: Bearer {{token}}
+
+###
+
+### Cancel appointment with reason
+PUT {{baseUrl}}/api/appointments/{{appointmentId}}/cancel
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "reason": "Patient feeling better, no longer needs the visit."
+}
+
+###
+
+### Confirm appointment – Doctor (assigned) / Receptionist / Admin
+PUT {{baseUrl}}/api/appointments/{{appointmentId}}/status
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "newStatus": "Confirmed"
+}
+
+###
+
+### Mark appointment Completed – Doctor (assigned) / Receptionist / Admin
+###   Allowed only from Confirmed. Sets PaymentStatus to Charged.
+PUT {{baseUrl}}/api/appointments/{{appointmentId}}/status
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "newStatus": "Completed"
+}
+
+###
+
+### Mark appointment NoShow – Doctor (assigned) / Receptionist / Admin
+###   Allowed only from Confirmed. Sets PaymentStatus to Charged.
+PUT {{baseUrl}}/api/appointments/{{appointmentId}}/status
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "newStatus": "NoShow"
+}
+
+### ── MEDICAL RECORDS ────────────────────────────────────────────────────────
+###
+### Set @token to a Doctor JWT for write requests, or a Patient JWT to test
+### the ownership rules. @patientId and @doctorId are shared from above.
+
+@recordId = 00000000-0000-0000-0000-000000000000
+
+### Get patient's medical record – Doctor (any patient) or Patient (own only; 403 otherwise)
+GET {{baseUrl}}/api/patients/{{patientId}}/records
+Authorization: Bearer {{token}}
+
+###
+
+### Create medical record – Doctor only (409 if a record already exists for this patient)
+POST {{baseUrl}}/api/patients/{{patientId}}/records
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "diagnosis": "Hypertension stage 1",
+  "treatmentPlan": "Low-sodium diet, daily 30-min walk, follow up in 3 months."
+}
+
+###
+
+### Update medical record – Doctor only
+###   Replace @recordId with the id returned from the create call above.
+PUT {{baseUrl}}/api/records/{{recordId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "diagnosis": "Hypertension stage 1 — improving",
+  "treatmentPlan": "Continue diet; reduce medication to maintenance dose."
+}
+
+###
+
+### Get prescriptions for a record – Doctor or Patient-own (403 otherwise)
+GET {{baseUrl}}/api/records/{{recordId}}/prescriptions
+Authorization: Bearer {{token}}
+
+###
+
+### Add prescription to a record – Doctor only
+POST {{baseUrl}}/api/records/{{recordId}}/prescriptions
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "medicationName": "Lisinopril",
+  "dosage": "10mg once daily",
+  "instructions": "Take in the morning with water. Avoid potassium supplements.",
+  "issueDate": "2026-05-11"
+}
+
+###
+
+### Add lab result for a patient – Doctor only
+POST {{baseUrl}}/api/patients/{{patientId}}/lab-results
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "testName": "Complete Blood Count (CBC)",
+  "resultValue": "WBC 6.2, RBC 4.8, HGB 14.1, PLT 230 — all within normal range",
+  "resultDate": "2026-05-11"
+}
+
+###
+
+### Get lab results for a patient – Doctor or Patient-own (403 otherwise)
+###   Results are ordered newest ResultDate first.
+GET {{baseUrl}}/api/patients/{{patientId}}/lab-results
+Authorization: Bearer {{token}}
+
+### ── VISIT SUMMARY ──────────────────────────────────────────────────────────
+###
+### Patient submits, Patient (own) and Doctor (assigned) can read.
+### Receptionist/Admin are blocked. Non-owner Patient and non-assigned Doctor
+### both receive 403 — including when the appointment id does not exist
+### (intentional, to prevent appointment-id enumeration).
+
+### Submit visit summary – Patient only (own appointment)
+###   400 if status is Completed/Cancelled.
+###   409 if a summary already exists for this appointment.
+###   403 if the appointment is not yours (or does not exist).
+POST {{baseUrl}}/api/appointments/{{appointmentId}}/summary
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "symptoms": "Persistent headache and mild nausea for the past 3 days.",
+  "description": "Pain is concentrated on the right side, worsens with bright light.",
+  "painLevel": 6,
+  "symptomDuration": "3 days"
+}
+
+###
+
+### Get visit summary – Patient (own) or Doctor (assigned)
+###   403 if the appointment is not yours / not assigned to you / does not exist.
+###   400 if the appointment is yours but no summary has been submitted.
+GET {{baseUrl}}/api/appointments/{{appointmentId}}/summary
+Authorization: Bearer {{token}}
+
+### ── EMERGENCY ──────────────────────────────────────────────────────────────
+###
+### Patient-only endpoints. Token must belong to a Patient role.
+### POST /request  — stores coordinates, creates EmergencyRequest (Pending),
+###                  returns top-3 nearest clinics by Haversine distance.
+### GET  /nearby-clinics — read-only lookup; coordinates NOT persisted,
+###                        but the call IS logged for accountability.
+
+### Submit emergency request – Patient only
+###   409 if patient already has a Pending request.
+###   400 if patient account is blocked.
+###   Body coordinates are the only place location is ever captured.
+POST {{baseUrl}}/api/emergency/request
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "latitude": 31.9869,
+  "longitude": 35.8969
+}
+
+###
+
+### Get nearby clinics – Patient only (coordinates as query params)
+###   Returns ALL clinics sorted by Haversine distance, nearest first.
+###   Coordinates are NOT stored; call is logged with PatientId + timestamp.
+###   400 if lat/lng are out of valid geographic range.
+GET {{baseUrl}}/api/emergency/nearby-clinics?lat=31.9869&lng=35.8969
+Authorization: Bearer {{token}}
+
+###
+
+### Get active emergencies – Doctor / Receptionist / Admin only
+###   Returns all Pending and Dispatched requests, oldest first.
+###   Empty list (not 404) when there are no active emergencies.
+GET {{baseUrl}}/api/emergency/active
+Authorization: Bearer {{token}}
+
+###
+
+### Update emergency status – Doctor / Receptionist / Admin only
+###   Valid transitions: Pending→Dispatched (1), Dispatched→Resolved (2).
+###   All other transitions return 400. NewStatus 0 (Pending) is rejected by validation.
+###   Replace {{emergencyId}} with the Guid returned when the request was created.
+PUT {{baseUrl}}/api/emergency/{{emergencyId}}/status
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "newStatus": 1
+}
+
+### ── ADMIN – USER MANAGEMENT ────────────────────────────────────────────────
+###
+### All endpoints require an Admin token.
+###
+### GET  /users?role=      — list all users; optional filter by role (Admin/Doctor/Receptionist/Patient)
+### POST /users            — create Doctor or Receptionist account (Patient creation is not allowed here)
+### PUT  /users/{id}       — update any user's info (only supplied fields are changed)
+### DELETE /users/{id}     — deactivate account (sets AccountStatus=Blocked); never hard-deletes
+
+### List all users – Admin only
+GET {{baseUrl}}/api/admin/users
+Authorization: Bearer {{token}}
+
+###
+
+### List users filtered by role
+GET {{baseUrl}}/api/admin/users?role=Doctor
+Authorization: Bearer {{token}}
+
+###
+
+### Create Doctor account – Admin only
+POST {{baseUrl}}/api/admin/users
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "fullName": "Dr. Sara Ahmed",
+  "email": "sara.ahmed@smartcare.com",
+  "password": "Doctor123!",
+  "role": "Doctor",
+  "specialization": "Cardiology",
+  "licenseNumber": "JO-DOC-2024-999"
+}
+
+###
+
+### Create Receptionist account – Admin only
+POST {{baseUrl}}/api/admin/users
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "fullName": "Rami Khalil",
+  "email": "rami.khalil@smartcare.com",
+  "password": "Staff123!",
+  "role": "Receptionist",
+  "employeeId": "EMP-0042"
+}
+
+###
+
+### Update user info – Admin only (only provided fields are changed)
+PUT {{baseUrl}}/api/admin/users/00000000-0000-0000-0000-000000000000
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "fullName": "Dr. Sara Ahmed-Hassan",
+  "specialization": "Interventional Cardiology"
+}
+
+###
+
+### Deactivate user – Admin only (sets AccountStatus=Blocked; no hard delete)
+###   400 if user is already deactivated.
+###   400 if admin tries to deactivate their own account.
+DELETE {{baseUrl}}/api/admin/users/00000000-0000-0000-0000-000000000000
+Authorization: Bearer {{token}}
+
+### ── ADMIN – SYSTEM SETTINGS ────────────────────────────────────────────────
+###
+### All endpoints require an Admin token.
+### Values are always strings in storage; numeric settings are stored as "30" etc.
+### Default settings seeded on startup: NoShowFee, GeneralConsultationDuration,
+###   FollowUpDuration, AnnualCheckupDuration.
+### PUT rejects unknown keys with 400 — only existing settings can be updated.
+
+### List all settings
+GET {{baseUrl}}/api/admin/settings
+Authorization: Bearer {{token}}
+
+###
+
+### Update a setting
+PUT {{baseUrl}}/api/admin/settings
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "key": "NoShowFee",
+  "value": "10"
+}
+
+###
+
+### ── ADMIN – REPORTS ─────────────────────────────────────────────────────────
+###
+### All endpoints require an Admin token.
+### Both date filters are optional; omit to query all time.
+### 400 if startDate > endDate.
+
+### Appointment report – totals + per-doctor breakdown
+###   Summary: total, completed, noShows, cancelled, pending, confirmed
+###   ByDoctor: same counters per doctor, ordered by total desc
+GET {{baseUrl}}/api/admin/reports/appointments?startDate=2026-05-01&endDate=2026-05-31
+Authorization: Bearer {{token}}
+
+###
+
+### Appointment report – all time (no date filter)
+GET {{baseUrl}}/api/admin/reports/appointments
+Authorization: Bearer {{token}}
+
+###
+
+### Visit frequency – daily booking count for a date range
+###   Counts all non-cancelled appointments grouped by date, ordered ascending.
+GET {{baseUrl}}/api/admin/reports/visits?startDate=2026-05-01&endDate=2026-05-31
+Authorization: Bearer {{token}}
+
+###
+
+### Visit frequency – all time
+GET {{baseUrl}}/api/admin/reports/visits
+Authorization: Bearer {{token}}
+
+###

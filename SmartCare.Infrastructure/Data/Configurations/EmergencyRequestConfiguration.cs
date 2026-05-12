@@ -15,6 +15,6 @@ public class EmergencyRequestConfiguration : IEntityTypeConfiguration<EmergencyR
         builder.HasOne(e => e.Patient)
             .WithMany(p => p.EmergencyRequests)
             .HasForeignKey(e => e.PatientId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
