@@ -37,7 +37,7 @@ public class MedicalRecordsController(IMedicalRecordService medicalRecordService
     [Authorize(Roles = "Doctor")]
     [HttpPut("records/{recordId}")]
     public async Task<ActionResult<ApiResponse<MedicalRecordDto>>> UpdateRecord(
-        Guid recordId, CreateMedicalRecordDto dto)
+        Guid recordId, UpdateMedicalRecordDto dto)
     {
         var requesterId = User.GetUserId();
         var requesterRole = User.GetRole();

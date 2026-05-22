@@ -6,7 +6,7 @@ public interface IMedicalRecordService
 {
     Task<MedicalRecordDto> GetPatientRecordsAsync(Guid patientId, Guid requesterId, string requesterRole);
     Task<MedicalRecordDto> CreateRecordAsync(CreateMedicalRecordDto dto, Guid requesterId, string requesterRole);
-    Task<MedicalRecordDto> UpdateRecordAsync(Guid recordId, CreateMedicalRecordDto dto, Guid requesterId, string requesterRole);
+    Task<MedicalRecordDto> UpdateRecordAsync(Guid recordId, UpdateMedicalRecordDto dto, Guid requesterId, string requesterRole);
 
     Task<PrescriptionDto> AddPrescriptionAsync(CreatePrescriptionDto dto, Guid requesterId, string requesterRole);
     Task<IReadOnlyList<PrescriptionDto>> GetPrescriptionsAsync(Guid patientId, Guid requesterId, string requesterRole);

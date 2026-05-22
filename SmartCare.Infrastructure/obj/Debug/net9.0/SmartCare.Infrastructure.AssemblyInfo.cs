@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SmartCare.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2782038b18cf2fcb09aa303cae841a8d352a1902")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6f3d84ef050079c55e44de8831c163b1dcac3f0d")]
 [assembly: System.Reflection.AssemblyProductAttribute("SmartCare.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SmartCare.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

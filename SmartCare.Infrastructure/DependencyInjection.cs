@@ -20,6 +20,7 @@ public static class DependencyInjection
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IAppointmentService, AppointmentService>();
+        services.AddScoped<IDoctorService, DoctorService>();
         services.AddScoped<IMedicalRecordService, MedicalRecordService>();
         services.AddScoped<IVisitSummaryService, VisitSummaryService>();
         services.AddScoped<IEmergencyService, EmergencyService>();

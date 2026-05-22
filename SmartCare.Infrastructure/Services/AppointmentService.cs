@@ -175,6 +175,30 @@ public class AppointmentService(AppDbContext context) : IAppointmentService
         return appointments.Select(a => ToDto(a, a.Patient.FullName, a.Doctor.FullName)).ToList();
     }
 
+    public async Task<IReadOnlyList<BusySlotDto>> GetDoctorBusySlotsAsync(Guid doctorId, DateOnly date)
+    {
+        _ = await context.Doctors.FindAsync(doctorId)
+            ?? throw new BadRequestException("Doctor not found.");
+
+        var appointments = await context.Appointments
+            .Where(a =>
+                a.DoctorId == doctorId &&
+                a.AppointmentDate == date &&
+                a.Status != AppointmentStatus.Cancelled &&
+                a.Status != AppointmentStatus.NoShow)
+            .Select(a => new { a.TimeSlot, a.VisitType })
+            .ToListAsync();
+
+        return appointments
+            .Select(a => new BusySlotDto
+            {
+                TimeSlot = a.TimeSlot,
+                EndTime = a.TimeSlot.AddMinutes(VisitTypeDurations.GetMinutes(a.VisitType)),
+            })
+            .OrderBy(b => b.TimeSlot)
+            .ToList();
+    }
+
     public async Task<IReadOnlyList<AppointmentResponseDto>> GetPatientAppointmentsAsync(
         Guid patientId, Guid requesterId, string requesterRole)
     {

@@ -74,6 +74,15 @@ public class AppointmentsController(IAppointmentService appointmentService) : Ba
         return Ok(ApiResponse<IReadOnlyList<AppointmentResponseDto>>.Ok(result));
     }
 
+    [Authorize(Roles = "Patient,Doctor,Receptionist,Admin")]
+    [HttpGet("doctor/{doctorId}/busy-slots")]
+    public async Task<ActionResult<ApiResponse<IReadOnlyList<BusySlotDto>>>> GetDoctorBusySlots(
+        Guid doctorId, [FromQuery] DateOnly date)
+    {
+        var result = await appointmentService.GetDoctorBusySlotsAsync(doctorId, date);
+        return Ok(ApiResponse<IReadOnlyList<BusySlotDto>>.Ok(result));
+    }
+
     [Authorize(Roles = "Doctor,Receptionist,Admin")]
     [HttpPut("{id}/status")]
     public async Task<ActionResult<ApiResponse<AppointmentResponseDto>>> UpdateStatus(

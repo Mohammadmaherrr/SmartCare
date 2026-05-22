@@ -74,7 +74,7 @@ public class MedicalRecordService(AppDbContext context) : IMedicalRecordService
     }
 
     public async Task<MedicalRecordDto> UpdateRecordAsync(
-        Guid recordId, CreateMedicalRecordDto dto, Guid requesterId, string requesterRole)
+        Guid recordId, UpdateMedicalRecordDto dto, Guid requesterId, string requesterRole)
     {
         if (requesterRole != "Doctor")
             throw new ForbiddenException("Only doctors can update medical records.");
