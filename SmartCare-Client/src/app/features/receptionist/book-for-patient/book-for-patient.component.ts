@@ -11,15 +11,9 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { ToastrService } from 'ngx-toastr';
-import {
-  AppointmentService,
-  VISIT_TYPE_DURATIONS,
-} from '../../../_services/appointment.service';
+import { AppointmentService, VISIT_TYPE_DURATIONS } from '../../../_services/appointment.service';
 import { DoctorService } from '../../../_services/doctor.service';
-import {
-  PatientLookupResult,
-  ReceptionistService,
-} from '../../../_services/receptionist.service';
+import { PatientLookupResult, ReceptionistService } from '../../../_services/receptionist.service';
 import { Appointment, VisitType } from '../../../_models/appointment.model';
 
 interface DoctorOption {
@@ -89,13 +83,17 @@ interface TimeSlot {
     trigger('slideStep', [
       transition(':increment', [
         style({ opacity: 0, transform: 'translateX(40px)' }),
-        animate('320ms cubic-bezier(0.16, 1, 0.3, 1)',
-          style({ opacity: 1, transform: 'translateX(0)' })),
+        animate(
+          '320ms cubic-bezier(0.16, 1, 0.3, 1)',
+          style({ opacity: 1, transform: 'translateX(0)' }),
+        ),
       ]),
       transition(':decrement', [
         style({ opacity: 0, transform: 'translateX(-40px)' }),
-        animate('320ms cubic-bezier(0.16, 1, 0.3, 1)',
-          style({ opacity: 1, transform: 'translateX(0)' })),
+        animate(
+          '320ms cubic-bezier(0.16, 1, 0.3, 1)',
+          style({ opacity: 1, transform: 'translateX(0)' }),
+        ),
       ]),
     ]),
   ],
@@ -140,17 +138,17 @@ export class BookForPatientComponent implements OnInit {
   protected selectedPatient = computed<PatientLookupResult | null>(() => {
     const id = this.form.controls.patientId.value;
     if (!id) return null;
-    return this.patients().find(p => p.id === id) ?? null;
+    return this.patients().find((p) => p.id === id) ?? null;
   });
 
   protected selectedVisit = computed<VisitOption | null>(() => {
     const type = this.form.controls.visitType.value;
-    return type ? VISIT_OPTIONS.find(v => v.type === type) ?? null : null;
+    return type ? (VISIT_OPTIONS.find((v) => v.type === type) ?? null) : null;
   });
 
   protected selectedDoctor = computed(() => {
     const id = this.form.controls.doctorId.value;
-    return id ? this.doctors().find(d => d.id === id) ?? null : null;
+    return id ? (this.doctors().find((d) => d.id === id) ?? null) : null;
   });
 
   protected timeSlots = computed<TimeSlot[]>(() => {
@@ -161,7 +159,7 @@ export class BookForPatientComponent implements OnInit {
     const isToday = date ? this.isSameDay(date, new Date()) : false;
     const nowMinutes = new Date().getHours() * 60 + new Date().getMinutes();
 
-    const booked = this.schedule().map(a => ({
+    const booked = this.schedule().map((a) => ({
       start: this.toMinutes(a.timeSlot),
       end: this.toMinutes(a.endTime),
     }));
@@ -171,7 +169,7 @@ export class BookForPatientComponent implements OnInit {
       const slotEnd = m + visit.duration;
       const fitsInDay = slotEnd <= WORKING_END;
       const inPast = isToday && m <= nowMinutes;
-      const overlaps = booked.some(b => b.start < slotEnd && b.end > m);
+      const overlaps = booked.some((b) => b.start < slotEnd && b.end > m);
       slots.push({
         time: this.minutesToTime(m),
         label: this.formatLabel(m),
@@ -181,14 +179,12 @@ export class BookForPatientComponent implements OnInit {
     return slots;
   });
 
-  protected progressPercent = computed(
-    () => ((this.step() - 1) / (this.totalSteps - 1)) * 100,
-  );
+  protected progressPercent = computed(() => ((this.step() - 1) / (this.totalSteps - 1)) * 100);
 
   ngOnInit(): void {
     this.loadDoctors();
     this.loadPatients('');
-    this.searchControl.valueChanges.subscribe(value => {
+    this.searchControl.valueChanges.subscribe((value) => {
       this.loadPatients(value ?? '');
     });
   }
@@ -221,12 +217,18 @@ export class BookForPatientComponent implements OnInit {
 
   protected canAdvance(): boolean {
     switch (this.step()) {
-      case 1: return !!this.form.controls.patientId.value;
-      case 2: return !!this.form.controls.visitType.value;
-      case 3: return !!this.form.controls.doctorId.value;
-      case 4: return !!this.form.controls.date.value;
-      case 5: return !!this.form.controls.timeSlot.value;
-      default: return false;
+      case 1:
+        return !!this.form.controls.patientId.value;
+      case 2:
+        return !!this.form.controls.visitType.value;
+      case 3:
+        return !!this.form.controls.doctorId.value;
+      case 4:
+        return !!this.form.controls.date.value;
+      case 5:
+        return !!this.form.controls.timeSlot.value;
+      default:
+        return false;
     }
   }
 
@@ -248,29 +250,32 @@ export class BookForPatientComponent implements OnInit {
     const visitType = this.form.controls.visitType.value!;
 
     this.submitting.set(true);
-    this.appointments.book({
-      patientId,
-      doctorId,
-      appointmentDate: this.toDateString(date),
-      timeSlot,
-      visitType,
-    }).subscribe({
-      next: () => {
-        const patient = this.selectedPatient();
-        this.toastr.success(
-          patient
-            ? `Appointment booked for ${patient.fullName}`
-            : 'Appointment booked',
-        );
-        this.router.navigateByUrl('/receptionist/appointments');
-      },
-      error: () => this.submitting.set(false),
-    });
+    this.appointments
+      .book({
+        patientId,
+        doctorId,
+        appointmentDate: this.toDateString(date),
+        timeSlot,
+        visitType,
+      })
+      .subscribe({
+        next: () => {
+          const patient = this.selectedPatient();
+          this.toastr.success(
+            patient ? `Appointment booked for ${patient.fullName}` : 'Appointment booked',
+          );
+          this.router.navigateByUrl('/receptionist/appointments');
+        },
+        error: () => this.submitting.set(false),
+      });
   }
 
   protected formatVisitDate(date: Date): string {
     return date.toLocaleDateString('en-US', {
-      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
     });
   }
 
@@ -287,12 +292,14 @@ export class BookForPatientComponent implements OnInit {
   private loadDoctors(): void {
     this.loadingDoctors.set(true);
     this.doctorService.getAll().subscribe({
-      next: list => {
-        this.doctors.set(list.map(d => ({
-          id: d.id,
-          name: d.fullName,
-          specialization: d.specialization,
-        })));
+      next: (list) => {
+        this.doctors.set(
+          list.map((d) => ({
+            id: d.id,
+            name: d.fullName,
+            specialization: d.specialization,
+          })),
+        );
         this.loadingDoctors.set(false);
       },
       error: () => this.loadingDoctors.set(false),
@@ -302,7 +309,7 @@ export class BookForPatientComponent implements OnInit {
   private loadPatients(query: string): void {
     this.loadingPatients.set(true);
     this.receptionist.searchPatients(query).subscribe({
-      next: list => {
+      next: (list) => {
         this.patients.set(list);
         this.loadingPatients.set(false);
       },
@@ -323,8 +330,8 @@ export class BookForPatientComponent implements OnInit {
     const iso = this.toDateString(date);
     this.loadingSlots.set(true);
     this.doctorService.getSchedule(doctorId, iso, iso).subscribe({
-      next: list => {
-        this.schedule.set(list.filter(a => a.status !== 'Cancelled'));
+      next: (list) => {
+        this.schedule.set(list.filter((a) => a.status !== 'Cancelled'));
         this.loadingSlots.set(false);
       },
       error: () => {
@@ -361,8 +368,10 @@ export class BookForPatientComponent implements OnInit {
   }
 
   private isSameDay(a: Date, b: Date): boolean {
-    return a.getFullYear() === b.getFullYear()
-      && a.getMonth() === b.getMonth()
-      && a.getDate() === b.getDate();
+    return (
+      a.getFullYear() === b.getFullYear() &&
+      a.getMonth() === b.getMonth() &&
+      a.getDate() === b.getDate()
+    );
   }
 }

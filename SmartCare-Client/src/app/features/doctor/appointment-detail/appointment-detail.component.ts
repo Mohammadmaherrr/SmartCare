@@ -59,8 +59,10 @@ const PAYMENT_LABEL: Record<PaymentStatus, string> = {
     trigger('fadeIn', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(8px)' }),
-        animate('260ms cubic-bezier(0.16, 1, 0.3, 1)',
-          style({ opacity: 1, transform: 'translateY(0)' })),
+        animate(
+          '260ms cubic-bezier(0.16, 1, 0.3, 1)',
+          style({ opacity: 1, transform: 'translateY(0)' }),
+        ),
       ]),
     ]),
   ],
@@ -96,7 +98,10 @@ export class AppointmentDetailComponent {
     if (!a) return '';
     const [y, m, d] = a.appointmentDate.split('-').map(Number);
     return new Date(y, m - 1, d).toLocaleDateString('en-US', {
-      weekday: 'long', month: 'long', day: 'numeric', year: 'numeric',
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
     });
   });
 
@@ -143,25 +148,31 @@ export class AppointmentDetailComponent {
   protected markCompleted(): void {
     const a = this.appointment();
     if (!a || this.acting()) return;
-    this.confirm({
-      title: 'Mark as completed?',
-      message: `Confirm that the ${this.visitTypeLabel(a.visitType)} with ${a.patientName} on ${this.appointmentDateLabel()} at ${this.formatTime(a.timeSlot)} has been completed. This will finalize the appointment.`,
-      confirmLabel: 'Mark Completed',
-      cancelLabel: 'Cancel',
-      tone: 'default',
-    }, () => this.updateStatus('Completed', 'Appointment marked as completed'));
+    this.confirm(
+      {
+        title: 'Mark as completed?',
+        message: `Confirm that the ${this.visitTypeLabel(a.visitType)} with ${a.patientName} on ${this.appointmentDateLabel()} at ${this.formatTime(a.timeSlot)} has been completed. This will finalize the appointment.`,
+        confirmLabel: 'Mark Completed',
+        cancelLabel: 'Cancel',
+        tone: 'default',
+      },
+      () => this.updateStatus('Completed', 'Appointment marked as completed'),
+    );
   }
 
   protected markNoShow(): void {
     const a = this.appointment();
     if (!a || this.acting()) return;
-    this.confirm({
-      title: 'Mark as no-show?',
-      message: `Are you sure you want to mark ${a.patientName} as a no-show for ${this.appointmentDateLabel()} at ${this.formatTime(a.timeSlot)}? This cannot be undone.`,
-      confirmLabel: 'Mark No-show',
-      cancelLabel: 'Cancel',
-      tone: 'danger',
-    }, () => this.updateStatus('NoShow', 'Appointment marked as no-show'));
+    this.confirm(
+      {
+        title: 'Mark as no-show?',
+        message: `Are you sure you want to mark ${a.patientName} as a no-show for ${this.appointmentDateLabel()} at ${this.formatTime(a.timeSlot)}? This cannot be undone.`,
+        confirmLabel: 'Mark No-show',
+        cancelLabel: 'Cancel',
+        tone: 'danger',
+      },
+      () => this.updateStatus('NoShow', 'Appointment marked as no-show'),
+    );
   }
 
   protected visitTypeLabel(type: VisitType): string {
@@ -201,7 +212,9 @@ export class AppointmentDetailComponent {
     this.dialog
       .open(ConfirmDialogComponent, { data, width: '440px', autoFocus: false })
       .afterClosed()
-      .subscribe(ok => { if (ok) onConfirm(); });
+      .subscribe((ok) => {
+        if (ok) onConfirm();
+      });
   }
 
   private updateStatus(newStatus: AppointmentStatus, successMsg: string): void {
@@ -209,7 +222,7 @@ export class AppointmentDetailComponent {
     if (!a) return;
     this.acting.set(newStatus);
     this.appointments.updateStatus(a.id, { newStatus }).subscribe({
-      next: updated => {
+      next: (updated) => {
         this.appointment.set(updated);
         this.acting.set(null);
         this.toastr.success(successMsg);

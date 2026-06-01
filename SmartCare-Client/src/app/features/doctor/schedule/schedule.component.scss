@@ -1,22 +1,22 @@
-$primary:        #1565C0;
-$primary-dark:   #0D47A1;
-$primary-light:  #E3F2FD;
-$accent:         #00897B;
-$accent-light:   #E0F2F1;
-$amber:          #F57C00;
-$amber-light:    #FFF3E0;
-$danger:         #C62828;
-$danger-light:   #FFEBEE;
-$success:        #2E7D32;
-$success-light:  #E8F5E9;
-$gray:           #607D8B;
-$gray-light:     #ECEFF1;
-$surface:        #F4F6F9;
-$card-bg:        #ffffff;
-$text-primary:   #1A1A2E;
-$text-secondary: #546E7A;
-$text-muted:     #90A4AE;
-$divider:        #E0E7EF;
+$primary: #1565c0;
+$primary-dark: #0d47a1;
+$primary-light: #e3f2fd;
+$accent: #00897b;
+$accent-light: #e0f2f1;
+$amber: #f57c00;
+$amber-light: #fff3e0;
+$danger: #c62828;
+$danger-light: #ffebee;
+$success: #2e7d32;
+$success-light: #e8f5e9;
+$gray: #607d8b;
+$gray-light: #eceff1;
+$surface: #f4f6f9;
+$card-bg: #ffffff;
+$text-primary: #1a1a2e;
+$text-secondary: #546e7a;
+$text-muted: #90a4ae;
+$divider: #e0e7ef;
 
 .schedule {
   padding: 28px;
@@ -30,7 +30,9 @@ $divider:        #E0E7EF;
 .card {
   background: $card-bg;
   border-radius: 14px;
-  box-shadow: 0 1px 3px rgba(15,23,42,.04), 0 4px 16px -4px rgba(21,101,192,.08);
+  box-shadow:
+    0 1px 3px rgba(15, 23, 42, 0.04),
+    0 4px 16px -4px rgba(21, 101, 192, 0.08);
   padding: 18px 22px;
 }
 
@@ -47,7 +49,7 @@ $divider:        #E0E7EF;
     font-size: 22px;
     font-weight: 700;
     color: $text-primary;
-    letter-spacing: -.3px;
+    letter-spacing: -0.3px;
   }
 
   &__period {
@@ -74,18 +76,30 @@ $divider:        #E0E7EF;
   border-radius: 10px;
 
   &__btn {
-    width: 32px; height: 32px;
+    width: 32px;
+    height: 32px;
     border-radius: 8px;
     border: none;
     background: transparent;
     color: $text-secondary;
     cursor: pointer;
-    display: inline-flex; align-items: center; justify-content: center;
-    transition: background .14s, color .14s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      background 0.14s,
+      color 0.14s;
 
-    mat-icon { font-size: 20px; width: 20px; height: 20px; }
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
 
-    &:hover { background: #fff; color: $primary; }
+    &:hover {
+      background: #fff;
+      color: $primary;
+    }
   }
 
   &__today {
@@ -97,9 +111,11 @@ $divider:        #E0E7EF;
     padding: 6px 12px;
     border-radius: 8px;
     cursor: pointer;
-    transition: background .14s;
+    transition: background 0.14s;
 
-    &:hover { background: #fff; }
+    &:hover {
+      background: #fff;
+    }
   }
 }
 
@@ -151,7 +167,7 @@ $divider:        #E0E7EF;
   &__loading {
     position: absolute;
     inset: 0;
-    background: rgba(255,255,255,.6);
+    background: rgba(255, 255, 255, 0.6);
     z-index: 10;
     display: flex;
     align-items: center;
@@ -167,7 +183,9 @@ $divider:        #E0E7EF;
   max-height: calc(100vh - 280px);
 
   &--day .grid__head,
-  &--day .grid__body { grid-template-columns: 72px 1fr; }
+  &--day .grid__body {
+    grid-template-columns: 72px 1fr;
+  }
 }
 
 .grid__head {
@@ -194,26 +212,33 @@ $divider:        #E0E7EF;
   align-items: center;
   gap: 4px;
   cursor: pointer;
-  transition: background .14s;
+  transition: background 0.14s;
 
-  &:last-child { border-right: none; }
+  &:last-child {
+    border-right: none;
+  }
 
-  &:not(:disabled):hover { background: $primary-light; }
-  &:disabled { cursor: default; }
+  &:not(:disabled):hover {
+    background: $primary-light;
+  }
+  &:disabled {
+    cursor: default;
+  }
 
   &__weekday {
     font-size: 11.5px;
     font-weight: 700;
     color: $text-secondary;
     text-transform: uppercase;
-    letter-spacing: .5px;
+    letter-spacing: 0.5px;
   }
 
   &__day {
     font-size: 17px;
     font-weight: 700;
     color: $text-primary;
-    width: 32px; height: 32px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     display: inline-flex;
     align-items: center;
@@ -225,8 +250,12 @@ $divider:        #E0E7EF;
     }
   }
 
-  &--weekend &__weekday { color: $text-muted; }
-  &--today &__weekday { color: $primary; }
+  &--weekend &__weekday {
+    color: $text-muted;
+  }
+  &--today &__weekday {
+    color: $primary;
+  }
 }
 
 .grid__body {
@@ -255,17 +284,25 @@ $divider:        #E0E7EF;
     padding: 0 4px;
   }
 
-  &:first-child &__label { top: 0; }
+  &:first-child &__label {
+    top: 0;
+  }
 }
 
 .col {
   position: relative;
   border-right: 1px solid $divider;
 
-  &:last-child { border-right: none; }
+  &:last-child {
+    border-right: none;
+  }
 
-  &--weekend { background: rgba(96, 125, 139, 0.025); }
-  &--today { background: rgba(21, 101, 192, 0.035); }
+  &--weekend {
+    background: rgba(96, 125, 139, 0.025);
+  }
+  &--today {
+    background: rgba(21, 101, 192, 0.035);
+  }
 
   &__hour {
     border-bottom: 1px solid $divider;
@@ -274,7 +311,7 @@ $divider:        #E0E7EF;
 
   &__half {
     height: 50%;
-    border-bottom: 1px dashed rgba(224, 231, 239, .55);
+    border-bottom: 1px dashed rgba(224, 231, 239, 0.55);
   }
 }
 
@@ -290,13 +327,16 @@ $divider:        #E0E7EF;
   display: flex;
   flex-direction: column;
   gap: 2px;
-  transition: transform .14s, box-shadow .14s, filter .14s;
+  transition:
+    transform 0.14s,
+    box-shadow 0.14s,
+    filter 0.14s;
   border-left: 3px solid;
   min-width: 0;
 
   &:hover {
     transform: translateY(-1px);
-    box-shadow: 0 6px 16px -4px rgba(15,23,42,.18);
+    box-shadow: 0 6px 16px -4px rgba(15, 23, 42, 0.18);
     filter: brightness(1.02);
     z-index: 2;
   }
@@ -304,8 +344,8 @@ $divider:        #E0E7EF;
   &__time {
     font-size: 10.5px;
     font-weight: 700;
-    letter-spacing: .2px;
-    opacity: .85;
+    letter-spacing: 0.2px;
+    opacity: 0.85;
   }
 
   &__name {
@@ -319,7 +359,7 @@ $divider:        #E0E7EF;
 
   &__type {
     font-size: 11px;
-    opacity: .8;
+    opacity: 0.8;
     line-height: 1.2;
     white-space: nowrap;
     overflow: hidden;
@@ -328,13 +368,13 @@ $divider:        #E0E7EF;
 
   &--pending {
     background: $amber-light;
-    color: #6E3A00;
+    color: #6e3a00;
     border-left-color: $amber;
   }
 
   &--confirmed {
     background: $accent-light;
-    color: #00524A;
+    color: #00524a;
     border-left-color: $accent;
   }
 
@@ -346,15 +386,15 @@ $divider:        #E0E7EF;
 
   &--cancelled {
     background: $gray-light;
-    color: #455A64;
+    color: #455a64;
     border-left-color: $gray;
     text-decoration: line-through;
-    opacity: .75;
+    opacity: 0.75;
   }
 
   &--noshow {
     background: $danger-light;
-    color: #8E1818;
+    color: #8e1818;
     border-left-color: $danger;
   }
 }
@@ -383,18 +423,36 @@ $divider:        #E0E7EF;
 }
 
 .dot {
-  width: 10px; height: 10px;
+  width: 10px;
+  height: 10px;
   border-radius: 3px;
 
-  &--pending   { background: $amber; }
-  &--confirmed { background: $accent; }
-  &--completed { background: $primary; }
-  &--cancelled { background: $gray; }
-  &--noshow    { background: $danger; }
+  &--pending {
+    background: $amber;
+  }
+  &--confirmed {
+    background: $accent;
+  }
+  &--completed {
+    background: $primary;
+  }
+  &--cancelled {
+    background: $gray;
+  }
+  &--noshow {
+    background: $danger;
+  }
 }
 
 @media (max-width: 768px) {
-  .schedule { padding: 16px; }
-  .grid__head, .grid__body { grid-template-columns: 56px repeat(7, minmax(80px, 1fr)) !important; }
-  .grid { overflow-x: auto; }
+  .schedule {
+    padding: 16px;
+  }
+  .grid__head,
+  .grid__body {
+    grid-template-columns: 56px repeat(7, minmax(80px, 1fr)) !important;
+  }
+  .grid {
+    overflow-x: auto;
+  }
 }

@@ -55,9 +55,13 @@
               class="row"
               [class.row--selected]="selectedId() === e.requestId"
               [class.row--pending]="e.status === 'Pending'"
-              (click)="select(e.requestId)">
+              (click)="select(e.requestId)"
+            >
               <div class="row__indicator">
-                <span class="row__pulse" [class.row__pulse--pending]="e.status === 'Pending'"></span>
+                <span
+                  class="row__pulse"
+                  [class.row__pulse--pending]="e.status === 'Pending'"
+                ></span>
               </div>
 
               <div class="row__body">
@@ -83,7 +87,8 @@
                     mat-flat-button
                     class="action-btn action-btn--dispatch"
                     [disabled]="acting() === e.requestId"
-                    (click)="confirmDispatch(e)">
+                    (click)="confirmDispatch(e)"
+                  >
                     @if (acting() === e.requestId) {
                       <mat-spinner diameter="16"></mat-spinner>
                     } @else {
@@ -96,7 +101,8 @@
                     mat-flat-button
                     class="action-btn action-btn--resolve"
                     [disabled]="acting() === e.requestId"
-                    (click)="confirmResolve(e)">
+                    (click)="confirmResolve(e)"
+                  >
                     @if (acting() === e.requestId) {
                       <mat-spinner diameter="16"></mat-spinner>
                     } @else {
@@ -109,7 +115,8 @@
                   mat-stroked-button
                   class="action-btn action-btn--map"
                   matTooltip="Open in OpenStreetMap"
-                  (click)="openInMaps(e, $event)">
+                  (click)="openInMaps(e, $event)"
+                >
                   <mat-icon>map</mat-icon>
                 </button>
               </div>
@@ -125,7 +132,12 @@
               <h2 class="detail__title">{{ e.patientName }}</h2>
               <span [class]="statusClass(e.status)">{{ e.status }}</span>
             </div>
-            <button mat-icon-button class="detail__close" (click)="closeDetail()" aria-label="Close detail">
+            <button
+              mat-icon-button
+              class="detail__close"
+              (click)="closeDetail()"
+              aria-label="Close detail"
+            >
               <mat-icon>close</mat-icon>
             </button>
           </header>
@@ -145,9 +157,7 @@
           </dl>
 
           <div class="detail__map">
-            <app-map-view
-              [patientCoords]="selectedCoords()"
-              [clinics]="selectedClinics()">
+            <app-map-view [patientCoords]="selectedCoords()" [clinics]="selectedClinics()">
             </app-map-view>
           </div>
 
@@ -177,7 +187,8 @@
             <button
               mat-stroked-button
               class="action-btn action-btn--map-large"
-              (click)="openInMaps(e)">
+              (click)="openInMaps(e)"
+            >
               <mat-icon>open_in_new</mat-icon>
               View on Map
             </button>
@@ -187,7 +198,8 @@
                 mat-flat-button
                 class="action-btn action-btn--dispatch"
                 [disabled]="acting() === e.requestId"
-                (click)="confirmDispatch(e)">
+                (click)="confirmDispatch(e)"
+              >
                 <mat-icon>local_shipping</mat-icon>
                 Mark Dispatched
               </button>
@@ -197,7 +209,8 @@
                 mat-flat-button
                 class="action-btn action-btn--resolve"
                 [disabled]="acting() === e.requestId"
-                (click)="confirmResolve(e)">
+                (click)="confirmResolve(e)"
+              >
                 <mat-icon>check</mat-icon>
                 Mark Resolved
               </button>

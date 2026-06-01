@@ -5,22 +5,25 @@ export const RECEPTIONIST_ROUTES: Routes = [
   {
     path: 'dashboard',
     loadComponent: () =>
-      import('./dashboard/dashboard.component').then(m => m.DashboardComponent),
+      import('./dashboard/dashboard.component').then((m) => m.DashboardComponent),
   },
   {
     path: 'appointments',
     loadComponent: () =>
-      import('./appointments/appointments.component').then(m => m.AppointmentsComponent),
+      import('./appointments/appointments.component').then((m) => m.AppointmentsComponent),
   },
   {
     path: 'appointments/new',
     loadComponent: () =>
-      import('./book-for-patient/book-for-patient.component').then(m => m.BookForPatientComponent),
+      import('./book-for-patient/book-for-patient.component').then(
+        (m) => m.BookForPatientComponent,
+      ),
   },
   {
     path: 'emergencies',
     loadComponent: () =>
-      import('../shared/active-emergencies/active-emergencies.component')
-        .then(m => m.ActiveEmergenciesComponent),
+      import('../shared/active-emergencies/active-emergencies.component').then(
+        (m) => m.ActiveEmergenciesComponent,
+      ),
   },
 ];

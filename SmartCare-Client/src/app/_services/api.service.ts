@@ -6,7 +6,7 @@ import { environment } from '../../environments/environment';
 import { ApiResponse } from '../_models/api-response.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApiService {
   private baseUrl = environment.apiUrl;
@@ -15,35 +15,35 @@ export class ApiService {
 
   get<T>(path: string): Observable<T> {
     return this.http.get<ApiResponse<T>>(`${this.baseUrl}/${path}`).pipe(
-      map(res => this.unwrap(res)),
-      catchError(err => this.handleError(err))
+      map((res) => this.unwrap(res)),
+      catchError((err) => this.handleError(err)),
     );
   }
 
   post<T>(path: string, body: unknown): Observable<T> {
     return this.http.post<ApiResponse<T>>(`${this.baseUrl}/${path}`, body).pipe(
-      map(res => this.unwrap(res)),
-      catchError(err => this.handleError(err))
+      map((res) => this.unwrap(res)),
+      catchError((err) => this.handleError(err)),
     );
   }
 
   put<T>(path: string, body: unknown): Observable<T> {
     return this.http.put<ApiResponse<T>>(`${this.baseUrl}/${path}`, body).pipe(
-      map(res => this.unwrap(res)),
-      catchError(err => this.handleError(err))
+      map((res) => this.unwrap(res)),
+      catchError((err) => this.handleError(err)),
     );
   }
 
   delete<T>(path: string): Observable<T> {
     return this.http.delete<ApiResponse<T>>(`${this.baseUrl}/${path}`).pipe(
-      map(res => this.unwrap(res)),
-      catchError(err => this.handleError(err))
+      map((res) => this.unwrap(res)),
+      catchError((err) => this.handleError(err)),
     );
   }
 
   private unwrap<T>(res: ApiResponse<T>): T {
     if (!res.success) {
-      const detail = res.errors?.length ? res.errors.join(', ') : res.message ?? 'Unknown error';
+      const detail = res.errors?.length ? res.errors.join(', ') : (res.message ?? 'Unknown error');
       throw new Error(detail);
     }
     return res.data as T;

@@ -38,10 +38,7 @@ import {
 import jsPDF from 'jspdf';
 import Papa from 'papaparse';
 import { AdminService } from '../../../_services/admin.service';
-import {
-  AppointmentReport,
-  VisitFrequencyReport,
-} from '../../../_models/admin.model';
+import { AppointmentReport, VisitFrequencyReport } from '../../../_models/admin.model';
 
 Chart.register(
   BarController,
@@ -64,10 +61,10 @@ interface SummaryStat {
 }
 
 const SUMMARY_STATS: SummaryStat[] = [
-  { key: 'total',     label: 'Total Appointments', icon: 'event',          tone: 'primary' },
-  { key: 'completed', label: 'Attended',           icon: 'check_circle',   tone: 'accent' },
-  { key: 'noShows',   label: 'No-shows',           icon: 'person_off',     tone: 'amber' },
-  { key: 'cancelled', label: 'Cancellations',      icon: 'event_busy',     tone: 'danger' },
+  { key: 'total', label: 'Total Appointments', icon: 'event', tone: 'primary' },
+  { key: 'completed', label: 'Attended', icon: 'check_circle', tone: 'accent' },
+  { key: 'noShows', label: 'No-shows', icon: 'person_off', tone: 'amber' },
+  { key: 'cancelled', label: 'Cancellations', icon: 'event_busy', tone: 'danger' },
 ];
 
 @Component({
@@ -143,15 +140,15 @@ export class ReportsComponent implements AfterViewInit, OnDestroy {
   protected stats = computed(() => {
     const r = this.appointmentReport();
     return {
-      total:     r?.total     ?? 0,
+      total: r?.total ?? 0,
       completed: r?.completed ?? 0,
-      noShows:   r?.noShows   ?? 0,
+      noShows: r?.noShows ?? 0,
       cancelled: r?.cancelled ?? 0,
     };
   });
 
-  protected visitTotal = computed(() =>
-    this.visitReport()?.data.reduce((sum, d) => sum + d.count, 0) ?? 0,
+  protected visitTotal = computed(
+    () => this.visitReport()?.data.reduce((sum, d) => sum + d.count, 0) ?? 0,
   );
 
   constructor() {
@@ -219,7 +216,7 @@ export class ReportsComponent implements AfterViewInit, OnDestroy {
     this.loadingAppointments.set(true);
     const { from, to } = this.range.value;
     this.admin.getAppointmentReport(this.toIso(from), this.toIso(to)).subscribe({
-      next: r => {
+      next: (r) => {
         this.appointmentReport.set(r);
         this.loadingAppointments.set(false);
       },
@@ -234,7 +231,7 @@ export class ReportsComponent implements AfterViewInit, OnDestroy {
     this.loadingVisits.set(true);
     const { from, to } = this.range.value;
     this.admin.getVisitFrequencyReport(this.toIso(from), this.toIso(to)).subscribe({
-      next: r => {
+      next: (r) => {
         this.visitReport.set(r);
         this.loadingVisits.set(false);
       },
@@ -250,33 +247,79 @@ export class ReportsComponent implements AfterViewInit, OnDestroy {
     if (!canvas) return;
     this.barChart?.destroy();
 
-    const labels = report.byDoctor.map(d => d.doctorName);
-    const totals = report.byDoctor.map(d => d.total);
-    const completed = report.byDoctor.map(d => d.completed);
-    const noShows = report.byDoctor.map(d => d.noShows);
-    const cancelled = report.byDoctor.map(d => d.cancelled);
+    const labels = report.byDoctor.map((d) => d.doctorName);
+    const totals = report.byDoctor.map((d) => d.total);
+    const completed = report.byDoctor.map((d) => d.completed);
+    const noShows = report.byDoctor.map((d) => d.noShows);
+    const cancelled = report.byDoctor.map((d) => d.cancelled);
 
     this.barChart = new Chart(canvas, {
       type: 'bar',
       data: {
         labels,
         datasets: [
-          { label: 'Completed', data: completed, backgroundColor: '#00897B', borderRadius: 6, stack: 'a' },
-          { label: 'No-shows',  data: noShows,   backgroundColor: '#F57C00', borderRadius: 6, stack: 'a' },
-          { label: 'Cancelled', data: cancelled, backgroundColor: '#C62828', borderRadius: 6, stack: 'a' },
-          { label: 'Other',     data: totals.map((t, i) => Math.max(0, t - completed[i] - noShows[i] - cancelled[i])), backgroundColor: '#90A4AE', borderRadius: 6, stack: 'a' },
+          {
+            label: 'Completed',
+            data: completed,
+            backgroundColor: '#00897B',
+            borderRadius: 6,
+            stack: 'a',
+          },
+          {
+            label: 'No-shows',
+            data: noShows,
+            backgroundColor: '#F57C00',
+            borderRadius: 6,
+            stack: 'a',
+          },
+          {
+            label: 'Cancelled',
+            data: cancelled,
+            backgroundColor: '#C62828',
+            borderRadius: 6,
+            stack: 'a',
+          },
+          {
+            label: 'Other',
+            data: totals.map((t, i) => Math.max(0, t - completed[i] - noShows[i] - cancelled[i])),
+            backgroundColor: '#90A4AE',
+            borderRadius: 6,
+            stack: 'a',
+          },
         ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
-          legend: { position: 'bottom', labels: { font: { family: 'Inter', size: 12 }, color: '#546E7A', padding: 16, usePointStyle: true } },
-          tooltip: { backgroundColor: '#1A1A2E', padding: 10, titleFont: { family: 'Inter' }, bodyFont: { family: 'Inter' } },
+          legend: {
+            position: 'bottom',
+            labels: {
+              font: { family: 'Inter', size: 12 },
+              color: '#546E7A',
+              padding: 16,
+              usePointStyle: true,
+            },
+          },
+          tooltip: {
+            backgroundColor: '#1A1A2E',
+            padding: 10,
+            titleFont: { family: 'Inter' },
+            bodyFont: { family: 'Inter' },
+          },
         },
         scales: {
-          x: { stacked: true, grid: { display: false }, ticks: { font: { family: 'Inter' }, color: '#546E7A' } },
-          y: { stacked: true, beginAtZero: true, grid: { color: '#E0E7EF' }, ticks: { font: { family: 'Inter' }, color: '#546E7A', precision: 0 } },
+          x: {
+            stacked: true,
+            grid: { display: false },
+            ticks: { font: { family: 'Inter' }, color: '#546E7A' },
+          },
+          y: {
+            stacked: true,
+            beginAtZero: true,
+            grid: { color: '#E0E7EF' },
+            ticks: { font: { family: 'Inter' }, color: '#546E7A', precision: 0 },
+          },
         },
       },
     });
@@ -287,8 +330,8 @@ export class ReportsComponent implements AfterViewInit, OnDestroy {
     if (!canvas) return;
     this.lineChart?.destroy();
 
-    const labels = report.data.map(d => this.formatShortDate(d.date));
-    const counts = report.data.map(d => d.count);
+    const labels = report.data.map((d) => this.formatShortDate(d.date));
+    const counts = report.data.map((d) => d.count);
 
     this.lineChart = new Chart(canvas, {
       type: 'line',
@@ -314,11 +357,29 @@ export class ReportsComponent implements AfterViewInit, OnDestroy {
         maintainAspectRatio: false,
         plugins: {
           legend: { display: false },
-          tooltip: { backgroundColor: '#1A1A2E', padding: 10, titleFont: { family: 'Inter' }, bodyFont: { family: 'Inter' } },
+          tooltip: {
+            backgroundColor: '#1A1A2E',
+            padding: 10,
+            titleFont: { family: 'Inter' },
+            bodyFont: { family: 'Inter' },
+          },
         },
         scales: {
-          x: { grid: { display: false }, ticks: { font: { family: 'Inter' }, color: '#546E7A', maxRotation: 0, autoSkip: true, maxTicksLimit: 12 } },
-          y: { beginAtZero: true, grid: { color: '#E0E7EF' }, ticks: { font: { family: 'Inter' }, color: '#546E7A', precision: 0 } },
+          x: {
+            grid: { display: false },
+            ticks: {
+              font: { family: 'Inter' },
+              color: '#546E7A',
+              maxRotation: 0,
+              autoSkip: true,
+              maxTicksLimit: 12,
+            },
+          },
+          y: {
+            beginAtZero: true,
+            grid: { color: '#E0E7EF' },
+            ticks: { font: { family: 'Inter' }, color: '#546E7A', precision: 0 },
+          },
         },
       },
     });
@@ -326,18 +387,21 @@ export class ReportsComponent implements AfterViewInit, OnDestroy {
 
   private exportAppointmentsCsv(): void {
     const report = this.appointmentReport();
-    if (!report) { this.toastr.info('Nothing to export'); return; }
+    if (!report) {
+      this.toastr.info('Nothing to export');
+      return;
+    }
 
     const rows = [
-      { Metric: 'Total',     Value: report.total },
+      { Metric: 'Total', Value: report.total },
       { Metric: 'Completed', Value: report.completed },
-      { Metric: 'No-shows',  Value: report.noShows },
+      { Metric: 'No-shows', Value: report.noShows },
       { Metric: 'Cancelled', Value: report.cancelled },
-      { Metric: 'Pending',   Value: report.pending },
+      { Metric: 'Pending', Value: report.pending },
       { Metric: 'Confirmed', Value: report.confirmed },
     ];
 
-    const byDoctor = report.byDoctor.map(d => ({
+    const byDoctor = report.byDoctor.map((d) => ({
       Doctor: d.doctorName,
       Total: d.total,
       Completed: d.completed,
@@ -355,9 +419,12 @@ export class ReportsComponent implements AfterViewInit, OnDestroy {
 
   private exportVisitsCsv(): void {
     const report = this.visitReport();
-    if (!report) { this.toastr.info('Nothing to export'); return; }
+    if (!report) {
+      this.toastr.info('Nothing to export');
+      return;
+    }
 
-    const rows = report.data.map(d => ({ Date: d.date, Visits: d.count }));
+    const rows = report.data.map((d) => ({ Date: d.date, Visits: d.count }));
     const csv = Papa.unparse(rows);
     this.downloadBlob(csv, this.fileName('visits', 'csv'), 'text/csv;charset=utf-8');
     this.toastr.success('CSV exported');
@@ -365,7 +432,10 @@ export class ReportsComponent implements AfterViewInit, OnDestroy {
 
   private exportAppointmentsPdf(): void {
     const report = this.appointmentReport();
-    if (!report) { this.toastr.info('Nothing to export'); return; }
+    if (!report) {
+      this.toastr.info('Nothing to export');
+      return;
+    }
 
     const doc = new jsPDF({ unit: 'pt', format: 'a4' });
     const margin = 40;
@@ -391,11 +461,11 @@ export class ReportsComponent implements AfterViewInit, OnDestroy {
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(11);
     const summary = [
-      ['Total',     report.total],
+      ['Total', report.total],
       ['Completed', report.completed],
-      ['No-shows',  report.noShows],
+      ['No-shows', report.noShows],
       ['Cancelled', report.cancelled],
-      ['Pending',   report.pending],
+      ['Pending', report.pending],
       ['Confirmed', report.confirmed],
     ];
     summary.forEach(([label, value]) => {
@@ -420,7 +490,10 @@ export class ReportsComponent implements AfterViewInit, OnDestroy {
     }
 
     if (report.byDoctor.length) {
-      if (y > 720) { doc.addPage(); y = margin; }
+      if (y > 720) {
+        doc.addPage();
+        y = margin;
+      }
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(11);
       doc.text('Doctor', margin, y);
@@ -433,8 +506,11 @@ export class ReportsComponent implements AfterViewInit, OnDestroy {
       doc.line(margin, y, doc.internal.pageSize.getWidth() - margin, y);
       y += 10;
       doc.setFont('helvetica', 'normal');
-      report.byDoctor.forEach(d => {
-        if (y > 780) { doc.addPage(); y = margin; }
+      report.byDoctor.forEach((d) => {
+        if (y > 780) {
+          doc.addPage();
+          y = margin;
+        }
         doc.text(d.doctorName.slice(0, 32), margin, y);
         doc.text(String(d.total), margin + 220, y);
         doc.text(String(d.completed), margin + 280, y);
@@ -450,7 +526,10 @@ export class ReportsComponent implements AfterViewInit, OnDestroy {
 
   private exportVisitsPdf(): void {
     const report = this.visitReport();
-    if (!report) { this.toastr.info('Nothing to export'); return; }
+    if (!report) {
+      this.toastr.info('Nothing to export');
+      return;
+    }
 
     const doc = new jsPDF({ unit: 'pt', format: 'a4' });
     const margin = 40;

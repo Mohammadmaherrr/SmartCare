@@ -37,7 +37,8 @@
     <mat-tab-group
       class="tabs no-print"
       animationDuration="220ms"
-      (selectedIndexChange)="onTabChange($event)">
+      (selectedIndexChange)="onTabChange($event)"
+    >
       <mat-tab>
         <ng-template mat-tab-label>
           <mat-icon class="tab-icon">description</mat-icon>
@@ -107,7 +108,7 @@
           <div @fadeIn>
             @if (prescriptionsLoading()) {
               <div class="skeleton skeleton--cards">
-                @for (i of [1,2,3]; track i) {
+                @for (i of [1, 2, 3]; track i) {
                   <div class="sk-card">
                     <div class="sk-line sk-line--title"></div>
                     <div class="sk-line"></div>
@@ -119,7 +120,9 @@
               <div class="empty">
                 <mat-icon class="empty__icon">medication_liquid</mat-icon>
                 <h3 class="empty__title">No prescriptions available</h3>
-                <p class="empty__sub">A medical record is required before prescriptions can be issued.</p>
+                <p class="empty__sub">
+                  A medical record is required before prescriptions can be issued.
+                </p>
               </div>
             } @else if (prescriptions().length === 0) {
               <div class="empty">
@@ -166,7 +169,7 @@
           <div @fadeIn>
             @if (labsLoading()) {
               <div class="skeleton skeleton--table">
-                @for (i of [1,2,3,4]; track i) {
+                @for (i of [1, 2, 3, 4]; track i) {
                   <div class="sk-row">
                     <div class="sk-line sk-line--col"></div>
                     <div class="sk-line sk-line--col"></div>
@@ -208,7 +211,7 @@
                   </ng-container>
 
                   <tr mat-header-row *matHeaderRowDef="labColumns"></tr>
-                  <tr mat-row *matRowDef="let row; columns: labColumns;"></tr>
+                  <tr mat-row *matRowDef="let row; columns: labColumns"></tr>
                 </table>
               </div>
             }

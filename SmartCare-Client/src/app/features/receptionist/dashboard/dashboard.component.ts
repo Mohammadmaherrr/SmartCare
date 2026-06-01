@@ -8,10 +8,7 @@ import { animate, query, stagger, style, transition, trigger } from '@angular/an
 import { AuthService } from '../../../_services/auth.service';
 import { ReceptionistService } from '../../../_services/receptionist.service';
 import { EmergencyService } from '../../../_services/emergency.service';
-import {
-  Appointment,
-  AppointmentStatus,
-} from '../../../_models/appointment.model';
+import { Appointment, AppointmentStatus } from '../../../_models/appointment.model';
 import { ActiveEmergency } from '../../../_models/emergency.model';
 
 interface StatusCard {
@@ -22,32 +19,34 @@ interface StatusCard {
 }
 
 const STATUS_CARDS: StatusCard[] = [
-  { status: 'Pending',   label: 'Pending',   icon: 'pending_actions', tone: 'pending' },
+  { status: 'Pending', label: 'Pending', icon: 'pending_actions', tone: 'pending' },
   { status: 'Confirmed', label: 'Confirmed', icon: 'event_available', tone: 'confirmed' },
-  { status: 'Completed', label: 'Completed', icon: 'check_circle',    tone: 'completed' },
-  { status: 'Cancelled', label: 'Cancelled', icon: 'cancel',          tone: 'cancelled' },
-  { status: 'NoShow',    label: 'No-show',   icon: 'person_off',      tone: 'noshow' },
+  { status: 'Completed', label: 'Completed', icon: 'check_circle', tone: 'completed' },
+  { status: 'Cancelled', label: 'Cancelled', icon: 'cancel', tone: 'cancelled' },
+  { status: 'NoShow', label: 'No-show', icon: 'person_off', tone: 'noshow' },
 ];
 
 @Component({
   selector: 'app-receptionist-dashboard',
-  imports: [
-    DatePipe,
-    MatButtonModule,
-    MatIconModule,
-    MatTooltipModule,
-  ],
+  imports: [DatePipe, MatButtonModule, MatIconModule, MatTooltipModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
   animations: [
     trigger('stagger', [
       transition(':enter', [
-        query('.stagger-item', [
-          style({ opacity: 0, transform: 'translateY(16px)' }),
-          stagger(60, [
-            animate('320ms cubic-bezier(0.16, 1, 0.3, 1)', style({ opacity: 1, transform: 'translateY(0)' })),
-          ]),
-        ], { optional: true }),
+        query(
+          '.stagger-item',
+          [
+            style({ opacity: 0, transform: 'translateY(16px)' }),
+            stagger(60, [
+              animate(
+                '320ms cubic-bezier(0.16, 1, 0.3, 1)',
+                style({ opacity: 1, transform: 'translateY(0)' }),
+              ),
+            ]),
+          ],
+          { optional: true },
+        ),
       ]),
     ]),
   ],
@@ -87,7 +86,11 @@ export class DashboardComponent {
 
   protected statusCounts = computed<Record<AppointmentStatus, number>>(() => {
     const counts: Record<AppointmentStatus, number> = {
-      Pending: 0, Confirmed: 0, Completed: 0, Cancelled: 0, NoShow: 0,
+      Pending: 0,
+      Confirmed: 0,
+      Completed: 0,
+      Cancelled: 0,
+      NoShow: 0,
     };
     for (const a of this.todayAppointments()) counts[a.status]++;
     return counts;
@@ -111,7 +114,7 @@ export class DashboardComponent {
   private loadToday(): void {
     this.loading.set(true);
     this.receptionist.getAllAppointments(this.todayIso, this.todayIso).subscribe({
-      next: list => {
+      next: (list) => {
         this.todayAppointments.set(list);
         this.loading.set(false);
       },
@@ -125,7 +128,7 @@ export class DashboardComponent {
   private loadEmergencies(): void {
     this.emergencyLoading.set(true);
     this.emergency.getActive().subscribe({
-      next: list => {
+      next: (list) => {
         this.activeEmergencies.set(list);
         this.emergencyLoading.set(false);
       },

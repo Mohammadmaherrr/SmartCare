@@ -22,7 +22,7 @@
 
     <mat-form-field appearance="outline" class="filter-field filter-field--search">
       <mat-label>Search</mat-label>
-      <input matInput formControlName="search" placeholder="Name or email">
+      <input matInput formControlName="search" placeholder="Name or email" />
       <mat-icon matPrefix>search</mat-icon>
     </mat-form-field>
   </section>
@@ -82,7 +82,8 @@
                 mat-icon-button
                 [matMenuTriggerFor]="menu"
                 [disabled]="acting() === u.id"
-                aria-label="Actions">
+                aria-label="Actions"
+              >
                 <mat-icon>more_vert</mat-icon>
               </button>
               <mat-menu #menu="matMenu">
@@ -94,7 +95,8 @@
                   mat-menu-item
                   class="menu-danger"
                   [disabled]="u.accountStatus === 'Blocked'"
-                  (click)="confirmDeactivate(u)">
+                  (click)="confirmDeactivate(u)"
+                >
                   <mat-icon>block</mat-icon>
                   <span>Deactivate</span>
                 </button>
@@ -103,7 +105,7 @@
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;" @fadeRow></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns" @fadeRow></tr>
         </table>
       </div>
     }

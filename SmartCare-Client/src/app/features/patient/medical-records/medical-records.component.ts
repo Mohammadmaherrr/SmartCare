@@ -78,15 +78,20 @@ export class MedicalRecordsComponent {
   protected formatDateTime(value: string): string {
     const dt = new Date(value);
     return dt.toLocaleString('en-US', {
-      month: 'short', day: 'numeric', year: 'numeric',
-      hour: 'numeric', minute: '2-digit',
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
     });
   }
 
   protected formatDate(value: string): string {
     const [y, m, d] = value.split('-').map(Number);
     return new Date(y, m - 1, d).toLocaleDateString('en-US', {
-      month: 'short', day: 'numeric', year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
     });
   }
 
@@ -98,25 +103,25 @@ export class MedicalRecordsComponent {
     }
 
     this.recordLoading.set(true);
-    this.medicalRecords.getRecord(id).pipe(
-      catchError(() => of(null)),
-    ).subscribe(rec => {
-      this.record.set(rec);
-      this.recordLoading.set(false);
-    });
+    this.medicalRecords
+      .getRecord(id)
+      .pipe(catchError(() => of(null)))
+      .subscribe((rec) => {
+        this.record.set(rec);
+        this.recordLoading.set(false);
+      });
   }
 
   private loadPrescriptions(recordId: string): void {
     this.prescriptionsLoading.set(true);
-    this.medicalRecords.getPrescriptions(recordId).pipe(
-      catchError(() => of([] as Prescription[])),
-    ).subscribe(list => {
-      this.prescriptions.set([...list].sort(
-        (a, b) => b.issueDate.localeCompare(a.issueDate),
-      ));
-      this.prescriptionsLoading.set(false);
-      this.prescriptionsLoaded.set(true);
-    });
+    this.medicalRecords
+      .getPrescriptions(recordId)
+      .pipe(catchError(() => of([] as Prescription[])))
+      .subscribe((list) => {
+        this.prescriptions.set([...list].sort((a, b) => b.issueDate.localeCompare(a.issueDate)));
+        this.prescriptionsLoading.set(false);
+        this.prescriptionsLoaded.set(true);
+      });
   }
 
   private loadLabs(): void {
@@ -127,14 +132,13 @@ export class MedicalRecordsComponent {
     }
 
     this.labsLoading.set(true);
-    this.medicalRecords.getLabResults(id).pipe(
-      catchError(() => of([] as LabResult[])),
-    ).subscribe(list => {
-      this.labs.set([...list].sort(
-        (a, b) => b.resultDate.localeCompare(a.resultDate),
-      ));
-      this.labsLoading.set(false);
-    });
+    this.medicalRecords
+      .getLabResults(id)
+      .pipe(catchError(() => of([] as LabResult[])))
+      .subscribe((list) => {
+        this.labs.set([...list].sort((a, b) => b.resultDate.localeCompare(a.resultDate)));
+        this.labsLoading.set(false);
+      });
   }
 
   private toInitials(name: string): string {

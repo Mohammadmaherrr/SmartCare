@@ -1,18 +1,18 @@
 // ── Design tokens ────────────────────────────────────────────────────────
-$primary:        #1565C0;
-$primary-dark:   #0D47A1;
-$primary-light:  #E3F2FD;
-$accent:         #00897B;
-$accent-light:   #E0F2F1;
-$amber:          #F57C00;
-$amber-light:    #FFF3E0;
-$surface:        #F4F6F9;
-$card-bg:        #ffffff;
-$text-primary:   #1A1A2E;
-$text-secondary: #546E7A;
-$text-muted:     #90A4AE;
-$divider:        #E0E7EF;
-$danger:         #C62828;
+$primary: #1565c0;
+$primary-dark: #0d47a1;
+$primary-light: #e3f2fd;
+$accent: #00897b;
+$accent-light: #e0f2f1;
+$amber: #f57c00;
+$amber-light: #fff3e0;
+$surface: #f4f6f9;
+$card-bg: #ffffff;
+$text-primary: #1a1a2e;
+$text-secondary: #546e7a;
+$text-muted: #90a4ae;
+$divider: #e0e7ef;
+$danger: #c62828;
 
 // ── Layout ───────────────────────────────────────────────────────────────
 .book {
@@ -136,7 +136,10 @@ $danger:         #C62828;
   border-radius: 12px;
   text-align: left;
   cursor: pointer;
-  transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+  transition:
+    border-color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
 
   &:hover {
     border-color: $primary;
@@ -214,7 +217,9 @@ $danger:         #C62828;
   border-radius: 12px;
   text-align: left;
   cursor: pointer;
-  transition: border-color 160ms ease, background 160ms ease;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease;
 
   &:hover {
     border-color: $primary;
@@ -381,8 +386,13 @@ $danger:         #C62828;
   height: 10px;
   border-radius: 50%;
 
-  &--available { background: $primary; }
-  &--booked    { background: $divider; border: 1px solid $text-muted; }
+  &--available {
+    background: $primary;
+  }
+  &--booked {
+    background: $divider;
+    border: 1px solid $text-muted;
+  }
 }
 
 // ── Step 5: Summary ──────────────────────────────────────────────────────

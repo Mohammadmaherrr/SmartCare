@@ -38,7 +38,9 @@ body {
   margin: 0;
   height: 100%;
 }
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -57,7 +59,7 @@ body {
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: #1565C0;
+    background: #1565c0;
     border: 3px solid #ffffff;
     box-shadow: 0 2px 6px rgba(21, 101, 192, 0.4);
   }
@@ -75,15 +77,21 @@ body {
 }
 
 @keyframes patient-pulse {
-  0%   { transform: scale(0.6); opacity: 0.8; }
-  100% { transform: scale(2.4); opacity: 0;   }
+  0% {
+    transform: scale(0.6);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
 }
 
 .clinic-marker {
   .pin {
     width: 32px;
     height: 40px;
-    background: #C62828;
+    background: #c62828;
     border-radius: 50% 50% 50% 0;
     transform: rotate(-45deg);
     display: flex;
@@ -91,7 +99,9 @@ body {
     justify-content: center;
     box-shadow: 0 3px 8px rgba(198, 40, 40, 0.4);
     border: 2px solid #ffffff;
-    transition: transform 180ms ease, background 180ms ease;
+    transition:
+      transform 180ms ease,
+      background 180ms ease;
   }
 
   .cross {
@@ -100,26 +110,31 @@ body {
     height: 14px;
     position: relative;
 
-    &::before, &::after {
+    &::before,
+    &::after {
       content: '';
       position: absolute;
       background: #ffffff;
       border-radius: 1px;
     }
     &::before {
-      top: 50%; left: 0; right: 0;
+      top: 50%;
+      left: 0;
+      right: 0;
       height: 3px;
       transform: translateY(-50%);
     }
     &::after {
-      left: 50%; top: 0; bottom: 0;
+      left: 50%;
+      top: 0;
+      bottom: 0;
       width: 3px;
       transform: translateX(-50%);
     }
   }
 
   &--active .pin {
-    background: #0D47A1;
+    background: #0d47a1;
     transform: rotate(-45deg) scale(1.18);
     box-shadow: 0 6px 14px rgba(13, 71, 161, 0.55);
   }
@@ -132,18 +147,18 @@ body {
   .title {
     font-size: 14px;
     font-weight: 600;
-    color: #1A1A2E;
+    color: #1a1a2e;
     margin-bottom: 6px;
   }
   .row {
     font-size: 12.5px;
-    color: #546E7A;
+    color: #546e7a;
     line-height: 1.45;
     margin-top: 4px;
   }
   .distance {
     font-weight: 600;
-    color: #1565C0;
+    color: #1565c0;
   }
 }
 

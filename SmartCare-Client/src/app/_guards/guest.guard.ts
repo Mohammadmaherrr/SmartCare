@@ -10,10 +10,15 @@ export const guestGuard: CanActivateFn = () => {
   if (!user) return true;
 
   switch (user.role) {
-    case 'Admin':        return router.createUrlTree(['/admin']);
-    case 'Doctor':       return router.createUrlTree(['/doctor']);
-    case 'Receptionist': return router.createUrlTree(['/receptionist']);
-    case 'Patient':      return router.createUrlTree(['/patient']);
-    default:             return router.createUrlTree(['/']);
+    case 'Admin':
+      return router.createUrlTree(['/admin']);
+    case 'Doctor':
+      return router.createUrlTree(['/doctor']);
+    case 'Receptionist':
+      return router.createUrlTree(['/receptionist']);
+    case 'Patient':
+      return router.createUrlTree(['/patient']);
+    default:
+      return router.createUrlTree(['/']);
   }
 };

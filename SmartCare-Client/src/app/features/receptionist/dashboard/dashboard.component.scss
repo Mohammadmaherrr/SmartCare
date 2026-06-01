@@ -1,22 +1,22 @@
-$primary:        #1565C0;
-$primary-dark:   #0D47A1;
-$primary-light:  #E3F2FD;
-$accent:         #00897B;
-$accent-light:   #E0F2F1;
-$amber:          #F57C00;
-$amber-light:    #FFF3E0;
-$danger:         #C62828;
-$danger-light:   #FFEBEE;
-$success:        #2E7D32;
-$success-light:  #E8F5E9;
-$gray:           #607D8B;
-$gray-light:     #ECEFF1;
-$surface:        #F4F6F9;
-$card-bg:        #ffffff;
-$text-primary:   #1A1A2E;
-$text-secondary: #546E7A;
-$text-muted:     #90A4AE;
-$divider:        #E0E7EF;
+$primary: #1565c0;
+$primary-dark: #0d47a1;
+$primary-light: #e3f2fd;
+$accent: #00897b;
+$accent-light: #e0f2f1;
+$amber: #f57c00;
+$amber-light: #fff3e0;
+$danger: #c62828;
+$danger-light: #ffebee;
+$success: #2e7d32;
+$success-light: #e8f5e9;
+$gray: #607d8b;
+$gray-light: #eceff1;
+$surface: #f4f6f9;
+$card-bg: #ffffff;
+$text-primary: #1a1a2e;
+$text-secondary: #546e7a;
+$text-muted: #90a4ae;
+$divider: #e0e7ef;
 
 .dashboard {
   padding: 28px;
@@ -30,7 +30,9 @@ $divider:        #E0E7EF;
 .card {
   background: $card-bg;
   border-radius: 14px;
-  box-shadow: 0 1px 3px rgba(15,23,42,.04), 0 4px 16px -4px rgba(21,101,192,.08);
+  box-shadow:
+    0 1px 3px rgba(15, 23, 42, 0.04),
+    0 4px 16px -4px rgba(21, 101, 192, 0.08);
   padding: 22px 24px;
 }
 
@@ -64,7 +66,7 @@ $divider:        #E0E7EF;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(135deg,#0D47A1 0%,#1565C0 50%,#00897B 100%);
+  background: linear-gradient(135deg, #0d47a1 0%, #1565c0 50%, #00897b 100%);
   color: #fff;
   padding: 28px 32px;
 
@@ -72,7 +74,7 @@ $divider:        #E0E7EF;
     margin: 0 0 6px;
     font-size: 22px;
     font-weight: 700;
-    letter-spacing: -.3px;
+    letter-spacing: -0.3px;
   }
 
   &__date {
@@ -82,8 +84,12 @@ $divider:        #E0E7EF;
     margin: 0;
     font-size: 14px;
     font-weight: 500;
-    opacity: .92;
-    mat-icon { font-size: 16px; width: 16px; height: 16px; }
+    opacity: 0.92;
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
   }
 
   &__avatar {
@@ -93,8 +99,13 @@ $divider:        #E0E7EF;
     width: 56px;
     height: 56px;
     border-radius: 50%;
-    background: rgba(255,255,255,.18);
-    mat-icon { font-size: 28px; width: 28px; height: 28px; color: #fff; }
+    background: rgba(255, 255, 255, 0.18);
+    mat-icon {
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+      color: #fff;
+    }
   }
 }
 
@@ -113,7 +124,9 @@ $divider:        #E0E7EF;
   position: relative;
   background: $card-bg;
   border-radius: 14px;
-  box-shadow: 0 1px 3px rgba(15,23,42,.04), 0 4px 16px -4px rgba(21,101,192,.08);
+  box-shadow:
+    0 1px 3px rgba(15, 23, 42, 0.04),
+    0 4px 16px -4px rgba(21, 101, 192, 0.08);
   padding: 22px 24px;
   display: flex;
   align-items: center;
@@ -128,17 +141,23 @@ $divider:        #E0E7EF;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    mat-icon { font-size: 26px; width: 26px; height: 26px; }
+    mat-icon {
+      font-size: 26px;
+      width: 26px;
+      height: 26px;
+    }
   }
 
-  &__body { min-width: 0; }
+  &__body {
+    min-width: 0;
+  }
 
   &__label {
     font-size: 12px;
     font-weight: 600;
     color: $text-secondary;
     text-transform: uppercase;
-    letter-spacing: .4px;
+    letter-spacing: 0.4px;
   }
 
   &__value {
@@ -147,7 +166,7 @@ $divider:        #E0E7EF;
     color: $text-primary;
     margin-top: 4px;
     line-height: 1.1;
-    letter-spacing: -.5px;
+    letter-spacing: -0.5px;
   }
 
   &__skeleton {
@@ -155,7 +174,7 @@ $divider:        #E0E7EF;
     width: 60px;
     height: 28px;
     border-radius: 6px;
-    background: linear-gradient(90deg,#ECEFF1 0%,#F5F7FA 50%,#ECEFF1 100%);
+    background: linear-gradient(90deg, #eceff1 0%, #f5f7fa 50%, #eceff1 100%);
     background-size: 800px 100%;
     animation: shimmer 1.4s linear infinite;
   }
@@ -182,7 +201,7 @@ $divider:        #E0E7EF;
     height: 10px;
     border-radius: 50%;
     background: $danger;
-    box-shadow: 0 0 0 0 rgba(198,40,40,.6);
+    box-shadow: 0 0 0 0 rgba(198, 40, 40, 0.6);
     animation: pulse 1.6s infinite;
   }
 }
@@ -199,47 +218,61 @@ $divider:        #E0E7EF;
   align-items: center;
   gap: 16px;
   cursor: pointer;
-  box-shadow: 0 6px 18px -4px rgba(21,101,192,.35);
-  transition: transform .18s cubic-bezier(.16,1,.3,1), box-shadow .18s;
+  box-shadow: 0 6px 18px -4px rgba(21, 101, 192, 0.35);
+  transition:
+    transform 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.18s;
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 28px -6px rgba(21,101,192,.5);
+    box-shadow: 0 12px 28px -6px rgba(21, 101, 192, 0.5);
 
-    .quick-action__arrow { transform: translateX(4px); }
+    .quick-action__arrow {
+      transform: translateX(4px);
+    }
   }
 
-  &:active { transform: translateY(0); }
+  &:active {
+    transform: translateY(0);
+  }
 
   &__icon {
     width: 48px;
     height: 48px;
     border-radius: 12px;
-    background: rgba(255,255,255,.2);
+    background: rgba(255, 255, 255, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    mat-icon { font-size: 26px; width: 26px; height: 26px; color: #fff; }
+    mat-icon {
+      font-size: 26px;
+      width: 26px;
+      height: 26px;
+      color: #fff;
+    }
   }
 
-  &__body { flex: 1; min-width: 0; }
+  &__body {
+    flex: 1;
+    min-width: 0;
+  }
 
   &__title {
     font-size: 16px;
     font-weight: 700;
-    letter-spacing: -.2px;
+    letter-spacing: -0.2px;
   }
 
   &__sub {
     margin-top: 2px;
     font-size: 12.5px;
-    opacity: .85;
+    opacity: 0.85;
   }
 
   &__arrow {
     color: #fff;
-    transition: transform .18s ease;
+    transition: transform 0.18s ease;
   }
 }
 
@@ -266,7 +299,10 @@ $divider:        #E0E7EF;
   align-items: center;
   gap: 12px;
   border: 1px solid transparent;
-  transition: border-color .16s, transform .16s, background .16s;
+  transition:
+    border-color 0.16s,
+    transform 0.16s,
+    background 0.16s;
 
   &:hover {
     background: $card-bg;
@@ -282,17 +318,23 @@ $divider:        #E0E7EF;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    mat-icon { font-size: 22px; width: 22px; height: 22px; }
+    mat-icon {
+      font-size: 22px;
+      width: 22px;
+      height: 22px;
+    }
   }
 
-  &__body { min-width: 0; }
+  &__body {
+    min-width: 0;
+  }
 
   &__label {
     font-size: 11px;
     font-weight: 600;
     color: $text-secondary;
     text-transform: uppercase;
-    letter-spacing: .4px;
+    letter-spacing: 0.4px;
   }
 
   &__value {
@@ -308,25 +350,50 @@ $divider:        #E0E7EF;
     width: 36px;
     height: 22px;
     border-radius: 6px;
-    background: linear-gradient(90deg,#ECEFF1 0%,#F5F7FA 50%,#ECEFF1 100%);
+    background: linear-gradient(90deg, #eceff1 0%, #f5f7fa 50%, #eceff1 100%);
     background-size: 800px 100%;
     animation: shimmer 1.4s linear infinite;
   }
 
-  &--pending   .status-card__icon { background: $amber-light;   color: $amber; }
-  &--confirmed .status-card__icon { background: $accent-light;  color: $accent; }
-  &--completed .status-card__icon { background: $primary-light; color: $primary; }
-  &--cancelled .status-card__icon { background: $gray-light;    color: $gray; }
-  &--noshow    .status-card__icon { background: $danger-light;  color: $danger; }
+  &--pending .status-card__icon {
+    background: $amber-light;
+    color: $amber;
+  }
+  &--confirmed .status-card__icon {
+    background: $accent-light;
+    color: $accent;
+  }
+  &--completed .status-card__icon {
+    background: $primary-light;
+    color: $primary;
+  }
+  &--cancelled .status-card__icon {
+    background: $gray-light;
+    color: $gray;
+  }
+  &--noshow .status-card__icon {
+    background: $danger-light;
+    color: $danger;
+  }
 }
 
 @keyframes shimmer {
-  0%   { background-position: -400px 0; }
-  100% { background-position:  400px 0; }
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
 }
 
 @keyframes pulse {
-  0%   { box-shadow: 0 0 0 0 rgba(198,40,40,.6); }
-  70%  { box-shadow: 0 0 0 10px rgba(198,40,40,0); }
-  100% { box-shadow: 0 0 0 0 rgba(198,40,40,0); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(198, 40, 40, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(198, 40, 40, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(198, 40, 40, 0);
+  }
 }

@@ -21,7 +21,7 @@ export class AuthService {
 
   login(email: string, password: string): Observable<void> {
     return this.api.post<AuthResponse>('auth/login', { email, password }).pipe(
-      tap(res => {
+      tap((res) => {
         const decoded = jwtDecode<JwtClaims>(res.token);
         const user: User = {
           id: res.userId,
@@ -34,13 +34,13 @@ export class AuthService {
         localStorage.setItem(this.USER_KEY, JSON.stringify(user));
         this.currentUser.set(user);
       }),
-      map(() => void 0)
+      map(() => void 0),
     );
   }
 
   register(dto: PatientRegisterDto): Observable<void> {
     return this.api.post<AuthResponse>('auth/register', dto).pipe(
-      tap(res => {
+      tap((res) => {
         const decoded = jwtDecode<JwtClaims>(res.token);
         const user: User = {
           id: res.userId,
@@ -53,7 +53,7 @@ export class AuthService {
         localStorage.setItem(this.USER_KEY, JSON.stringify(user));
         this.currentUser.set(user);
       }),
-      map(() => void 0)
+      map(() => void 0),
     );
   }
 

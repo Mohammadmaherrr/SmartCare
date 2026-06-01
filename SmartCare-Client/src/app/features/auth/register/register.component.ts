@@ -48,7 +48,10 @@ const today = new Date().toISOString().split('T')[0];
     trigger('slideIn', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateX(30px)' }),
-        animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({ opacity: 1, transform: 'translateX(0)' })),
+        animate(
+          '400ms cubic-bezier(0.25, 0.8, 0.25, 1)',
+          style({ opacity: 1, transform: 'translateX(0)' }),
+        ),
       ]),
     ]),
   ],
@@ -64,14 +67,14 @@ export class RegisterComponent {
   protected readonly maxDate = today;
 
   protected form = this.fb.group({
-    fullName:        ['', [Validators.required, Validators.minLength(2)]],
-    email:           ['', [Validators.required, Validators.email]],
-    password:        ['', [Validators.required, Validators.minLength(6)]],
+    fullName: ['', [Validators.required, Validators.minLength(2)]],
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
     confirmPassword: ['', [Validators.required, matchValues('password')]],
-    dateOfBirth:     ['', Validators.required],
-    gender:          ['', Validators.required],
-    contactNumber:   ['', [Validators.required, Validators.pattern(/^\+?[\d\s\-().]{7,20}$/)]],
-    address:         ['', [Validators.required, Validators.minLength(10)]],
+    dateOfBirth: ['', Validators.required],
+    gender: ['', Validators.required],
+    contactNumber: ['', [Validators.required, Validators.pattern(/^\+?[\d\s\-().]{7,20}$/)]],
+    address: ['', [Validators.required, Validators.minLength(10)]],
   });
 
   constructor() {
@@ -87,14 +90,14 @@ export class RegisterComponent {
 
     const v = this.form.value;
     const dto: PatientRegisterDto = {
-      fullName:      v.fullName!,
-      email:         v.email!,
-      password:      v.password!,
-      role:          'Patient',
-      dateOfBirth:   v.dateOfBirth!,
-      gender:        v.gender!,
+      fullName: v.fullName!,
+      email: v.email!,
+      password: v.password!,
+      role: 'Patient',
+      dateOfBirth: v.dateOfBirth!,
+      gender: v.gender!,
       contactNumber: v.contactNumber!,
-      address:       v.address!,
+      address: v.address!,
     };
 
     this.auth.register(dto).subscribe({

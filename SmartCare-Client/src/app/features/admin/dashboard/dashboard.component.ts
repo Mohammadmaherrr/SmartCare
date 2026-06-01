@@ -28,37 +28,60 @@ interface QuickAction {
 }
 
 const STAT_CARDS: StatCard[] = [
-  { key: 'todayAppointments',  label: "Today's Appointments", icon: 'event',         tone: 'primary' },
-  { key: 'activeDoctors',      label: 'Active Doctors',       icon: 'medical_services', tone: 'accent' },
-  { key: 'pendingEmergencies', label: 'Pending Emergencies',  icon: 'sos',           tone: 'danger' },
-  { key: 'totalPatients',      label: 'Total Patients',       icon: 'group',         tone: 'amber' },
+  { key: 'todayAppointments', label: "Today's Appointments", icon: 'event', tone: 'primary' },
+  { key: 'activeDoctors', label: 'Active Doctors', icon: 'medical_services', tone: 'accent' },
+  { key: 'pendingEmergencies', label: 'Pending Emergencies', icon: 'sos', tone: 'danger' },
+  { key: 'totalPatients', label: 'Total Patients', icon: 'group', tone: 'amber' },
 ];
 
 const QUICK_ACTIONS: QuickAction[] = [
-  { label: 'Appointments', icon: 'calendar_month',  route: '/receptionist/appointments', description: 'View all clinic bookings' },
-  { label: 'Doctors',      icon: 'medical_services', route: '/admin/users',              description: 'Manage doctor accounts' },
-  { label: 'Patients',     icon: 'group',            route: '/admin/users',              description: 'Manage patient accounts' },
-  { label: 'Reports',      icon: 'bar_chart',        route: '/admin/reports',            description: 'View clinic metrics' },
+  {
+    label: 'Appointments',
+    icon: 'calendar_month',
+    route: '/receptionist/appointments',
+    description: 'View all clinic bookings',
+  },
+  {
+    label: 'Doctors',
+    icon: 'medical_services',
+    route: '/admin/users',
+    description: 'Manage doctor accounts',
+  },
+  {
+    label: 'Patients',
+    icon: 'group',
+    route: '/admin/users',
+    description: 'Manage patient accounts',
+  },
+  {
+    label: 'Reports',
+    icon: 'bar_chart',
+    route: '/admin/reports',
+    description: 'View clinic metrics',
+  },
 ];
 
 @Component({
   selector: 'app-admin-dashboard',
-  imports: [
-    DatePipe,
-    MatButtonModule,
-    MatIconModule,
-  ],
+  imports: [DatePipe, MatButtonModule, MatIconModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
   animations: [
     trigger('stagger', [
       transition(':enter', [
-        query('.stagger-item', [
-          style({ opacity: 0, transform: 'translateY(16px)' }),
-          stagger(60, [
-            animate('320ms cubic-bezier(0.16, 1, 0.3, 1)', style({ opacity: 1, transform: 'translateY(0)' })),
-          ]),
-        ], { optional: true }),
+        query(
+          '.stagger-item',
+          [
+            style({ opacity: 0, transform: 'translateY(16px)' }),
+            stagger(60, [
+              animate(
+                '320ms cubic-bezier(0.16, 1, 0.3, 1)',
+                style({ opacity: 1, transform: 'translateY(0)' }),
+              ),
+            ]),
+          ],
+          { optional: true },
+        ),
       ]),
     ]),
   ],
@@ -99,8 +122,8 @@ export class DashboardComponent {
 
   protected stats = computed<Record<StatCard['key'], number>>(() => ({
     todayAppointments: this.todayAppointments().length,
-    activeDoctors: this.doctors().filter(d => d.accountStatus === 'Active').length,
-    pendingEmergencies: this.activeEmergencies().filter(e => e.status === 'Pending').length,
+    activeDoctors: this.doctors().filter((d) => d.accountStatus === 'Active').length,
+    pendingEmergencies: this.activeEmergencies().filter((e) => e.status === 'Pending').length,
     totalPatients: this.patients().length,
   }));
 

@@ -2,7 +2,9 @@
   <header class="page__header">
     <div>
       <h1 class="page__title">My Appointments</h1>
-      <p class="page__sub">Track upcoming visits, submit pre-visit summaries, and review past consultations.</p>
+      <p class="page__sub">
+        Track upcoming visits, submit pre-visit summaries, and review past consultations.
+      </p>
     </div>
     <button mat-flat-button class="primary-btn" (click)="book()">
       <mat-icon>add</mat-icon>
@@ -14,7 +16,8 @@
     <mat-tab-group
       class="tabs"
       animationDuration="220ms"
-      (selectedIndexChange)="onTabChange($event)">
+      (selectedIndexChange)="onTabChange($event)"
+    >
       <mat-tab>
         <ng-template mat-tab-label>
           Upcoming
@@ -118,9 +121,12 @@
                   </button>
                 }
                 @if (canCancel(a)) {
-                  <button mat-menu-item class="menu-danger"
-                          [disabled]="cancelling() === a.id"
-                          (click)="confirmCancel(a)">
+                  <button
+                    mat-menu-item
+                    class="menu-danger"
+                    [disabled]="cancelling() === a.id"
+                    (click)="confirmCancel(a)"
+                  >
                     <mat-icon>cancel</mat-icon>
                     <span>Cancel</span>
                   </button>
@@ -136,7 +142,7 @@
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;" @fadeRow></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns" @fadeRow></tr>
         </table>
       </div>
     }

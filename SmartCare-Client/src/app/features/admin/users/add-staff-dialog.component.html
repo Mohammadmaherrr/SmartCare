@@ -15,7 +15,7 @@
 
     <mat-form-field appearance="outline" class="full">
       <mat-label>Full name</mat-label>
-      <input matInput formControlName="fullName" placeholder="Dr. Jane Doe">
+      <input matInput formControlName="fullName" placeholder="Dr. Jane Doe" />
       @if (form.controls.fullName.hasError('required') && form.controls.fullName.touched) {
         <mat-error>Full name is required.</mat-error>
       }
@@ -23,7 +23,7 @@
 
     <mat-form-field appearance="outline" class="full">
       <mat-label>Email</mat-label>
-      <input matInput type="email" formControlName="email" placeholder="jane.doe@clinic.com">
+      <input matInput type="email" formControlName="email" placeholder="jane.doe@clinic.com" />
       @if (form.controls.email.hasError('required') && form.controls.email.touched) {
         <mat-error>Email is required.</mat-error>
       }
@@ -38,13 +38,15 @@
         matInput
         [type]="showPassword() ? 'text' : 'password'"
         formControlName="password"
-        autocomplete="new-password">
+        autocomplete="new-password"
+      />
       <button
         type="button"
         matSuffix
         mat-icon-button
         (click)="togglePassword()"
-        [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'">
+        [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'"
+      >
         <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
       </button>
       <mat-hint>Min 8 chars, one uppercase letter, one number.</mat-hint>
@@ -62,23 +64,27 @@
     @if (isDoctor()) {
       <mat-form-field appearance="outline" class="full">
         <mat-label>Specialization</mat-label>
-        <input matInput formControlName="specialization" placeholder="Cardiology">
-        @if (form.controls.specialization.hasError('required') && form.controls.specialization.touched) {
+        <input matInput formControlName="specialization" placeholder="Cardiology" />
+        @if (
+          form.controls.specialization.hasError('required') && form.controls.specialization.touched
+        ) {
           <mat-error>Specialization is required.</mat-error>
         }
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full">
         <mat-label>License number</mat-label>
-        <input matInput formControlName="licenseNumber" placeholder="MED-2024-00123">
-        @if (form.controls.licenseNumber.hasError('required') && form.controls.licenseNumber.touched) {
+        <input matInput formControlName="licenseNumber" placeholder="MED-2024-00123" />
+        @if (
+          form.controls.licenseNumber.hasError('required') && form.controls.licenseNumber.touched
+        ) {
           <mat-error>License number is required.</mat-error>
         }
       </mat-form-field>
     } @else {
       <mat-form-field appearance="outline" class="full">
         <mat-label>Employee ID</mat-label>
-        <input matInput formControlName="employeeId" placeholder="EMP-00045">
+        <input matInput formControlName="employeeId" placeholder="EMP-00045" />
         @if (form.controls.employeeId.hasError('required') && form.controls.employeeId.touched) {
           <mat-error>Employee ID is required.</mat-error>
         }
@@ -93,7 +99,8 @@
       type="button"
       class="primary"
       [disabled]="form.invalid || submitting()"
-      (click)="submit()">
+      (click)="submit()"
+    >
       @if (submitting()) {
         <mat-spinner diameter="20" class="btn-spinner"></mat-spinner>
       } @else {

@@ -1,14 +1,11 @@
 <div class="dashboard" [@stagger]="loading() ? 'loading' : 'ready'">
-
   <!-- ── Greeting ──────────────────────────────────────────────────────── -->
   <section class="greeting card stagger-item">
     <div class="greeting__text">
-      <h1 class="greeting__title">
-        {{ greeting() }}, Dr. {{ lastName() }}
-      </h1>
+      <h1 class="greeting__title">{{ greeting() }}, Dr. {{ lastName() }}</h1>
       <p class="greeting__date">
         <mat-icon>calendar_today</mat-icon>
-        {{ todayLabel() | date:'EEEE, MMMM d, y' }}
+        {{ todayLabel() | date: 'EEEE, MMMM d, y' }}
       </p>
     </div>
     <div class="greeting__avatar" aria-hidden="true">
@@ -24,7 +21,8 @@
         class="day"
         [class.day--selected]="selectedDate() === d.isoDate"
         [class.day--today]="d.isToday"
-        (click)="selectDay(d)">
+        (click)="selectDay(d)"
+      >
         <span class="day__weekday">{{ d.weekday }}</span>
         <span class="day__num">{{ d.day }}</span>
         @if (d.isToday) {
@@ -47,7 +45,7 @@
 
     @if (loading()) {
       <div class="skeleton-list">
-        @for (_ of [1,2]; track $index) {
+        @for (_ of [1, 2]; track $index) {
           <div class="skeleton skeleton--row"></div>
         }
       </div>
@@ -55,8 +53,7 @@
       <ul class="pending__list">
         @for (a of pending(); track a.id) {
           <li class="pending-item" [@fadeIn]>
-            <div class="pending-item__avatar"
-                 [attr.data-tone]="avatarTone(a.patientName)">
+            <div class="pending-item__avatar" [attr.data-tone]="avatarTone(a.patientName)">
               {{ initial(a.patientName) }}
             </div>
             <div class="pending-item__body">
@@ -76,7 +73,8 @@
                 [disabled]="acting() === a.id"
                 (click)="accept(a)"
                 matTooltip="Accept"
-                aria-label="Accept">
+                aria-label="Accept"
+              >
                 <mat-icon>check</mat-icon>
               </button>
               <button
@@ -85,7 +83,8 @@
                 [disabled]="acting() === a.id"
                 (click)="reject(a)"
                 matTooltip="Reject"
-                aria-label="Reject">
+                aria-label="Reject"
+              >
                 <mat-icon>close</mat-icon>
               </button>
             </div>
@@ -106,13 +105,15 @@
     <div class="card-header">
       <h2 class="section-title">Today's Timeline</h2>
       @if (timeline().length) {
-        <span class="header-sub">{{ timeline().length }} appointment{{ timeline().length === 1 ? '' : 's' }}</span>
+        <span class="header-sub"
+          >{{ timeline().length }} appointment{{ timeline().length === 1 ? '' : 's' }}</span
+        >
       }
     </div>
 
     @if (loading()) {
       <div class="skeleton-list">
-        @for (_ of [1,2,3]; track $index) {
+        @for (_ of [1, 2, 3]; track $index) {
           <div class="skeleton skeleton--row"></div>
         }
       </div>
@@ -132,8 +133,7 @@
             <div class="tl-row__card">
               <div class="tl-row__head">
                 <div class="tl-row__patient">
-                  <div class="tl-row__avatar"
-                       [attr.data-tone]="avatarTone(a.patientName)">
+                  <div class="tl-row__avatar" [attr.data-tone]="avatarTone(a.patientName)">
                     {{ initial(a.patientName) }}
                   </div>
                   <div>
@@ -141,13 +141,12 @@
                     <div class="tl-row__type">{{ visitTypeLabel(a.visitType) }}</div>
                   </div>
                 </div>
-                <span class="chip chip--{{ a.status.toLowerCase() }}">{{ statusLabel(a.status) }}</span>
+                <span class="chip chip--{{ a.status.toLowerCase() }}">{{
+                  statusLabel(a.status)
+                }}</span>
               </div>
               <div class="tl-row__foot">
-                <button
-                  type="button"
-                  class="details-link"
-                  (click)="viewDetails(a)">
+                <button type="button" class="details-link" (click)="viewDetails(a)">
                   View Details
                   <mat-icon>arrow_forward</mat-icon>
                 </button>

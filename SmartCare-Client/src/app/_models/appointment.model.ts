@@ -11,8 +11,8 @@ export interface Appointment {
   doctorId: string;
   doctorName: string;
   appointmentDate: string; // DateOnly → "YYYY-MM-DD"
-  timeSlot: string;        // TimeOnly → "HH:mm:ss"
-  endTime: string;         // TimeOnly → "HH:mm:ss"
+  timeSlot: string; // TimeOnly → "HH:mm:ss"
+  endTime: string; // TimeOnly → "HH:mm:ss"
   visitType: VisitType;
   status: AppointmentStatus;
   paymentStatus: PaymentStatus;

@@ -1,5 +1,4 @@
 <div class="detail">
-
   <!-- ── Top bar ──────────────────────────────────────────────────────── -->
   <div class="topbar">
     <button type="button" class="back" (click)="back()" aria-label="Back to schedule">
@@ -43,7 +42,6 @@
 
     <!-- ── Grid: patient + visit info ─────────────────────────────────── -->
     <div class="grid">
-
       <!-- Patient info -->
       <section class="card section" [@fadeIn]>
         <h2 class="section__title">
@@ -104,11 +102,17 @@
           </div>
           <div class="info-row">
             <dt>Status</dt>
-            <dd><span [class]="statusClass(a.status)">{{ statusLabel(a.status) }}</span></dd>
+            <dd>
+              <span [class]="statusClass(a.status)">{{ statusLabel(a.status) }}</span>
+            </dd>
           </div>
           <div class="info-row">
             <dt>Payment</dt>
-            <dd><span [class]="paymentClass(a.paymentStatus)">{{ paymentLabel(a.paymentStatus) }}</span></dd>
+            <dd>
+              <span [class]="paymentClass(a.paymentStatus)">{{
+                paymentLabel(a.paymentStatus)
+              }}</span>
+            </dd>
           </div>
         </dl>
       </section>
@@ -142,9 +146,11 @@
                   <span class="pain__scale">/ 10</span>
                 </div>
                 <div class="pain__bar">
-                  <div class="pain__fill"
-                       [style.width.%]="s.painLevel * 10"
-                       [style.background]="painColor(s.painLevel)"></div>
+                  <div
+                    class="pain__fill"
+                    [style.width.%]="s.painLevel * 10"
+                    [style.background]="painColor(s.painLevel)"
+                  ></div>
                 </div>
               </div>
               @if (s.symptomDuration) {
@@ -166,10 +172,7 @@
 
     <!-- ── Action bar ─────────────────────────────────────────────────── -->
     <section class="actions card" [@fadeIn]>
-      <button
-        mat-flat-button
-        class="btn-secondary"
-        (click)="viewPatientRecords()">
+      <button mat-flat-button class="btn-secondary" (click)="viewPatientRecords()">
         <mat-icon>folder_open</mat-icon>
         View Patient Records
       </button>
@@ -180,7 +183,8 @@
         mat-stroked-button
         class="btn-noshow"
         [disabled]="!canMarkNoShow() || acting() !== null"
-        (click)="markNoShow()">
+        (click)="markNoShow()"
+      >
         @if (acting() === 'NoShow') {
           <mat-spinner diameter="16"></mat-spinner>
         } @else {
@@ -193,7 +197,8 @@
         mat-flat-button
         class="btn-complete"
         [disabled]="!canMarkCompleted() || acting() !== null"
-        (click)="markCompleted()">
+        (click)="markCompleted()"
+      >
         @if (acting() === 'Completed') {
           <mat-spinner diameter="16"></mat-spinner>
         } @else {

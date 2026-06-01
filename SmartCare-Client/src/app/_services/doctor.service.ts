@@ -6,7 +6,7 @@ import { Doctor } from '../_models/doctor.model';
 
 export interface BusySlot {
   timeSlot: string; // "HH:mm:ss"
-  endTime: string;  // "HH:mm:ss"
+  endTime: string; // "HH:mm:ss"
 }
 
 @Injectable({ providedIn: 'root' })

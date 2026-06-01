@@ -1,17 +1,17 @@
-$primary:        #1565C0;
-$primary-dark:   #0D47A1;
-$primary-light:  #E3F2FD;
-$accent:         #00897B;
-$accent-light:   #E0F2F1;
-$amber:          #F57C00;
-$amber-light:    #FFF3E0;
-$surface:        #F4F6F9;
-$card-bg:        #ffffff;
-$text-primary:   #1A1A2E;
-$text-secondary: #546E7A;
-$text-muted:     #90A4AE;
-$divider:        #E0E7EF;
-$danger:         #C62828;
+$primary: #1565c0;
+$primary-dark: #0d47a1;
+$primary-light: #e3f2fd;
+$accent: #00897b;
+$accent-light: #e0f2f1;
+$amber: #f57c00;
+$amber-light: #fff3e0;
+$surface: #f4f6f9;
+$card-bg: #ffffff;
+$text-primary: #1a1a2e;
+$text-secondary: #546e7a;
+$text-muted: #90a4ae;
+$divider: #e0e7ef;
+$danger: #c62828;
 
 .book {
   display: flex;
@@ -168,9 +168,13 @@ $danger:         #C62828;
   text-align: left;
   cursor: pointer;
   width: 100%;
-  transition: border-color 160ms ease, background 160ms ease;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease;
 
-  &:hover { border-color: $primary; }
+  &:hover {
+    border-color: $primary;
+  }
 
   &--active {
     border-color: $primary;
@@ -216,7 +220,9 @@ $danger:         #C62828;
     transition: opacity 160ms ease;
   }
 
-  &--active &__check { opacity: 1; }
+  &--active &__check {
+    opacity: 1;
+  }
 }
 
 .empty-inline {
@@ -240,7 +246,9 @@ $danger:         #C62828;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 
-  @media (max-width: 720px) { grid-template-columns: 1fr; }
+  @media (max-width: 720px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .visit-card {
@@ -254,7 +262,10 @@ $danger:         #C62828;
   border-radius: 12px;
   text-align: left;
   cursor: pointer;
-  transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+  transition:
+    border-color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
 
   &:hover {
     border-color: $primary;
@@ -279,7 +290,11 @@ $danger:         #C62828;
     color: $primary;
     margin-bottom: 4px;
 
-    mat-icon { font-size: 24px; width: 24px; height: 24px; }
+    mat-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
   }
 
   &__title {
@@ -303,7 +318,11 @@ $danger:         #C62828;
     font-weight: 600;
     color: $accent;
 
-    mat-icon { font-size: 14px; width: 14px; height: 14px; }
+    mat-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+    }
   }
 }
 
@@ -324,9 +343,13 @@ $danger:         #C62828;
   border-radius: 12px;
   text-align: left;
   cursor: pointer;
-  transition: border-color 160ms ease, background 160ms ease;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease;
 
-  &:hover { border-color: $primary; }
+  &:hover {
+    border-color: $primary;
+  }
 
   &--active {
     border-color: $primary;
@@ -344,7 +367,11 @@ $danger:         #C62828;
     color: $primary;
     flex-shrink: 0;
 
-    mat-icon { font-size: 24px; width: 24px; height: 24px; }
+    mat-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
   }
 
   &__info {
@@ -372,7 +399,9 @@ $danger:         #C62828;
     transition: opacity 160ms ease;
   }
 
-  &--active &__check { opacity: 1; }
+  &--active &__check {
+    opacity: 1;
+  }
 }
 
 // ── Step 4: Datepicker ───────────────────────────────────────────────────
@@ -397,7 +426,11 @@ $danger:         #C62828;
   margin-top: 4px;
   width: fit-content;
 
-  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
 }
 
 // ── Step 5: Time slots ───────────────────────────────────────────────────
@@ -406,7 +439,9 @@ $danger:         #C62828;
   grid-template-columns: repeat(6, 1fr);
   gap: 10px;
 
-  @media (max-width: 720px) { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 720px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .slot {
@@ -432,7 +467,9 @@ $danger:         #C62828;
     color: #ffffff !important;
     border-color: $primary;
 
-    &:hover { background: $primary-dark; }
+    &:hover {
+      background: $primary-dark;
+    }
   }
 
   &--booked,
@@ -475,8 +512,13 @@ $danger:         #C62828;
   height: 10px;
   border-radius: 50%;
 
-  &--available { background: $primary; }
-  &--booked    { background: $divider; border: 1px solid $text-muted; }
+  &--available {
+    background: $primary;
+  }
+  &--booked {
+    background: $divider;
+    border: 1px solid $text-muted;
+  }
 }
 
 // ── Step 6: Summary ──────────────────────────────────────────────────────
@@ -564,19 +606,31 @@ $danger:         #C62828;
   align-items: center;
   gap: 6px;
 
-  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
 
-  &--ghost { color: $text-secondary; }
+  &--ghost {
+    color: $text-secondary;
+  }
 
   &--primary {
     background: $primary;
     color: #ffffff;
 
-    &:not([disabled]):hover { background: $primary-dark; }
-    &[disabled] { opacity: 0.5; }
+    &:not([disabled]):hover {
+      background: $primary-dark;
+    }
+    &[disabled] {
+      opacity: 0.5;
+    }
   }
 }
 
 .btn-spinner {
-  ::ng-deep circle { stroke: #ffffff !important; }
+  ::ng-deep circle {
+    stroke: #ffffff !important;
+  }
 }

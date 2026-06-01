@@ -1,5 +1,4 @@
 <div class="schedule">
-
   <!-- ── Header ───────────────────────────────────────────────────────── -->
   <section class="header card">
     <div class="header__title-block">
@@ -14,7 +13,8 @@
           class="nav__btn"
           (click)="previous()"
           [attr.aria-label]="view() === 'week' ? 'Previous week' : 'Previous day'"
-          matTooltip="Previous">
+          matTooltip="Previous"
+        >
           <mat-icon>chevron_left</mat-icon>
         </button>
         <button type="button" class="nav__today" (click)="today()">Today</button>
@@ -23,7 +23,8 @@
           class="nav__btn"
           (click)="next()"
           [attr.aria-label]="view() === 'week' ? 'Next week' : 'Next day'"
-          matTooltip="Next">
+          matTooltip="Next"
+        >
           <mat-icon>chevron_right</mat-icon>
         </button>
       </div>
@@ -32,7 +33,8 @@
         [value]="view()"
         (change)="setView($event.value)"
         class="view-toggle"
-        hideSingleSelectionIndicator>
+        hideSingleSelectionIndicator
+      >
         <mat-button-toggle value="week">
           <mat-icon>calendar_view_week</mat-icon>
           Week
@@ -64,7 +66,8 @@
             [class.col-head--today]="col.isToday"
             [class.col-head--weekend]="col.isWeekend"
             [disabled]="view() === 'day'"
-            (click)="pickDay(col)">
+            (click)="pickDay(col)"
+          >
             <span class="col-head__weekday">{{ col.weekday }}</span>
             <span class="col-head__day" [class.col-head__day--today]="col.isToday">
               {{ col.day }}
@@ -84,9 +87,7 @@
         </div>
 
         @for (col of columns(); track col.isoDate) {
-          <div class="col"
-               [class.col--today]="col.isToday"
-               [class.col--weekend]="col.isWeekend">
+          <div class="col" [class.col--today]="col.isToday" [class.col--weekend]="col.isWeekend">
             <!-- Hour grid lines -->
             @for (slot of timeSlots; track slot.hour) {
               <div class="col__hour" [style.height.px]="slotPx * 2">
@@ -106,7 +107,8 @@
                 [matTooltip]="blockTooltip(p.appointment)"
                 matTooltipClass="block-tooltip"
                 (click)="open(p.appointment)"
-                [@fadeIn]>
+                [@fadeIn]
+              >
                 <span class="block__time">{{ formatTime(p.appointment.timeSlot) }}</span>
                 <span class="block__name">{{ p.appointment.patientName }}</span>
                 @if (p.height > 50) {

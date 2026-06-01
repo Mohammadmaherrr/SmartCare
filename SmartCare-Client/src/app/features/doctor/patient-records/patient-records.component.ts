@@ -22,11 +22,7 @@ import {
   CreatePrescriptionRequest,
   MedicalRecordService,
 } from '../../../_services/medical-record.service';
-import {
-  LabResult,
-  MedicalRecord,
-  Prescription,
-} from '../../../_models/medical-record.model';
+import { LabResult, MedicalRecord, Prescription } from '../../../_models/medical-record.model';
 import {
   ConfirmDialogComponent,
   ConfirmDialogData,
@@ -63,33 +59,39 @@ type TabKey = 'prescriptions' | 'labs';
     trigger('slideForm', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(-8px)', height: 0 }),
-        animate('260ms cubic-bezier(0.16, 1, 0.3, 1)',
-          style({ opacity: 1, transform: 'translateY(0)', height: '*' })),
+        animate(
+          '260ms cubic-bezier(0.16, 1, 0.3, 1)',
+          style({ opacity: 1, transform: 'translateY(0)', height: '*' }),
+        ),
       ]),
       transition(':leave', [
-        animate('200ms ease-in',
-          style({ opacity: 0, transform: 'translateY(-8px)', height: 0 })),
+        animate('200ms ease-in', style({ opacity: 0, transform: 'translateY(-8px)', height: 0 })),
       ]),
     ]),
     trigger('listItem', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(10px) scale(0.98)' }),
-        animate('300ms cubic-bezier(0.16, 1, 0.3, 1)',
-          style({ opacity: 1, transform: 'translateY(0) scale(1)' })),
+        animate(
+          '300ms cubic-bezier(0.16, 1, 0.3, 1)',
+          style({ opacity: 1, transform: 'translateY(0) scale(1)' }),
+        ),
       ]),
       transition(':leave', [
-        animate('180ms ease-in',
-          style({ opacity: 0, transform: 'translateY(-6px) scale(0.98)' })),
+        animate('180ms ease-in', style({ opacity: 0, transform: 'translateY(-6px) scale(0.98)' })),
       ]),
     ]),
     trigger('listStagger', [
       transition('* => *', [
-        query(':enter', [
-          style({ opacity: 0, transform: 'translateY(8px)' }),
-          stagger(60, [
-            animate('260ms ease-out', style({ opacity: 1, transform: 'translateY(0)' })),
-          ]),
-        ], { optional: true }),
+        query(
+          ':enter',
+          [
+            style({ opacity: 0, transform: 'translateY(8px)' }),
+            stagger(60, [
+              animate('260ms ease-out', style({ opacity: 1, transform: 'translateY(0)' })),
+            ]),
+          ],
+          { optional: true },
+        ),
       ]),
     ]),
   ],
@@ -194,13 +196,16 @@ export class PatientRecordsComponent {
 
     const existing = this.record();
     if (existing) {
-      this.confirm({
-        title: 'Overwrite medical record?',
-        message: `This will replace the existing diagnosis and treatment plan for ${this.patientName()}. The previous values cannot be recovered. Continue?`,
-        confirmLabel: 'Save changes',
-        cancelLabel: 'Cancel',
-        tone: 'default',
-      }, () => this.persistRecord(existing));
+      this.confirm(
+        {
+          title: 'Overwrite medical record?',
+          message: `This will replace the existing diagnosis and treatment plan for ${this.patientName()}. The previous values cannot be recovered. Continue?`,
+          confirmLabel: 'Save changes',
+          cancelLabel: 'Cancel',
+          tone: 'default',
+        },
+        () => this.persistRecord(existing),
+      );
       return;
     }
 
@@ -220,7 +225,7 @@ export class PatientRecordsComponent {
       : this.medicalRecords.createRecord(this.patientId(), body);
 
     obs.subscribe({
-      next: rec => {
+      next: (rec) => {
         const wasCreate = !existing;
         this.record.set(rec);
         this.editingRecord.set(false);
@@ -238,7 +243,9 @@ export class PatientRecordsComponent {
     this.dialog
       .open(ConfirmDialogComponent, { data, width: '440px', autoFocus: false })
       .afterClosed()
-      .subscribe(ok => { if (ok) onConfirm(); });
+      .subscribe((ok) => {
+        if (ok) onConfirm();
+      });
   }
 
   protected togglePrescriptionForm(): void {
@@ -246,7 +253,7 @@ export class PatientRecordsComponent {
       this.toastr.info('Create a medical record before adding prescriptions');
       return;
     }
-    this.showPrescriptionForm.update(v => !v);
+    this.showPrescriptionForm.update((v) => !v);
     if (this.showPrescriptionForm()) {
       this.prescriptionForm.reset({
         medicationName: '',
@@ -275,8 +282,8 @@ export class PatientRecordsComponent {
 
     this.savingPrescription.set(true);
     this.medicalRecords.addPrescription(rec.id, body).subscribe({
-      next: created => {
-        this.prescriptions.update(list =>
+      next: (created) => {
+        this.prescriptions.update((list) =>
           [created, ...list].sort((a, b) => b.issueDate.localeCompare(a.issueDate)),
         );
         this.showPrescriptionForm.set(false);
@@ -288,7 +295,7 @@ export class PatientRecordsComponent {
   }
 
   protected toggleLabForm(): void {
-    this.showLabForm.update(v => !v);
+    this.showLabForm.update((v) => !v);
     if (this.showLabForm()) {
       this.labForm.reset({
         testName: '',
@@ -314,8 +321,8 @@ export class PatientRecordsComponent {
 
     this.savingLab.set(true);
     this.medicalRecords.addLabResult(this.patientId(), body).subscribe({
-      next: created => {
-        this.labs.update(list =>
+      next: (created) => {
+        this.labs.update((list) =>
           [created, ...list].sort((a, b) => b.resultDate.localeCompare(a.resultDate)),
         );
         this.showLabForm.set(false);
@@ -328,57 +335,61 @@ export class PatientRecordsComponent {
 
   protected formatDateTime(value: string): string {
     return new Date(value).toLocaleString('en-US', {
-      month: 'short', day: 'numeric', year: 'numeric',
-      hour: 'numeric', minute: '2-digit',
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
     });
   }
 
   protected formatDate(value: string): string {
     const [y, m, d] = value.split('-').map(Number);
     return new Date(y, m - 1, d).toLocaleDateString('en-US', {
-      month: 'short', day: 'numeric', year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
     });
   }
 
   private loadAll(): void {
     this.loading.set(true);
-    this.medicalRecords.getRecord(this.patientId()).pipe(
-      catchError(() => of(null)),
-    ).subscribe(rec => {
-      this.record.set(rec);
-      this.loading.set(false);
-      if (rec) {
-        this.loadPrescriptions(rec.id);
-      } else {
-        this.editingRecord.set(true);
-      }
-      this.loadLabs();
-    });
+    this.medicalRecords
+      .getRecord(this.patientId())
+      .pipe(catchError(() => of(null)))
+      .subscribe((rec) => {
+        this.record.set(rec);
+        this.loading.set(false);
+        if (rec) {
+          this.loadPrescriptions(rec.id);
+        } else {
+          this.editingRecord.set(true);
+        }
+        this.loadLabs();
+      });
   }
 
   private loadPrescriptions(recordId: string): void {
     this.prescriptionsLoading.set(true);
-    this.medicalRecords.getPrescriptions(recordId).pipe(
-      catchError(() => of([] as Prescription[])),
-    ).subscribe(list => {
-      this.prescriptions.set([...list].sort(
-        (a, b) => b.issueDate.localeCompare(a.issueDate),
-      ));
-      this.prescriptionsLoading.set(false);
-      this.prescriptionsLoaded.set(true);
-    });
+    this.medicalRecords
+      .getPrescriptions(recordId)
+      .pipe(catchError(() => of([] as Prescription[])))
+      .subscribe((list) => {
+        this.prescriptions.set([...list].sort((a, b) => b.issueDate.localeCompare(a.issueDate)));
+        this.prescriptionsLoading.set(false);
+        this.prescriptionsLoaded.set(true);
+      });
   }
 
   private loadLabs(): void {
     this.labsLoading.set(true);
-    this.medicalRecords.getLabResults(this.patientId()).pipe(
-      catchError(() => of([] as LabResult[])),
-    ).subscribe(list => {
-      this.labs.set([...list].sort(
-        (a, b) => b.resultDate.localeCompare(a.resultDate),
-      ));
-      this.labsLoading.set(false);
-    });
+    this.medicalRecords
+      .getLabResults(this.patientId())
+      .pipe(catchError(() => of([] as LabResult[])))
+      .subscribe((list) => {
+        this.labs.set([...list].sort((a, b) => b.resultDate.localeCompare(a.resultDate)));
+        this.labsLoading.set(false);
+      });
   }
 
   private notInFuture(control: { value: Date | null }) {
@@ -432,7 +443,8 @@ export class PatientRecordsComponent {
 
     const groups: { label: string; items: Prescription[]; recent: boolean }[] = [];
     if (recent.length) groups.push({ label: 'Recent (last 30 days)', items: recent, recent: true });
-    if (lastQuarter.length) groups.push({ label: 'Last 90 days', items: lastQuarter, recent: false });
+    if (lastQuarter.length)
+      groups.push({ label: 'Last 90 days', items: lastQuarter, recent: false });
     if (older.length) groups.push({ label: 'Older', items: older, recent: false });
     return groups;
   }

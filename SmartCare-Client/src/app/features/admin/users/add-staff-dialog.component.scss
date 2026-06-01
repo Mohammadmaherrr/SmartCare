@@ -1,7 +1,7 @@
-$primary:        #1565C0;
-$primary-dark:   #0D47A1;
-$text-primary:   #1A1A2E;
-$text-secondary: #546E7A;
+$primary: #1565c0;
+$primary-dark: #0d47a1;
+$text-primary: #1a1a2e;
+$text-secondary: #546e7a;
 
 .dlg {
   display: flex;
@@ -57,14 +57,24 @@ $text-secondary: #546E7A;
   align-items: center;
   gap: 6px;
 
-  &:not([disabled]):hover { background: $primary-dark; }
-  &[disabled] { opacity: .55; }
+  &:not([disabled]):hover {
+    background: $primary-dark;
+  }
+  &[disabled] {
+    opacity: 0.55;
+  }
 
-  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
 }
 
 .btn-spinner {
-  ::ng-deep circle { stroke: #fff !important; }
+  ::ng-deep circle {
+    stroke: #fff !important;
+  }
 }
 
 .role-note {
@@ -72,6 +82,6 @@ $text-secondary: #546E7A;
   font-size: 13px;
   color: $text-secondary;
   padding: 12px 14px;
-  background: #F4F6F9;
+  background: #f4f6f9;
   border-radius: 10px;
 }

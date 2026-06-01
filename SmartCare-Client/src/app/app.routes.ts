@@ -10,13 +10,13 @@ export const routes: Routes = [
     path: 'login',
     canActivate: [guestGuard],
     loadComponent: () =>
-      import('./features/auth/login/login.component').then(m => m.LoginComponent),
+      import('./features/auth/login/login.component').then((m) => m.LoginComponent),
   },
   {
     path: 'register',
     canActivate: [guestGuard],
     loadComponent: () =>
-      import('./features/auth/register/register.component').then(m => m.RegisterComponent),
+      import('./features/auth/register/register.component').then((m) => m.RegisterComponent),
   },
 
   // ── Patient ─────────────────────────────────────────────────────────
@@ -25,8 +25,7 @@ export const routes: Routes = [
     component: MainLayoutComponent,
     canActivate: [authGuard, roleGuard],
     data: { roles: ['Patient'] },
-    loadChildren: () =>
-      import('./features/patient/patient.routes').then(m => m.PATIENT_ROUTES),
+    loadChildren: () => import('./features/patient/patient.routes').then((m) => m.PATIENT_ROUTES),
   },
 
   // ── Doctor ──────────────────────────────────────────────────────────
@@ -35,8 +34,7 @@ export const routes: Routes = [
     component: MainLayoutComponent,
     canActivate: [authGuard, roleGuard],
     data: { roles: ['Doctor'] },
-    loadChildren: () =>
-      import('./features/doctor/doctor.routes').then(m => m.DOCTOR_ROUTES),
+    loadChildren: () => import('./features/doctor/doctor.routes').then((m) => m.DOCTOR_ROUTES),
   },
 
   // ── Receptionist ─────────────────────────────────────────────────────
@@ -46,7 +44,7 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard],
     data: { roles: ['Receptionist'] },
     loadChildren: () =>
-      import('./features/receptionist/receptionist.routes').then(m => m.RECEPTIONIST_ROUTES),
+      import('./features/receptionist/receptionist.routes').then((m) => m.RECEPTIONIST_ROUTES),
   },
 
   // ── Admin ────────────────────────────────────────────────────────────
@@ -55,8 +53,7 @@ export const routes: Routes = [
     component: MainLayoutComponent,
     canActivate: [authGuard, roleGuard],
     data: { roles: ['Admin'] },
-    loadChildren: () =>
-      import('./features/admin/admin.routes').then(m => m.ADMIN_ROUTES),
+    loadChildren: () => import('./features/admin/admin.routes').then((m) => m.ADMIN_ROUTES),
   },
 
   // ── Fallback ─────────────────────────────────────────────────────────

@@ -1,19 +1,19 @@
-$primary:        #1565C0;
-$primary-dark:   #0D47A1;
-$primary-light:  #E3F2FD;
-$accent:         #00897B;
-$accent-light:   #E0F2F1;
-$amber:          #F57C00;
-$amber-light:    #FFF3E0;
-$danger:         #C62828;
-$gray:           #607D8B;
-$gray-light:     #ECEFF1;
-$surface:        #F4F6F9;
-$card-bg:        #ffffff;
-$text-primary:   #1A1A2E;
-$text-secondary: #546E7A;
-$text-muted:     #90A4AE;
-$divider:        #E0E7EF;
+$primary: #1565c0;
+$primary-dark: #0d47a1;
+$primary-light: #e3f2fd;
+$accent: #00897b;
+$accent-light: #e0f2f1;
+$amber: #f57c00;
+$amber-light: #fff3e0;
+$danger: #c62828;
+$gray: #607d8b;
+$gray-light: #eceff1;
+$surface: #f4f6f9;
+$card-bg: #ffffff;
+$text-primary: #1a1a2e;
+$text-secondary: #546e7a;
+$text-muted: #90a4ae;
+$divider: #e0e7ef;
 
 .page {
   padding: 28px;
@@ -42,9 +42,16 @@ $divider:        #E0E7EF;
   cursor: pointer;
   padding: 6px 10px;
   border-radius: 8px;
-  transition: background .14s, color .14s, gap .14s;
+  transition:
+    background 0.14s,
+    color 0.14s,
+    gap 0.14s;
 
-  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
 
   &:hover {
     background: $primary-light;
@@ -347,9 +354,17 @@ $divider:        #E0E7EF;
     gap: 12px;
     flex-wrap: wrap;
 
-    .grow-1 { flex: 1; min-width: 200px; }
-    .grow-2 { flex: 2; min-width: 240px; }
-    .full   { flex: 1 1 100%; }
+    .grow-1 {
+      flex: 1;
+      min-width: 200px;
+    }
+    .grow-2 {
+      flex: 2;
+      min-width: 240px;
+    }
+    .full {
+      flex: 1 1 100%;
+    }
   }
 
   &__actions {
@@ -366,7 +381,10 @@ $divider:        #E0E7EF;
     }
   }
 
-  .full   { flex: 1 1 100%; width: 100%; }
+  .full {
+    flex: 1 1 100%;
+    width: 100%;
+  }
 }
 
 ::ng-deep .mat-mdc-form-field {
@@ -377,7 +395,9 @@ $divider:        #E0E7EF;
 .rx-group {
   margin-bottom: 22px;
 
-  &:last-child { margin-bottom: 0; }
+  &:last-child {
+    margin-bottom: 0;
+  }
 
   &__label {
     margin: 0 0 12px;
@@ -403,7 +423,10 @@ $divider:        #E0E7EF;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
 
   &:hover {
     transform: translateY(-2px);
@@ -432,7 +455,11 @@ $divider:        #E0E7EF;
     justify-content: center;
     flex-shrink: 0;
 
-    mat-icon { font-size: 20px; width: 20px; height: 20px; }
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
   }
 
   &__title {
@@ -502,7 +529,9 @@ $divider:        #E0E7EF;
   display: block;
   margin-bottom: 16px;
 
-  &:last-child { margin-bottom: 0; }
+  &:last-child {
+    margin-bottom: 0;
+  }
 
   ::ng-deep .mat-expansion-panel {
     background: transparent;
@@ -555,7 +584,10 @@ $divider:        #E0E7EF;
   grid-template-columns: 40px 1fr auto;
   gap: 14px;
   align-items: center;
-  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
 
   &:hover {
     transform: translateY(-1px);
@@ -573,7 +605,11 @@ $divider:        #E0E7EF;
     align-items: center;
     justify-content: center;
 
-    mat-icon { font-size: 20px; width: 20px; height: 20px; }
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
   }
 
   &__body {
@@ -652,8 +688,12 @@ $divider:        #E0E7EF;
 
 // ── Skeleton loaders ─────────────────────────────────────────────────────
 @keyframes shimmer {
-  0%   { background-position: -480px 0; }
-  100% { background-position: 480px 0; }
+  0% {
+    background-position: -480px 0;
+  }
+  100% {
+    background-position: 480px 0;
+  }
 }
 
 .skeleton--cards {
@@ -675,15 +715,15 @@ $divider:        #E0E7EF;
 .sk-line {
   height: 12px;
   border-radius: 6px;
-  background: linear-gradient(
-    90deg,
-    $gray-light 0%,
-    #F5F7FA 50%,
-    $gray-light 100%
-  );
+  background: linear-gradient(90deg, $gray-light 0%, #f5f7fa 50%, $gray-light 100%);
   background-size: 960px 100%;
   animation: shimmer 1.4s linear infinite;
 
-  &--title { height: 16px; width: 60%; }
-  &--short { width: 45%; }
+  &--title {
+    height: 16px;
+    width: 60%;
+  }
+  &--short {
+    width: 45%;
+  }
 }

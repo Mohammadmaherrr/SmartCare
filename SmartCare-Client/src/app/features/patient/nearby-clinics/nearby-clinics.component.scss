@@ -1,18 +1,18 @@
 // ── Design tokens ────────────────────────────────────────────────────────
-$primary:        #1565C0;
-$primary-dark:   #0D47A1;
-$primary-light:  #E3F2FD;
-$accent:         #00897B;
-$accent-light:   #E0F2F1;
-$amber:          #F57C00;
-$amber-light:    #FFF3E0;
-$sos:            #C62828;
-$surface:        #F4F6F9;
-$card-bg:        #ffffff;
-$text-primary:   #1A1A2E;
-$text-secondary: #546E7A;
-$text-muted:     #90A4AE;
-$divider:        #E0E7EF;
+$primary: #1565c0;
+$primary-dark: #0d47a1;
+$primary-light: #e3f2fd;
+$accent: #00897b;
+$accent-light: #e0f2f1;
+$amber: #f57c00;
+$amber-light: #fff3e0;
+$sos: #c62828;
+$surface: #f4f6f9;
+$card-bg: #ffffff;
+$text-primary: #1a1a2e;
+$text-secondary: #546e7a;
+$text-muted: #90a4ae;
+$divider: #e0e7ef;
 
 // ── Layout ───────────────────────────────────────────────────────────────
 .nearby {
@@ -33,7 +33,11 @@ $divider:        #E0E7EF;
   gap: 16px;
 }
 
-.nearby__title-block { display: flex; flex-direction: column; gap: 4px; }
+.nearby__title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
 
 .nearby__title {
   display: flex;
@@ -68,7 +72,11 @@ $divider:        #E0E7EF;
   align-items: center;
   gap: 6px;
 
-  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
 }
 
 // ── Banner ───────────────────────────────────────────────────────────────
@@ -89,9 +97,21 @@ $divider:        #E0E7EF;
     flex-shrink: 0;
   }
 
-  &__body { flex: 1; display: flex; flex-direction: column; gap: 2px; }
-  &__title { font-size: 13.5px; font-weight: 600; color: $text-primary; }
-  &__sub { font-size: 12.5px; color: $text-secondary; }
+  &__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  &__title {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: $text-primary;
+  }
+  &__sub {
+    font-size: 12.5px;
+    color: $text-secondary;
+  }
 
   &__action {
     height: 36px;
@@ -101,7 +121,11 @@ $divider:        #E0E7EF;
     align-items: center;
     gap: 6px;
 
-    mat-icon { font-size: 17px; width: 17px; height: 17px; }
+    mat-icon {
+      font-size: 17px;
+      width: 17px;
+      height: 17px;
+    }
   }
 }
 
@@ -136,8 +160,16 @@ $divider:        #E0E7EF;
     margin-bottom: 6px;
   }
 
-  h3 { margin: 0; font-size: 16px; color: $text-primary; }
-  p { margin: 0 0 14px; color: $text-secondary; font-size: 13.5px; }
+  h3 {
+    margin: 0;
+    font-size: 16px;
+    color: $text-primary;
+  }
+  p {
+    margin: 0 0 14px;
+    color: $text-secondary;
+    font-size: 13.5px;
+  }
 }
 
 // ── Split layout ─────────────────────────────────────────────────────────
@@ -171,8 +203,13 @@ $divider:        #E0E7EF;
   padding-right: 4px;
   min-height: 0;
 
-  &::-webkit-scrollbar { width: 6px; }
-  &::-webkit-scrollbar-thumb { background: $divider; border-radius: 3px; }
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $divider;
+    border-radius: 3px;
+  }
 }
 
 // ── Clinic card ──────────────────────────────────────────────────────────
@@ -185,9 +222,10 @@ $divider:        #E0E7EF;
     0 4px 16px -4px rgba(21, 101, 192, 0.06);
   border: 2px solid transparent;
   cursor: pointer;
-  transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 180ms ease,
-              box-shadow 200ms ease;
+  transition:
+    transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 180ms ease,
+    box-shadow 200ms ease;
 
   &:hover {
     transform: translateY(-2px);
@@ -270,9 +308,15 @@ $divider:        #E0E7EF;
   align-items: center;
   gap: 6px;
 
-  mat-icon { font-size: 17px; width: 17px; height: 17px; }
+  mat-icon {
+    font-size: 17px;
+    width: 17px;
+    height: 17px;
+  }
 
-  &:hover { background: $primary-dark; }
+  &:hover {
+    background: $primary-dark;
+  }
 }
 
 // ── Empty ────────────────────────────────────────────────────────────────
@@ -296,6 +340,15 @@ $divider:        #E0E7EF;
     opacity: 0.7;
   }
 
-  h3 { margin: 0; font-size: 14px; font-weight: 600; color: $text-primary; }
-  p  { margin: 0; font-size: 12.5px; color: $text-secondary; }
+  h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: $text-primary;
+  }
+  p {
+    margin: 0;
+    font-size: 12.5px;
+    color: $text-secondary;
+  }
 }

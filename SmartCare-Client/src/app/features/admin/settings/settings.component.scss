@@ -1,20 +1,20 @@
-$primary:        #1565C0;
-$primary-dark:   #0D47A1;
-$primary-light:  #E3F2FD;
-$accent:         #00897B;
-$accent-light:   #E0F2F1;
-$amber:          #F57C00;
-$amber-light:    #FFF3E0;
-$danger:         #C62828;
-$danger-light:   #FFEBEE;
-$success:        #2E7D32;
-$success-light:  #E8F5E9;
-$surface:        #F4F6F9;
-$card-bg:        #ffffff;
-$text-primary:   #1A1A2E;
-$text-secondary: #546E7A;
-$text-muted:     #90A4AE;
-$divider:        #E0E7EF;
+$primary: #1565c0;
+$primary-dark: #0d47a1;
+$primary-light: #e3f2fd;
+$accent: #00897b;
+$accent-light: #e0f2f1;
+$amber: #f57c00;
+$amber-light: #fff3e0;
+$danger: #c62828;
+$danger-light: #ffebee;
+$success: #2e7d32;
+$success-light: #e8f5e9;
+$surface: #f4f6f9;
+$card-bg: #ffffff;
+$text-primary: #1a1a2e;
+$text-secondary: #546e7a;
+$text-muted: #90a4ae;
+$divider: #e0e7ef;
 
 .page {
   padding: 28px;
@@ -115,11 +115,24 @@ $divider:        #E0E7EF;
     justify-content: center;
     flex-shrink: 0;
 
-    mat-icon { font-size: 24px; width: 24px; height: 24px; }
+    mat-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
 
-    &--primary { background: $primary-light; color: $primary; }
-    &--accent  { background: $accent-light;  color: $accent; }
-    &--amber   { background: $amber-light;   color: $amber; }
+    &--primary {
+      background: $primary-light;
+      color: $primary;
+    }
+    &--accent {
+      background: $accent-light;
+      color: $accent;
+    }
+    &--amber {
+      background: $amber-light;
+      color: $amber;
+    }
   }
 
   &__title {
@@ -150,7 +163,9 @@ $divider:        #E0E7EF;
   padding: 18px 4px;
   border-bottom: 1px solid $divider;
 
-  &:last-child { border-bottom: none; }
+  &:last-child {
+    border-bottom: none;
+  }
 
   &__info {
     flex: 1;
@@ -235,7 +250,9 @@ $divider:        #E0E7EF;
 .save-btn {
   color: $success;
 
-  &[disabled] { color: $text-muted; }
+  &[disabled] {
+    color: $text-muted;
+  }
 }
 
 .cancel-btn {
@@ -254,5 +271,7 @@ $divider:        #E0E7EF;
     }
   }
 
-  .edit-field { width: 100%; }
+  .edit-field {
+    width: 100%;
+  }
 }

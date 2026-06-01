@@ -41,11 +41,15 @@ export class AdminService {
   }
 
   getAppointmentReport(startDate?: string, endDate?: string): Observable<AppointmentReport> {
-    return this.api.get<AppointmentReport>(this.withRange('admin/reports/appointments', startDate, endDate));
+    return this.api.get<AppointmentReport>(
+      this.withRange('admin/reports/appointments', startDate, endDate),
+    );
   }
 
   getVisitFrequencyReport(startDate?: string, endDate?: string): Observable<VisitFrequencyReport> {
-    return this.api.get<VisitFrequencyReport>(this.withRange('admin/reports/visits', startDate, endDate));
+    return this.api.get<VisitFrequencyReport>(
+      this.withRange('admin/reports/visits', startDate, endDate),
+    );
   }
 
   private withRange(path: string, startDate?: string, endDate?: string): string {

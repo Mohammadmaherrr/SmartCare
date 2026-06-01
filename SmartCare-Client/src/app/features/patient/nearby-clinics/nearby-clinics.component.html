@@ -1,5 +1,4 @@
 <section class="nearby" @panelEnter>
-
   <!-- ── Header ─────────────────────────────────────────────────────── -->
   <header class="nearby__header">
     <div class="nearby__title-block">
@@ -23,7 +22,8 @@
       class="nearby__refresh"
       (click)="refresh()"
       [disabled]="phase() === 'locating' || phase() === 'loading'"
-      matTooltip="Refresh nearby clinics">
+      matTooltip="Refresh nearby clinics"
+    >
       <mat-icon>refresh</mat-icon>
       <span>Refresh</span>
     </button>
@@ -49,8 +49,11 @@
     <div class="nearby__loading">
       <mat-spinner diameter="36" strokeWidth="3"></mat-spinner>
       <p>
-        @if (phase() === 'locating') { Getting your location… }
-        @else { Loading nearby clinics… }
+        @if (phase() === 'locating') {
+          Getting your location…
+        } @else {
+          Loading nearby clinics…
+        }
       </p>
     </div>
   }
@@ -71,13 +74,13 @@
   <!-- ── Ready ──────────────────────────────────────────────────────── -->
   @if (phase() === 'ready') {
     <div class="nearby__layout">
-
       <div class="nearby__map">
         <app-map-view
           [clinics]="sortedClinics()"
           [patientCoords]="coords()"
           [selectedClinicId]="selectedId()"
-          (clinicSelect)="onClinicSelect($event)" />
+          (clinicSelect)="onClinicSelect($event)"
+        />
       </div>
 
       <aside class="nearby__list" @listStagger>
@@ -88,8 +91,8 @@
               class="clinic-card"
               [class.clinic-card--active]="selectedId() === clinic.id"
               [attr.data-clinic-id]="clinic.id"
-              (click)="selectFromList(clinic)">
-
+              (click)="selectFromList(clinic)"
+            >
               <header class="clinic-card__top">
                 <h3 class="clinic-card__name">{{ clinic.name }}</h3>
                 <span class="clinic-card__distance">{{ clinic.distanceKm.toFixed(1) }} km</span>
@@ -118,7 +121,8 @@
                 <button
                   mat-flat-button
                   class="directions-btn"
-                  (click)="getDirections(clinic, $event)">
+                  (click)="getDirections(clinic, $event)"
+                >
                   <mat-icon>directions</mat-icon>
                   <span>Get Directions</span>
                 </button>
@@ -135,5 +139,4 @@
       </aside>
     </div>
   }
-
 </section>

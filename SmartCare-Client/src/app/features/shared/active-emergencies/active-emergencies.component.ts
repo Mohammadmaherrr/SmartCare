@@ -1,10 +1,4 @@
-import {
-  Component,
-  DestroyRef,
-  computed,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,11 +10,7 @@ import { animate, query, stagger, style, transition, trigger } from '@angular/an
 import { interval, startWith, switchMap } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { EmergencyService } from '../../../_services/emergency.service';
-import {
-  ActiveEmergency,
-  EmergencyStatus,
-  NearbyClinic,
-} from '../../../_models/emergency.model';
+import { ActiveEmergency, EmergencyStatus, NearbyClinic } from '../../../_models/emergency.model';
 import { Coordinates } from '../../../_services/geolocation.service';
 import { MapViewComponent } from '../../../shared/map/map-view.component';
 import {
@@ -47,18 +37,28 @@ const REFRESH_MS = 30_000;
   animations: [
     trigger('listStagger', [
       transition('* => *', [
-        query(':enter', [
-          style({ opacity: 0, transform: 'translateY(8px)' }),
-          stagger(40, [
-            animate('220ms cubic-bezier(0.16, 1, 0.3, 1)', style({ opacity: 1, transform: 'translateY(0)' })),
-          ]),
-        ], { optional: true }),
+        query(
+          ':enter',
+          [
+            style({ opacity: 0, transform: 'translateY(8px)' }),
+            stagger(40, [
+              animate(
+                '220ms cubic-bezier(0.16, 1, 0.3, 1)',
+                style({ opacity: 1, transform: 'translateY(0)' }),
+              ),
+            ]),
+          ],
+          { optional: true },
+        ),
       ]),
     ]),
     trigger('detailFade', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(8px)' }),
-        animate('260ms cubic-bezier(0.16, 1, 0.3, 1)', style({ opacity: 1, transform: 'translateY(0)' })),
+        animate(
+          '260ms cubic-bezier(0.16, 1, 0.3, 1)',
+          style({ opacity: 1, transform: 'translateY(0)' }),
+        ),
       ]),
     ]),
   ],
@@ -79,7 +79,7 @@ export class ActiveEmergenciesComponent {
 
   protected selected = computed<ActiveEmergency | null>(() => {
     const id = this.selectedId();
-    return id ? this.items().find(e => e.requestId === id) ?? null : null;
+    return id ? (this.items().find((e) => e.requestId === id) ?? null) : null;
   });
 
   protected selectedCoords = computed<Coordinates | null>(() => {
@@ -89,15 +89,15 @@ export class ActiveEmergenciesComponent {
 
   protected selectedClinics = computed<NearbyClinic[]>(() => {
     const id = this.selectedId();
-    return id ? this.clinicsById()[id] ?? [] : [];
+    return id ? (this.clinicsById()[id] ?? []) : [];
   });
 
   protected stats = computed(() => {
     const list = this.items();
     return {
       total: list.length,
-      pending: list.filter(e => e.status === 'Pending').length,
-      dispatched: list.filter(e => e.status === 'Dispatched').length,
+      pending: list.filter((e) => e.status === 'Pending').length,
+      dispatched: list.filter((e) => e.status === 'Dispatched').length,
     };
   });
 
@@ -113,13 +113,13 @@ export class ActiveEmergenciesComponent {
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
-        next: list => {
+        next: (list) => {
           this.items.set(list);
           this.loading.set(false);
           this.refreshing.set(false);
           this.lastUpdated.set(new Date());
 
-          if (this.selectedId() && !list.some(e => e.requestId === this.selectedId())) {
+          if (this.selectedId() && !list.some((e) => e.requestId === this.selectedId())) {
             this.selectedId.set(null);
           }
         },
@@ -153,10 +153,10 @@ export class ActiveEmergenciesComponent {
     if (isNaN(d.getTime())) return '';
     const diffMs = Date.now() - d.getTime();
     const mins = Math.floor(diffMs / 60_000);
-    if (mins < 1)  return 'just now';
+    if (mins < 1) return 'just now';
     if (mins < 60) return `${mins} min ago`;
     const hrs = Math.floor(mins / 60);
-    if (hrs < 24)  return `${hrs} hr ago`;
+    if (hrs < 24) return `${hrs} hr ago`;
     const days = Math.floor(hrs / 24);
     return `${days} day${days === 1 ? '' : 's'} ago`;
   }
@@ -182,7 +182,9 @@ export class ActiveEmergenciesComponent {
     this.dialog
       .open(ConfirmDialogComponent, { data, width: '440px', autoFocus: false })
       .afterClosed()
-      .subscribe(ok => { if (ok) this.changeStatus(e, 'Dispatched'); });
+      .subscribe((ok) => {
+        if (ok) this.changeStatus(e, 'Dispatched');
+      });
   }
 
   protected confirmResolve(e: ActiveEmergency): void {
@@ -196,7 +198,9 @@ export class ActiveEmergenciesComponent {
     this.dialog
       .open(ConfirmDialogComponent, { data, width: '440px', autoFocus: false })
       .afterClosed()
-      .subscribe(ok => { if (ok) this.changeStatus(e, 'Resolved'); });
+      .subscribe((ok) => {
+        if (ok) this.changeStatus(e, 'Resolved');
+      });
   }
 
   private changeStatus(e: ActiveEmergency, newStatus: EmergencyStatus): void {
@@ -204,17 +208,17 @@ export class ActiveEmergenciesComponent {
     this.acting.set(e.requestId);
 
     this.emergency.updateStatus(e.requestId, newStatus).subscribe({
-      next: response => {
+      next: (response) => {
         if (newStatus === 'Resolved') {
-          this.items.update(list => list.filter(x => x.requestId !== e.requestId));
+          this.items.update((list) => list.filter((x) => x.requestId !== e.requestId));
           if (this.selectedId() === e.requestId) this.selectedId.set(null);
           this.toastr.success(`${e.patientName}'s emergency resolved`);
         } else {
-          this.items.update(list => list.map(x =>
-            x.requestId === e.requestId ? { ...x, status: newStatus } : x,
-          ));
+          this.items.update((list) =>
+            list.map((x) => (x.requestId === e.requestId ? { ...x, status: newStatus } : x)),
+          );
           if (response.nearbyClinics?.length) {
-            this.clinicsById.update(m => ({ ...m, [e.requestId]: response.nearbyClinics }));
+            this.clinicsById.update((m) => ({ ...m, [e.requestId]: response.nearbyClinics }));
           }
           this.toastr.success(`Dispatched help to ${e.patientName}`);
         }

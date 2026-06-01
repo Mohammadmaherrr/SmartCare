@@ -1,12 +1,11 @@
 <div class="dashboard" [@stagger]="loading() ? 'loading' : 'ready'">
-
   <!-- Greeting -->
   <section class="greeting card stagger-item">
     <div class="greeting__text">
       <h1 class="greeting__title">{{ greeting() }}, {{ firstName() }}</h1>
       <p class="greeting__date">
         <mat-icon>calendar_today</mat-icon>
-        {{ today | date:'EEEE, MMMM d, y' }}
+        {{ today | date: 'EEEE, MMMM d, y' }}
       </p>
     </div>
     <div class="greeting__avatar" aria-hidden="true">
@@ -54,5 +53,4 @@
       }
     </div>
   </section>
-
 </div>

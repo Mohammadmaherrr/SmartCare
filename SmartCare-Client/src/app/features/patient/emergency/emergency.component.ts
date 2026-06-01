@@ -6,9 +6,16 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { animate, query, stagger, style, transition, trigger } from '@angular/animations';
-import { ConfirmDialogComponent, ConfirmDialogData } from '../../../shared/confirm-dialog/confirm-dialog.component';
+import {
+  ConfirmDialogComponent,
+  ConfirmDialogData,
+} from '../../../shared/confirm-dialog/confirm-dialog.component';
 import { EmergencyService } from '../../../_services/emergency.service';
-import { Coordinates, GeolocationFailure, GeolocationService } from '../../../_services/geolocation.service';
+import {
+  Coordinates,
+  GeolocationFailure,
+  GeolocationService,
+} from '../../../_services/geolocation.service';
 import { EmergencyRequest, NearbyClinic } from '../../../_models/emergency.model';
 import { MapViewComponent } from '../../../shared/map/map-view.component';
 
@@ -24,30 +31,34 @@ type Phase =
 @Component({
   selector: 'app-emergency',
   standalone: true,
-  imports: [
-    DatePipe,
-    MatButtonModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-    MapViewComponent,
-  ],
+  imports: [DatePipe, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MapViewComponent],
   templateUrl: './emergency.component.html',
   styleUrl: './emergency.component.scss',
   animations: [
     trigger('phaseEnter', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(14px)' }),
-        animate('360ms cubic-bezier(0.16, 1, 0.3, 1)', style({ opacity: 1, transform: 'translateY(0)' })),
+        animate(
+          '360ms cubic-bezier(0.16, 1, 0.3, 1)',
+          style({ opacity: 1, transform: 'translateY(0)' }),
+        ),
       ]),
     ]),
     trigger('clinicStagger', [
       transition(':enter', [
-        query('.clinic-item', [
-          style({ opacity: 0, transform: 'translateX(12px)' }),
-          stagger(80, [
-            animate('300ms cubic-bezier(0.16, 1, 0.3, 1)', style({ opacity: 1, transform: 'translateX(0)' })),
-          ]),
-        ], { optional: true }),
+        query(
+          '.clinic-item',
+          [
+            style({ opacity: 0, transform: 'translateX(12px)' }),
+            stagger(80, [
+              animate(
+                '300ms cubic-bezier(0.16, 1, 0.3, 1)',
+                style({ opacity: 1, transform: 'translateX(0)' }),
+              ),
+            ]),
+          ],
+          { optional: true },
+        ),
       ]),
     ]),
   ],
@@ -104,11 +115,11 @@ export class EmergencyComponent {
       cancelLabel: 'Cancel',
       tone: 'danger',
     };
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       this.dialog
         .open(ConfirmDialogComponent, { data, width: '420px', disableClose: false })
         .afterClosed()
-        .subscribe(result => resolve(Boolean(result)));
+        .subscribe((result) => resolve(Boolean(result)));
     });
   }
 
@@ -133,7 +144,7 @@ export class EmergencyComponent {
     this.networkMessage.set(null);
 
     this.emergency.createEmergencyRequest(coords.lat, coords.lng).subscribe({
-      next: response => {
+      next: (response) => {
         this.result.set(response);
         this.phase.set('success');
       },
@@ -141,9 +152,10 @@ export class EmergencyComponent {
         if (err.status === 409) {
           this.phase.set('error-conflict');
         } else {
-          const fallback = err.status === 0
-            ? 'Could not reach the server. Check your internet connection.'
-            : 'Something went wrong while sending your alert.';
+          const fallback =
+            err.status === 0
+              ? 'Could not reach the server. Check your internet connection.'
+              : 'Something went wrong while sending your alert.';
           this.networkMessage.set(fallback);
           this.phase.set('error-network');
         }

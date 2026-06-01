@@ -11,10 +11,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { ToastrService } from 'ngx-toastr';
-import {
-  AppointmentService,
-  VISIT_TYPE_DURATIONS,
-} from '../../../_services/appointment.service';
+import { AppointmentService, VISIT_TYPE_DURATIONS } from '../../../_services/appointment.service';
 import { BusySlot, DoctorService } from '../../../_services/doctor.service';
 import { VisitType } from '../../../_models/appointment.model';
 
@@ -56,13 +53,13 @@ const VISIT_OPTIONS: VisitOption[] = [
   },
 ];
 
-const WORKING_START = 9 * 60;  // minutes from midnight
+const WORKING_START = 9 * 60; // minutes from midnight
 const WORKING_END = 17 * 60;
 const SLOT_MINUTES = 20;
 
 interface TimeSlot {
-  time: string;       // "HH:mm:ss"
-  label: string;      // "9:00 AM"
+  time: string; // "HH:mm:ss"
+  label: string; // "9:00 AM"
   available: boolean;
 }
 
@@ -85,13 +82,17 @@ interface TimeSlot {
     trigger('slideStep', [
       transition(':increment', [
         style({ opacity: 0, transform: 'translateX(40px)' }),
-        animate('320ms cubic-bezier(0.16, 1, 0.3, 1)',
-          style({ opacity: 1, transform: 'translateX(0)' })),
+        animate(
+          '320ms cubic-bezier(0.16, 1, 0.3, 1)',
+          style({ opacity: 1, transform: 'translateX(0)' }),
+        ),
       ]),
       transition(':decrement', [
         style({ opacity: 0, transform: 'translateX(-40px)' }),
-        animate('320ms cubic-bezier(0.16, 1, 0.3, 1)',
-          style({ opacity: 1, transform: 'translateX(0)' })),
+        animate(
+          '320ms cubic-bezier(0.16, 1, 0.3, 1)',
+          style({ opacity: 1, transform: 'translateX(0)' }),
+        ),
       ]),
     ]),
   ],
@@ -116,12 +117,14 @@ export class BookAppointmentComponent implements OnInit {
   ngOnInit(): void {
     this.loadingDoctors.set(true);
     this.doctorService.getAll().subscribe({
-      next: list => {
-        this.doctors.set(list.map(d => ({
-          id: d.id,
-          name: d.fullName,
-          specialization: d.specialization,
-        })));
+      next: (list) => {
+        this.doctors.set(
+          list.map((d) => ({
+            id: d.id,
+            name: d.fullName,
+            specialization: d.specialization,
+          })),
+        );
         this.loadingDoctors.set(false);
       },
       error: () => this.loadingDoctors.set(false),
@@ -144,12 +147,12 @@ export class BookAppointmentComponent implements OnInit {
 
   protected selectedVisit = computed<VisitOption | null>(() => {
     const type = this.form.controls.visitType.value;
-    return type ? VISIT_OPTIONS.find(v => v.type === type) ?? null : null;
+    return type ? (VISIT_OPTIONS.find((v) => v.type === type) ?? null) : null;
   });
 
   protected selectedDoctor = computed(() => {
     const id = this.form.controls.doctorId.value;
-    return id ? this.doctors().find(d => d.id === id) ?? null : null;
+    return id ? (this.doctors().find((d) => d.id === id) ?? null) : null;
   });
 
   protected timeSlots = computed<TimeSlot[]>(() => {
@@ -160,7 +163,7 @@ export class BookAppointmentComponent implements OnInit {
     const isToday = date ? this.isSameDay(date, new Date()) : false;
     const nowMinutes = new Date().getHours() * 60 + new Date().getMinutes();
 
-    const booked = this.schedule().map(a => ({
+    const booked = this.schedule().map((a) => ({
       start: this.toMinutes(a.timeSlot),
       end: this.toMinutes(a.endTime),
     }));
@@ -170,7 +173,7 @@ export class BookAppointmentComponent implements OnInit {
       const slotEnd = m + visit.duration;
       const fitsInDay = slotEnd <= WORKING_END;
       const inPast = isToday && m <= nowMinutes;
-      const overlaps = booked.some(b => b.start < slotEnd && b.end > m);
+      const overlaps = booked.some((b) => b.start < slotEnd && b.end > m);
       slots.push({
         time: this.minutesToTime(m),
         label: this.formatLabel(m),
@@ -208,7 +211,7 @@ export class BookAppointmentComponent implements OnInit {
     }
     this.loadingSlots.set(true);
     this.doctorService.getBusySlots(doctorId, this.toDateString(date)).subscribe({
-      next: slots => {
+      next: (slots) => {
         this.schedule.set(slots);
         this.loadingSlots.set(false);
       },
@@ -226,11 +229,16 @@ export class BookAppointmentComponent implements OnInit {
 
   protected canAdvance(): boolean {
     switch (this.step()) {
-      case 1: return !!this.form.controls.visitType.value;
-      case 2: return !!this.form.controls.doctorId.value;
-      case 3: return !!this.form.controls.date.value;
-      case 4: return !!this.form.controls.timeSlot.value;
-      default: return false;
+      case 1:
+        return !!this.form.controls.visitType.value;
+      case 2:
+        return !!this.form.controls.doctorId.value;
+      case 3:
+        return !!this.form.controls.date.value;
+      case 4:
+        return !!this.form.controls.timeSlot.value;
+      default:
+        return false;
     }
   }
 
@@ -251,23 +259,28 @@ export class BookAppointmentComponent implements OnInit {
     const visitType = this.form.controls.visitType.value!;
 
     this.submitting.set(true);
-    this.appointments.book({
-      doctorId,
-      appointmentDate: this.toDateString(date),
-      timeSlot,
-      visitType,
-    }).subscribe({
-      next: () => {
-        this.toastr.success('Appointment booked! 5 JOD on hold, refunded on attendance');
-        this.router.navigateByUrl('/patient/appointments');
-      },
-      error: () => this.submitting.set(false),
-    });
+    this.appointments
+      .book({
+        doctorId,
+        appointmentDate: this.toDateString(date),
+        timeSlot,
+        visitType,
+      })
+      .subscribe({
+        next: () => {
+          this.toastr.success('Appointment booked! 5 JOD on hold, refunded on attendance');
+          this.router.navigateByUrl('/patient/appointments');
+        },
+        error: () => this.submitting.set(false),
+      });
   }
 
   protected formatVisitDate(date: Date): string {
     return date.toLocaleDateString('en-US', {
-      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
     });
   }
 
@@ -303,8 +316,10 @@ export class BookAppointmentComponent implements OnInit {
   }
 
   private isSameDay(a: Date, b: Date): boolean {
-    return a.getFullYear() === b.getFullYear()
-      && a.getMonth() === b.getMonth()
-      && a.getDate() === b.getDate();
+    return (
+      a.getFullYear() === b.getFullYear() &&
+      a.getMonth() === b.getMonth() &&
+      a.getDate() === b.getDate()
+    );
   }
 }

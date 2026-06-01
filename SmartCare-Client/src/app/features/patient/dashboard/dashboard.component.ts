@@ -23,12 +23,19 @@ const VISIT_TYPE_LABEL: Record<VisitType, string> = {
   animations: [
     trigger('stagger', [
       transition(':enter', [
-        query('.stagger-item', [
-          style({ opacity: 0, transform: 'translateY(16px)' }),
-          stagger(100, [
-            animate('320ms cubic-bezier(0.16, 1, 0.3, 1)', style({ opacity: 1, transform: 'translateY(0)' })),
-          ]),
-        ], { optional: true }),
+        query(
+          '.stagger-item',
+          [
+            style({ opacity: 0, transform: 'translateY(16px)' }),
+            stagger(100, [
+              animate(
+                '320ms cubic-bezier(0.16, 1, 0.3, 1)',
+                style({ opacity: 1, transform: 'translateY(0)' }),
+              ),
+            ]),
+          ],
+          { optional: true },
+        ),
       ]),
     ]),
   ],
@@ -47,11 +54,12 @@ export class DashboardComponent {
   protected upcoming = computed(() => {
     const todayStr = new Date().toISOString().slice(0, 10);
     return this.appointments()
-      .filter(a =>
-        a.status !== 'Cancelled' &&
-        a.status !== 'Completed' &&
-        a.status !== 'NoShow' &&
-        a.appointmentDate >= todayStr,
+      .filter(
+        (a) =>
+          a.status !== 'Cancelled' &&
+          a.status !== 'Completed' &&
+          a.status !== 'NoShow' &&
+          a.appointmentDate >= todayStr,
       )
       .sort((a, b) => {
         const dateCmp = a.appointmentDate.localeCompare(b.appointmentDate);
@@ -62,11 +70,13 @@ export class DashboardComponent {
   protected upcomingCount = computed(() => this.upcoming().length);
   protected nextAppointment = computed(() => this.upcoming()[0] ?? null);
   protected pendingSummaries = signal(0);
-  protected latestPrescription = signal<{ name: string; dosage: string; date: string } | null>(null);
+  protected latestPrescription = signal<{ name: string; dosage: string; date: string } | null>(
+    null,
+  );
 
   constructor() {
     this.patient.getMyAppointments().subscribe({
-      next: list => {
+      next: (list) => {
         this.appointments.set(list);
         this.loading.set(false);
       },

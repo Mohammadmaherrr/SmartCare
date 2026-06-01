@@ -1,6 +1,12 @@
 <div class="book">
   <header class="book__header">
-    <button mat-icon-button class="back-btn" type="button" (click)="step() > 1 ? back() : null" [disabled]="step() === 1">
+    <button
+      mat-icon-button
+      class="back-btn"
+      type="button"
+      (click)="step() > 1 ? back() : null"
+      [disabled]="step() === 1"
+    >
       <mat-icon>arrow_back</mat-icon>
     </button>
     <div class="book__heading">
@@ -15,245 +21,255 @@
 
   <section class="step-wrap" [@slideStep]="step()">
     @switch (step()) {
+      @case (1) {
+        <div class="step">
+          <h2 class="step__title">Pick the patient</h2>
+          <p class="step__sub">Search by name or email.</p>
 
-    @case (1) {
-      <div class="step">
-        <h2 class="step__title">Pick the patient</h2>
-        <p class="step__sub">Search by name or email.</p>
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Search patients</mat-label>
+            <input matInput [formControl]="searchControl" placeholder="Name or email" />
+            <mat-icon matPrefix>search</mat-icon>
+          </mat-form-field>
 
-        <mat-form-field appearance="outline" class="search-field">
-          <mat-label>Search patients</mat-label>
-          <input matInput [formControl]="searchControl" placeholder="Name or email">
-          <mat-icon matPrefix>search</mat-icon>
-        </mat-form-field>
-
-        @if (loadingPatients()) {
-          <div class="slots-loading">
-            <mat-spinner diameter="32"></mat-spinner>
-            <span>Searching…</span>
-          </div>
-        } @else if (patients().length === 0) {
-          <div class="empty-inline">
-            <mat-icon>person_search</mat-icon>
-            <span>No patients found.</span>
-          </div>
-        } @else {
-          <ul class="patient-list">
-            @for (p of patients(); track p.id) {
-              <li>
-                <button
-                  type="button"
-                  class="patient-card"
-                  [class.patient-card--active]="form.controls.patientId.value === p.id"
-                  (click)="selectPatient(p)">
-                  <span class="patient-card__avatar">{{ initial(p.fullName) }}</span>
-                  <span class="patient-card__info">
-                    <span class="patient-card__name">{{ p.fullName }}</span>
-                    <span class="patient-card__meta">{{ p.email }}</span>
-                    @if (p.contactNumber) {
-                      <span class="patient-card__meta">{{ p.contactNumber }}</span>
-                    }
-                  </span>
-                  <mat-icon class="patient-card__check">check_circle</mat-icon>
-                </button>
-              </li>
-            }
-          </ul>
-        }
-      </div>
-    }
-
-    @case (2) {
-      <div class="step">
-        <h2 class="step__title">What kind of visit?</h2>
-        <p class="step__sub">
-          Booking for <strong>{{ selectedPatient()?.fullName }}</strong>.
-        </p>
-
-        <div class="visit-grid">
-          @for (option of visitOptions; track option.type) {
-            <button
-              type="button"
-              class="visit-card"
-              [class.visit-card--active]="form.controls.visitType.value === option.type"
-              (click)="selectVisitType(option.type)">
-              <span class="visit-card__icon">
-                <mat-icon>{{ option.icon }}</mat-icon>
-              </span>
-              <span class="visit-card__title">{{ option.title }}</span>
-              <span class="visit-card__desc">{{ option.description }}</span>
-              <span class="visit-card__duration">
-                <mat-icon>schedule</mat-icon>
-                {{ option.duration }} min
-              </span>
-            </button>
+          @if (loadingPatients()) {
+            <div class="slots-loading">
+              <mat-spinner diameter="32"></mat-spinner>
+              <span>Searching…</span>
+            </div>
+          } @else if (patients().length === 0) {
+            <div class="empty-inline">
+              <mat-icon>person_search</mat-icon>
+              <span>No patients found.</span>
+            </div>
+          } @else {
+            <ul class="patient-list">
+              @for (p of patients(); track p.id) {
+                <li>
+                  <button
+                    type="button"
+                    class="patient-card"
+                    [class.patient-card--active]="form.controls.patientId.value === p.id"
+                    (click)="selectPatient(p)"
+                  >
+                    <span class="patient-card__avatar">{{ initial(p.fullName) }}</span>
+                    <span class="patient-card__info">
+                      <span class="patient-card__name">{{ p.fullName }}</span>
+                      <span class="patient-card__meta">{{ p.email }}</span>
+                      @if (p.contactNumber) {
+                        <span class="patient-card__meta">{{ p.contactNumber }}</span>
+                      }
+                    </span>
+                    <mat-icon class="patient-card__check">check_circle</mat-icon>
+                  </button>
+                </li>
+              }
+            </ul>
           }
         </div>
-      </div>
-    }
+      }
 
-    @case (3) {
-      <div class="step">
-        <h2 class="step__title">Choose a doctor</h2>
-        <p class="step__sub">Pick the doctor the patient will see.</p>
+      @case (2) {
+        <div class="step">
+          <h2 class="step__title">What kind of visit?</h2>
+          <p class="step__sub">
+            Booking for <strong>{{ selectedPatient()?.fullName }}</strong
+            >.
+          </p>
 
-        @if (loadingDoctors()) {
-          <div class="slots-loading">
-            <mat-spinner diameter="32"></mat-spinner>
-            <span>Loading doctors…</span>
-          </div>
-        } @else if (doctors().length === 0) {
-          <p class="step__sub">No doctors are available right now.</p>
-        } @else {
-          <div class="doctor-list">
-            @for (doctor of doctors(); track doctor.id) {
+          <div class="visit-grid">
+            @for (option of visitOptions; track option.type) {
               <button
                 type="button"
-                class="doctor-card"
-                [class.doctor-card--active]="form.controls.doctorId.value === doctor.id"
-                (click)="selectDoctor(doctor.id)">
-                <span class="doctor-card__avatar">
-                  <mat-icon>person</mat-icon>
+                class="visit-card"
+                [class.visit-card--active]="form.controls.visitType.value === option.type"
+                (click)="selectVisitType(option.type)"
+              >
+                <span class="visit-card__icon">
+                  <mat-icon>{{ option.icon }}</mat-icon>
                 </span>
-                <span class="doctor-card__info">
-                  <span class="doctor-card__name">{{ doctor.name }}</span>
-                  <span class="doctor-card__spec">{{ doctor.specialization }}</span>
+                <span class="visit-card__title">{{ option.title }}</span>
+                <span class="visit-card__desc">{{ option.description }}</span>
+                <span class="visit-card__duration">
+                  <mat-icon>schedule</mat-icon>
+                  {{ option.duration }} min
                 </span>
-                <mat-icon class="doctor-card__check">check_circle</mat-icon>
               </button>
             }
           </div>
-        }
-      </div>
-    }
+        </div>
+      }
 
-    @case (4) {
-      <div class="step">
-        <h2 class="step__title">Pick a date</h2>
-        <p class="step__sub">Choose any day within the next six months.</p>
+      @case (3) {
+        <div class="step">
+          <h2 class="step__title">Choose a doctor</h2>
+          <p class="step__sub">Pick the doctor the patient will see.</p>
 
-        <mat-form-field class="date-field" appearance="outline">
-          <mat-label>Appointment date</mat-label>
-          <input
-            matInput
-            [matDatepicker]="picker"
-            [min]="minDate"
-            [max]="maxDate"
-            [value]="form.controls.date.value"
-            (dateChange)="onDateChange($event.value)"
-            readonly>
-          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-
-        @if (form.controls.date.value) {
-          <div class="date-preview">
-            <mat-icon>event</mat-icon>
-            <span>{{ formatVisitDate(form.controls.date.value!) }}</span>
-          </div>
-        }
-      </div>
-    }
-
-    @case (5) {
-      <div class="step">
-        <h2 class="step__title">Choose a time slot</h2>
-        <p class="step__sub">
-          Available slots for {{ selectedDoctor()?.name }} on
-          {{ form.controls.date.value ? formatVisitDate(form.controls.date.value!) : '' }}.
-        </p>
-
-        @if (loadingSlots()) {
-          <div class="slots-loading">
-            <mat-spinner diameter="32"></mat-spinner>
-            <span>Loading available slots…</span>
-          </div>
-        } @else {
-          <div class="slots">
-            @for (slot of timeSlots(); track slot.time) {
-              <button
-                type="button"
-                class="slot"
-                [class.slot--active]="form.controls.timeSlot.value === slot.time"
-                [class.slot--booked]="!slot.available"
-                [disabled]="!slot.available"
-                (click)="selectSlot(slot)">
-                {{ slot.label }}
-              </button>
-            }
-          </div>
-
-          <div class="slots-legend">
-            <span class="legend-item"><span class="dot dot--available"></span> Available</span>
-            <span class="legend-item"><span class="dot dot--booked"></span> Booked</span>
-          </div>
-        }
-      </div>
-    }
-
-    @case (6) {
-      <div class="step">
-        <h2 class="step__title">Review &amp; confirm</h2>
-        <p class="step__sub">Double-check the booking details.</p>
-
-        <div class="summary">
-          <div class="summary__row">
-            <mat-icon class="summary__icon">person</mat-icon>
-            <div>
-              <div class="summary__label">Patient</div>
-              <div class="summary__value">{{ selectedPatient()?.fullName }}</div>
-              <div class="summary__sub">{{ selectedPatient()?.email }}</div>
+          @if (loadingDoctors()) {
+            <div class="slots-loading">
+              <mat-spinner diameter="32"></mat-spinner>
+              <span>Loading doctors…</span>
             </div>
-          </div>
-
-          <div class="summary__row">
-            <mat-icon class="summary__icon">medical_services</mat-icon>
-            <div>
-              <div class="summary__label">Visit type</div>
-              <div class="summary__value">{{ selectedVisit()?.title }} · {{ selectedVisit()?.duration }} min</div>
+          } @else if (doctors().length === 0) {
+            <p class="step__sub">No doctors are available right now.</p>
+          } @else {
+            <div class="doctor-list">
+              @for (doctor of doctors(); track doctor.id) {
+                <button
+                  type="button"
+                  class="doctor-card"
+                  [class.doctor-card--active]="form.controls.doctorId.value === doctor.id"
+                  (click)="selectDoctor(doctor.id)"
+                >
+                  <span class="doctor-card__avatar">
+                    <mat-icon>person</mat-icon>
+                  </span>
+                  <span class="doctor-card__info">
+                    <span class="doctor-card__name">{{ doctor.name }}</span>
+                    <span class="doctor-card__spec">{{ doctor.specialization }}</span>
+                  </span>
+                  <mat-icon class="doctor-card__check">check_circle</mat-icon>
+                </button>
+              }
             </div>
-          </div>
+          }
+        </div>
+      }
 
-          <div class="summary__row">
-            <mat-icon class="summary__icon">badge</mat-icon>
-            <div>
-              <div class="summary__label">Doctor</div>
-              <div class="summary__value">{{ selectedDoctor()?.name }}</div>
-              <div class="summary__sub">{{ selectedDoctor()?.specialization }}</div>
+      @case (4) {
+        <div class="step">
+          <h2 class="step__title">Pick a date</h2>
+          <p class="step__sub">Choose any day within the next six months.</p>
+
+          <mat-form-field class="date-field" appearance="outline">
+            <mat-label>Appointment date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              [min]="minDate"
+              [max]="maxDate"
+              [value]="form.controls.date.value"
+              (dateChange)="onDateChange($event.value)"
+              readonly
+            />
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+          @if (form.controls.date.value) {
+            <div class="date-preview">
+              <mat-icon>event</mat-icon>
+              <span>{{ formatVisitDate(form.controls.date.value!) }}</span>
             </div>
-          </div>
+          }
+        </div>
+      }
 
-          <div class="summary__row">
-            <mat-icon class="summary__icon">event</mat-icon>
-            <div>
-              <div class="summary__label">Date</div>
-              <div class="summary__value">
-                {{ form.controls.date.value ? formatVisitDate(form.controls.date.value!) : '' }}
+      @case (5) {
+        <div class="step">
+          <h2 class="step__title">Choose a time slot</h2>
+          <p class="step__sub">
+            Available slots for {{ selectedDoctor()?.name }} on
+            {{ form.controls.date.value ? formatVisitDate(form.controls.date.value!) : '' }}.
+          </p>
+
+          @if (loadingSlots()) {
+            <div class="slots-loading">
+              <mat-spinner diameter="32"></mat-spinner>
+              <span>Loading available slots…</span>
+            </div>
+          } @else {
+            <div class="slots">
+              @for (slot of timeSlots(); track slot.time) {
+                <button
+                  type="button"
+                  class="slot"
+                  [class.slot--active]="form.controls.timeSlot.value === slot.time"
+                  [class.slot--booked]="!slot.available"
+                  [disabled]="!slot.available"
+                  (click)="selectSlot(slot)"
+                >
+                  {{ slot.label }}
+                </button>
+              }
+            </div>
+
+            <div class="slots-legend">
+              <span class="legend-item"><span class="dot dot--available"></span> Available</span>
+              <span class="legend-item"><span class="dot dot--booked"></span> Booked</span>
+            </div>
+          }
+        </div>
+      }
+
+      @case (6) {
+        <div class="step">
+          <h2 class="step__title">Review &amp; confirm</h2>
+          <p class="step__sub">Double-check the booking details.</p>
+
+          <div class="summary">
+            <div class="summary__row">
+              <mat-icon class="summary__icon">person</mat-icon>
+              <div>
+                <div class="summary__label">Patient</div>
+                <div class="summary__value">{{ selectedPatient()?.fullName }}</div>
+                <div class="summary__sub">{{ selectedPatient()?.email }}</div>
+              </div>
+            </div>
+
+            <div class="summary__row">
+              <mat-icon class="summary__icon">medical_services</mat-icon>
+              <div>
+                <div class="summary__label">Visit type</div>
+                <div class="summary__value">
+                  {{ selectedVisit()?.title }} · {{ selectedVisit()?.duration }} min
+                </div>
+              </div>
+            </div>
+
+            <div class="summary__row">
+              <mat-icon class="summary__icon">badge</mat-icon>
+              <div>
+                <div class="summary__label">Doctor</div>
+                <div class="summary__value">{{ selectedDoctor()?.name }}</div>
+                <div class="summary__sub">{{ selectedDoctor()?.specialization }}</div>
+              </div>
+            </div>
+
+            <div class="summary__row">
+              <mat-icon class="summary__icon">event</mat-icon>
+              <div>
+                <div class="summary__label">Date</div>
+                <div class="summary__value">
+                  {{ form.controls.date.value ? formatVisitDate(form.controls.date.value!) : '' }}
+                </div>
+              </div>
+            </div>
+
+            <div class="summary__row">
+              <mat-icon class="summary__icon">schedule</mat-icon>
+              <div>
+                <div class="summary__label">Time</div>
+                <div class="summary__value">
+                  {{
+                    form.controls.timeSlot.value
+                      ? formatSlotLabel(form.controls.timeSlot.value!)
+                      : ''
+                  }}
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="summary__row">
-            <mat-icon class="summary__icon">schedule</mat-icon>
+          <div class="hold-notice">
+            <mat-icon>info</mat-icon>
             <div>
-              <div class="summary__label">Time</div>
-              <div class="summary__value">
-                {{ form.controls.timeSlot.value ? formatSlotLabel(form.controls.timeSlot.value!) : '' }}
-              </div>
+              <strong>5 JOD will be placed on hold</strong>
+              <p>The amount is refunded after the patient attends.</p>
             </div>
           </div>
         </div>
-
-        <div class="hold-notice">
-          <mat-icon>info</mat-icon>
-          <div>
-            <strong>5 JOD will be placed on hold</strong>
-            <p>The amount is refunded after the patient attends.</p>
-          </div>
-        </div>
-      </div>
-    }
-
+      }
     }
   </section>
 
@@ -270,7 +286,8 @@
         type="button"
         class="footer-btn footer-btn--primary"
         [disabled]="!canAdvance()"
-        (click)="next()">
+        (click)="next()"
+      >
         Continue
         <mat-icon iconPositionEnd>arrow_forward</mat-icon>
       </button>
@@ -280,7 +297,8 @@
         type="button"
         class="footer-btn footer-btn--primary"
         [disabled]="form.invalid || submitting()"
-        (click)="confirm()">
+        (click)="confirm()"
+      >
         @if (submitting()) {
           <mat-spinner diameter="20" class="btn-spinner"></mat-spinner>
         } @else {

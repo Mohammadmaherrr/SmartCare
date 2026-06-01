@@ -19,11 +19,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ReceptionistService } from '../../../_services/receptionist.service';
 import { AppointmentService } from '../../../_services/appointment.service';
 import { DoctorService } from '../../../_services/doctor.service';
-import {
-  Appointment,
-  AppointmentStatus,
-  VisitType,
-} from '../../../_models/appointment.model';
+import { Appointment, AppointmentStatus, VisitType } from '../../../_models/appointment.model';
 import { Doctor } from '../../../_models/doctor.model';
 import {
   ConfirmDialogComponent,
@@ -44,7 +40,13 @@ const STATUS_LABEL: Record<AppointmentStatus, string> = {
   NoShow: 'No-show',
 };
 
-const STATUS_OPTIONS: AppointmentStatus[] = ['Pending', 'Confirmed', 'Completed', 'Cancelled', 'NoShow'];
+const STATUS_OPTIONS: AppointmentStatus[] = [
+  'Pending',
+  'Confirmed',
+  'Completed',
+  'Cancelled',
+  'NoShow',
+];
 
 @Component({
   selector: 'app-receptionist-appointments',
@@ -85,11 +87,16 @@ export class AppointmentsComponent {
   private dialog = inject(MatDialog);
 
   protected readonly displayedColumns = [
-    'date', 'time', 'patient', 'doctor', 'visitType', 'status', 'actions',
+    'date',
+    'time',
+    'patient',
+    'doctor',
+    'visitType',
+    'status',
+    'actions',
   ];
   protected readonly statusOptions = STATUS_OPTIONS;
-  protected readonly nextStatusOptions: AppointmentStatus[] =
-    ['Confirmed', 'Completed', 'NoShow'];
+  protected readonly nextStatusOptions: AppointmentStatus[] = ['Confirmed', 'Completed', 'NoShow'];
 
   protected loading = signal(true);
   protected acting = signal<string | null>(null);
@@ -122,8 +129,8 @@ export class AppointmentsComponent {
     const { doctorId, status } = this.filters.value;
 
     return list
-      .filter(a => !doctorId || a.doctorId === doctorId)
-      .filter(a => !status || a.status === status)
+      .filter((a) => !doctorId || a.doctorId === doctorId)
+      .filter((a) => !status || a.status === status)
       .sort((a, b) => {
         const dateCmp = b.appointmentDate.localeCompare(a.appointmentDate);
         return dateCmp !== 0 ? dateCmp : b.timeSlot.localeCompare(a.timeSlot);
@@ -169,7 +176,7 @@ export class AppointmentsComponent {
   }
 
   protected nextStatusesFor(a: Appointment): AppointmentStatus[] {
-    return this.nextStatusOptions.filter(s => s !== a.status);
+    return this.nextStatusOptions.filter((s) => s !== a.status);
   }
 
   protected confirmCancel(a: Appointment): void {
@@ -184,15 +191,17 @@ export class AppointmentsComponent {
     this.dialog
       .open(ConfirmDialogComponent, { data, width: '440px', autoFocus: false })
       .afterClosed()
-      .subscribe(confirmed => { if (confirmed) this.doCancel(a); });
+      .subscribe((confirmed) => {
+        if (confirmed) this.doCancel(a);
+      });
   }
 
   protected updateStatus(a: Appointment, newStatus: AppointmentStatus): void {
     if (this.acting()) return;
     this.acting.set(a.id);
     this.appointments.updateStatus(a.id, { newStatus }).subscribe({
-      next: updated => {
-        this.items.update(list => list.map(x => (x.id === updated.id ? updated : x)));
+      next: (updated) => {
+        this.items.update((list) => list.map((x) => (x.id === updated.id ? updated : x)));
         this.acting.set(null);
         this.toastr.success(`Status updated to ${this.statusLabel(newStatus)}`);
       },
@@ -216,7 +225,10 @@ export class AppointmentsComponent {
     const [y, m, d] = value.split('-').map(Number);
     const dt = new Date(y, m - 1, d);
     return dt.toLocaleDateString('en-US', {
-      weekday: 'short', month: 'short', day: 'numeric', year: 'numeric',
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
     });
   }
 
@@ -236,8 +248,8 @@ export class AppointmentsComponent {
     if (this.acting()) return;
     this.acting.set(a.id);
     this.appointments.cancel(a.id, { reason: 'Cancelled by receptionist' }).subscribe({
-      next: updated => {
-        this.items.update(list => list.map(x => (x.id === updated.id ? updated : x)));
+      next: (updated) => {
+        this.items.update((list) => list.map((x) => (x.id === updated.id ? updated : x)));
         this.acting.set(null);
         this.toastr.success('Appointment cancelled');
       },
@@ -247,7 +259,7 @@ export class AppointmentsComponent {
 
   private loadDoctors(): void {
     this.doctorService.getAll().subscribe({
-      next: list => this.doctors.set(list),
+      next: (list) => this.doctors.set(list),
       error: () => this.doctors.set([]),
     });
   }
@@ -260,7 +272,7 @@ export class AppointmentsComponent {
     const toIso = to ? this.toIso(to) : undefined;
 
     this.receptionist.getAllAppointments(fromIso, toIso).subscribe({
-      next: list => {
+      next: (list) => {
         this.items.set(list);
         this.loading.set(false);
       },

@@ -13,7 +13,10 @@ import { ToastrService } from 'ngx-toastr';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AppointmentService } from '../../../_services/appointment.service';
 import { Appointment, AppointmentStatus, VisitType } from '../../../_models/appointment.model';
-import { ConfirmDialogComponent, ConfirmDialogData } from '../../../shared/confirm-dialog/confirm-dialog.component';
+import {
+  ConfirmDialogComponent,
+  ConfirmDialogData,
+} from '../../../shared/confirm-dialog/confirm-dialog.component';
 import { VisitSummaryDialogComponent } from './visit-summary-dialog.component';
 
 type Filter = 'upcoming' | 'past' | 'cancelled';
@@ -62,7 +65,14 @@ export class MyAppointmentsComponent {
   private toastr = inject(ToastrService);
   private dialog = inject(MatDialog);
 
-  protected readonly displayedColumns = ['date', 'time', 'doctor', 'visitType', 'status', 'actions'];
+  protected readonly displayedColumns = [
+    'date',
+    'time',
+    'doctor',
+    'visitType',
+    'status',
+    'actions',
+  ];
 
   protected loading = signal(true);
   protected cancelling = signal<string | null>(null);
@@ -71,9 +81,19 @@ export class MyAppointmentsComponent {
 
   protected todayStr = new Date().toISOString().slice(0, 10);
 
-  protected upcoming = computed(() => this.sort(this.items().filter(a => this.isUpcoming(a))));
-  protected past     = computed(() => this.sort(this.items().filter(a => this.isPast(a)), true));
-  protected cancelled = computed(() => this.sort(this.items().filter(a => a.status === 'Cancelled'), true));
+  protected upcoming = computed(() => this.sort(this.items().filter((a) => this.isUpcoming(a))));
+  protected past = computed(() =>
+    this.sort(
+      this.items().filter((a) => this.isPast(a)),
+      true,
+    ),
+  );
+  protected cancelled = computed(() =>
+    this.sort(
+      this.items().filter((a) => a.status === 'Cancelled'),
+      true,
+    ),
+  );
 
   protected counts = computed(() => ({
     upcoming: this.upcoming().length,
@@ -83,9 +103,12 @@ export class MyAppointmentsComponent {
 
   protected visible = computed<Appointment[]>(() => {
     switch (this.filter()) {
-      case 'upcoming':  return this.upcoming();
-      case 'past':      return this.past();
-      case 'cancelled': return this.cancelled();
+      case 'upcoming':
+        return this.upcoming();
+      case 'past':
+        return this.past();
+      case 'cancelled':
+        return this.cancelled();
     }
   });
 
@@ -113,7 +136,10 @@ export class MyAppointmentsComponent {
     const [y, m, d] = value.split('-').map(Number);
     const dt = new Date(y, m - 1, d);
     return dt.toLocaleDateString('en-US', {
-      weekday: 'short', month: 'short', day: 'numeric', year: 'numeric',
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
     });
   }
 
@@ -143,7 +169,7 @@ export class MyAppointmentsComponent {
 
   protected viewSummary(a: Appointment): void {
     this.appointments.getVisitSummary(a.id).subscribe({
-      next: summary => {
+      next: (summary) => {
         this.dialog.open(VisitSummaryDialogComponent, {
           data: { summary, appointment: a },
           width: '480px',
@@ -166,7 +192,7 @@ export class MyAppointmentsComponent {
     this.dialog
       .open(ConfirmDialogComponent, { data, width: '420px', autoFocus: false })
       .afterClosed()
-      .subscribe(confirmed => {
+      .subscribe((confirmed) => {
         if (confirmed) this.doCancel(a);
       });
   }
@@ -174,8 +200,8 @@ export class MyAppointmentsComponent {
   private doCancel(a: Appointment): void {
     this.cancelling.set(a.id);
     this.appointments.cancel(a.id).subscribe({
-      next: updated => {
-        this.items.update(list => list.map(x => (x.id === updated.id ? updated : x)));
+      next: (updated) => {
+        this.items.update((list) => list.map((x) => (x.id === updated.id ? updated : x)));
         this.cancelling.set(null);
         this.toastr.success('Appointment cancelled');
       },
@@ -190,7 +216,7 @@ export class MyAppointmentsComponent {
   private load(): void {
     this.loading.set(true);
     this.appointments.getMyAppointments().subscribe({
-      next: list => {
+      next: (list) => {
         this.items.set(list);
         this.loading.set(false);
       },

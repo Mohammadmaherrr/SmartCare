@@ -93,7 +93,7 @@ export class EditUserDialogComponent {
 
     this.submitting.set(true);
     this.admin.updateUser(this.user.id, payload).subscribe({
-      next: updated => {
+      next: (updated) => {
         this.submitting.set(false);
         this.ref.close(updated);
       },

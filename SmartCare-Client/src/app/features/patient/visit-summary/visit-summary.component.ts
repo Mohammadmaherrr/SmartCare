@@ -81,7 +81,7 @@ export class VisitSummaryComponent {
     }
 
     this.appointments.getById(this.appointmentId).subscribe({
-      next: a => {
+      next: (a) => {
         this.appointment.set(a);
         this.loadingAppointment.set(false);
       },
@@ -99,7 +99,10 @@ export class VisitSummaryComponent {
   protected formatDate(value: string): string {
     const [y, m, d] = value.split('-').map(Number);
     return new Date(y, m - 1, d).toLocaleDateString('en-US', {
-      weekday: 'long', month: 'long', day: 'numeric', year: 'numeric',
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
     });
   }
 

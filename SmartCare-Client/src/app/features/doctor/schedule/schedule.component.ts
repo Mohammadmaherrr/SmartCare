@@ -9,11 +9,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { AuthService } from '../../../_services/auth.service';
 import { DoctorService } from '../../../_services/doctor.service';
-import {
-  Appointment,
-  AppointmentStatus,
-  VisitType,
-} from '../../../_models/appointment.model';
+import { Appointment, AppointmentStatus, VisitType } from '../../../_models/appointment.model';
 
 type ScheduleView = 'week' | 'day';
 
@@ -106,7 +102,10 @@ export class ScheduleComponent {
   protected periodLabel = computed<string>(() => {
     if (this.view() === 'day') {
       return this.selectedDay().toLocaleDateString('en-US', {
-        weekday: 'long', month: 'long', day: 'numeric', year: 'numeric',
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
       });
     }
     const cols = this.weekColumns();
@@ -114,7 +113,8 @@ export class ScheduleComponent {
     const last = cols[cols.length - 1].date;
     const sameMonth = first.getMonth() === last.getMonth();
     const fmtStart = first.toLocaleDateString('en-US', {
-      month: 'short', day: 'numeric',
+      month: 'short',
+      day: 'numeric',
     });
     const fmtEnd = last.toLocaleDateString('en-US', {
       month: sameMonth ? undefined : 'short',
@@ -229,7 +229,7 @@ export class ScheduleComponent {
     const to = cols[cols.length - 1].isoDate;
 
     this.doctorService.getSchedule(id, from, to).subscribe({
-      next: list => {
+      next: (list) => {
         this.items.set(list);
         this.loading.set(false);
       },
@@ -248,7 +248,7 @@ export class ScheduleComponent {
     for (const a of sorted) {
       const start = this.toMinutes(a.timeSlot);
       const end = this.toMinutes(a.endTime);
-      let lane = lanes.findIndex(laneEnd => laneEnd <= start);
+      let lane = lanes.findIndex((laneEnd) => laneEnd <= start);
       if (lane === -1) {
         lane = lanes.length;
         lanes.push(end);
@@ -292,14 +292,14 @@ export class ScheduleComponent {
         current.push(p);
         currentEnd = Math.max(currentEnd, p.end);
       } else {
-        const lc = Math.max(...current.map(x => x.lane)) + 1;
+        const lc = Math.max(...current.map((x) => x.lane)) + 1;
         clusters.push({ items: current, laneCount: lc });
         current = [p];
         currentEnd = p.end;
       }
     }
     if (current.length) {
-      const lc = Math.max(...current.map(x => x.lane)) + 1;
+      const lc = Math.max(...current.map((x) => x.lane)) + 1;
       clusters.push({ items: current, laneCount: lc });
     }
     return clusters;

@@ -18,20 +18,22 @@ import { Coordinates } from '../../_services/geolocation.service';
   selector: 'app-map-view',
   standalone: true,
   template: `<div #mapEl class="map-canvas"></div>`,
-  styles: [`
-    :host {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-    .map-canvas {
-      width: 100%;
-      height: 100%;
-      border-radius: 14px;
-      overflow: hidden;
-      background: #E5EBF1;
-    }
-  `],
+  styles: [
+    `
+      :host {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+      .map-canvas {
+        width: 100%;
+        height: 100%;
+        border-radius: 14px;
+        overflow: hidden;
+        background: #e5ebf1;
+      }
+    `,
+  ],
 })
 export class MapViewComponent implements AfterViewInit {
   clinics = input<NearbyClinic[]>([]);
@@ -121,7 +123,7 @@ export class MapViewComponent implements AfterViewInit {
 
     if (clinics.length > 0) {
       const patient = this.patientCoords();
-      const points: L.LatLngTuple[] = clinics.map(c => [c.latitude, c.longitude]);
+      const points: L.LatLngTuple[] = clinics.map((c) => [c.latitude, c.longitude]);
       if (patient) points.push([patient.lat, patient.lng]);
       const bounds = L.latLngBounds(points);
       map.fitBounds(bounds, { padding: [40, 40], maxZoom: 15 });
@@ -156,7 +158,9 @@ export class MapViewComponent implements AfterViewInit {
   }
 
   private popupHtml(clinic: NearbyClinic): string {
-    const phone = clinic.phoneNumber ? `<div class="row"><span>Phone:</span> ${this.escape(clinic.phoneNumber)}</div>` : '';
+    const phone = clinic.phoneNumber
+      ? `<div class="row"><span>Phone:</span> ${this.escape(clinic.phoneNumber)}</div>`
+      : '';
     return `
       <div class="clinic-popup">
         <div class="title">${this.escape(clinic.name)}</div>

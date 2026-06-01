@@ -10,11 +10,7 @@ import { animate, query, stagger, style, transition, trigger } from '@angular/an
 import { AuthService } from '../../../_services/auth.service';
 import { DoctorService } from '../../../_services/doctor.service';
 import { AppointmentService } from '../../../_services/appointment.service';
-import {
-  Appointment,
-  AppointmentStatus,
-  VisitType,
-} from '../../../_models/appointment.model';
+import { Appointment, AppointmentStatus, VisitType } from '../../../_models/appointment.model';
 
 interface DayChip {
   date: Date;
@@ -40,30 +36,34 @@ const STATUS_LABEL: Record<AppointmentStatus, string> = {
 
 @Component({
   selector: 'app-doctor-dashboard',
-  imports: [
-    DatePipe,
-    MatButtonModule,
-    MatIconModule,
-    MatTooltipModule,
-    MatProgressSpinnerModule,
-  ],
+  imports: [DatePipe, MatButtonModule, MatIconModule, MatTooltipModule, MatProgressSpinnerModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
   animations: [
     trigger('stagger', [
       transition(':enter', [
-        query('.stagger-item', [
-          style({ opacity: 0, transform: 'translateY(16px)' }),
-          stagger(80, [
-            animate('320ms cubic-bezier(0.16, 1, 0.3, 1)', style({ opacity: 1, transform: 'translateY(0)' })),
-          ]),
-        ], { optional: true }),
+        query(
+          '.stagger-item',
+          [
+            style({ opacity: 0, transform: 'translateY(16px)' }),
+            stagger(80, [
+              animate(
+                '320ms cubic-bezier(0.16, 1, 0.3, 1)',
+                style({ opacity: 1, transform: 'translateY(0)' }),
+              ),
+            ]),
+          ],
+          { optional: true },
+        ),
       ]),
     ]),
     trigger('fadeIn', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(8px)' }),
-        animate('260ms cubic-bezier(0.16, 1, 0.3, 1)', style({ opacity: 1, transform: 'translateY(0)' })),
+        animate(
+          '260ms cubic-bezier(0.16, 1, 0.3, 1)',
+          style({ opacity: 1, transform: 'translateY(0)' }),
+        ),
       ]),
       transition(':leave', [
         animate('160ms ease-in', style({ opacity: 0, transform: 'translateY(-4px)' })),
@@ -103,13 +103,13 @@ export class DashboardComponent {
 
   protected pending = computed(() =>
     this.items()
-      .filter(a => a.status === 'Pending')
+      .filter((a) => a.status === 'Pending')
       .sort((a, b) => a.timeSlot.localeCompare(b.timeSlot)),
   );
 
   protected timeline = computed(() =>
     this.items()
-      .filter(a => a.status === 'Confirmed' || a.status === 'Completed')
+      .filter((a) => a.status === 'Confirmed' || a.status === 'Completed')
       .sort((a, b) => a.timeSlot.localeCompare(b.timeSlot)),
   );
 
@@ -132,8 +132,8 @@ export class DashboardComponent {
     if (this.acting()) return;
     this.acting.set(a.id);
     this.appointments.updateStatus(a.id, { newStatus: 'Confirmed' }).subscribe({
-      next: updated => {
-        this.items.update(list => list.map(x => (x.id === updated.id ? updated : x)));
+      next: (updated) => {
+        this.items.update((list) => list.map((x) => (x.id === updated.id ? updated : x)));
         this.acting.set(null);
         this.toastr.success(`Appointment with ${a.patientName} confirmed`);
       },
@@ -145,8 +145,8 @@ export class DashboardComponent {
     if (this.acting()) return;
     this.acting.set(a.id);
     this.appointments.cancel(a.id, { reason: 'Rejected by doctor' }).subscribe({
-      next: updated => {
-        this.items.update(list => list.map(x => (x.id === updated.id ? updated : x)));
+      next: (updated) => {
+        this.items.update((list) => list.map((x) => (x.id === updated.id ? updated : x)));
         this.acting.set(null);
         this.toastr.success(`Appointment with ${a.patientName} rejected`);
       },
@@ -190,7 +190,7 @@ export class DashboardComponent {
     this.loading.set(true);
     const date = this.selectedDate();
     this.doctorService.getSchedule(id, date, date).subscribe({
-      next: list => {
+      next: (list) => {
         this.items.set(list);
         this.loading.set(false);
       },

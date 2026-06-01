@@ -1,22 +1,22 @@
-$primary:        #1565C0;
-$primary-dark:   #0D47A1;
-$primary-light:  #E3F2FD;
-$accent:         #00897B;
-$accent-light:   #E0F2F1;
-$amber:          #F57C00;
-$amber-light:    #FFF3E0;
-$danger:         #C62828;
-$danger-light:   #FFEBEE;
-$blue-chip:      #1565C0;
-$blue-chip-bg:   #E3F2FD;
-$gray:           #607D8B;
-$gray-light:     #ECEFF1;
-$surface:        #F4F6F9;
-$card-bg:        #ffffff;
-$text-primary:   #1A1A2E;
-$text-secondary: #546E7A;
-$text-muted:     #90A4AE;
-$divider:        #E0E7EF;
+$primary: #1565c0;
+$primary-dark: #0d47a1;
+$primary-light: #e3f2fd;
+$accent: #00897b;
+$accent-light: #e0f2f1;
+$amber: #f57c00;
+$amber-light: #fff3e0;
+$danger: #c62828;
+$danger-light: #ffebee;
+$blue-chip: #1565c0;
+$blue-chip-bg: #e3f2fd;
+$gray: #607d8b;
+$gray-light: #eceff1;
+$surface: #f4f6f9;
+$card-bg: #ffffff;
+$text-primary: #1a1a2e;
+$text-secondary: #546e7a;
+$text-muted: #90a4ae;
+$divider: #e0e7ef;
 
 .page {
   padding: 28px;
@@ -61,7 +61,9 @@ $divider:        #E0E7EF;
   align-items: center;
   gap: 6px;
 
-  &:hover { background: $primary-dark; }
+  &:hover {
+    background: $primary-dark;
+  }
 
   mat-icon {
     font-size: 20px;
@@ -118,9 +120,15 @@ $divider:        #E0E7EF;
   align-items: center;
   gap: 6px;
 
-  &:hover { background: $primary-dark; }
+  &:hover {
+    background: $primary-dark;
+  }
 
-  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
 }
 
 .reset-btn {
@@ -227,16 +235,33 @@ $divider:        #E0E7EF;
   letter-spacing: 0.4px;
   white-space: nowrap;
 
-  &--pending   { background: $amber-light;   color: $amber; }
-  &--confirmed { background: $accent-light;  color: $accent; }
-  &--completed { background: $blue-chip-bg;  color: $blue-chip; }
-  &--cancelled { background: $gray-light;    color: $gray; }
-  &--noshow    { background: $danger-light;  color: $danger; }
+  &--pending {
+    background: $amber-light;
+    color: $amber;
+  }
+  &--confirmed {
+    background: $accent-light;
+    color: $accent;
+  }
+  &--completed {
+    background: $blue-chip-bg;
+    color: $blue-chip;
+  }
+  &--cancelled {
+    background: $gray-light;
+    color: $gray;
+  }
+  &--noshow {
+    background: $danger-light;
+    color: $danger;
+  }
 }
 
 .menu-danger {
   color: $danger !important;
-  ::ng-deep mat-icon { color: $danger; }
+  ::ng-deep mat-icon {
+    color: $danger;
+  }
 }
 
 .loading {

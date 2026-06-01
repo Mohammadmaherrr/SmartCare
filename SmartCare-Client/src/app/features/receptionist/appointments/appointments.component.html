@@ -2,7 +2,9 @@
   <header class="page__header">
     <div>
       <h1 class="page__title">Appointments</h1>
-      <p class="page__sub">All-clinic appointments. Filter, update status, or book on behalf of a patient.</p>
+      <p class="page__sub">
+        All-clinic appointments. Filter, update status, or book on behalf of a patient.
+      </p>
     </div>
     <button mat-flat-button class="primary-btn" (click)="bookForPatient()">
       <mat-icon>add</mat-icon>
@@ -34,35 +36,25 @@
 
     <mat-form-field appearance="outline" class="filter-field">
       <mat-label>From</mat-label>
-      <input matInput [matDatepicker]="fromPicker" formControlName="from" readonly>
+      <input matInput [matDatepicker]="fromPicker" formControlName="from" readonly />
       <mat-datepicker-toggle matIconSuffix [for]="fromPicker"></mat-datepicker-toggle>
       <mat-datepicker #fromPicker></mat-datepicker>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="filter-field">
       <mat-label>To</mat-label>
-      <input matInput [matDatepicker]="toPicker" formControlName="to" readonly>
+      <input matInput [matDatepicker]="toPicker" formControlName="to" readonly />
       <mat-datepicker-toggle matIconSuffix [for]="toPicker"></mat-datepicker-toggle>
       <mat-datepicker #toPicker></mat-datepicker>
     </mat-form-field>
 
     <div class="filter-actions">
-      <button
-        mat-flat-button
-        class="apply-btn"
-        type="button"
-        (click)="applyFilters()">
+      <button mat-flat-button class="apply-btn" type="button" (click)="applyFilters()">
         <mat-icon>filter_list</mat-icon>
         Apply
       </button>
       @if (filtersDirty()) {
-        <button
-          mat-button
-          class="reset-btn"
-          type="button"
-          (click)="resetFilters()">
-          Reset
-        </button>
+        <button mat-button class="reset-btn" type="button" (click)="resetFilters()">Reset</button>
       }
     </div>
   </section>
@@ -145,7 +137,8 @@
                 mat-icon-button
                 [matMenuTriggerFor]="menu"
                 [disabled]="acting() === a.id"
-                aria-label="Actions">
+                aria-label="Actions"
+              >
                 <mat-icon>more_vert</mat-icon>
               </button>
               <mat-menu #menu="matMenu">
@@ -169,7 +162,7 @@
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;" @fadeRow></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns" @fadeRow></tr>
         </table>
       </div>
     }

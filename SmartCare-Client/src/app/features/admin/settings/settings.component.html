@@ -52,7 +52,8 @@
                       mat-icon-button
                       class="edit-btn"
                       matTooltip="Edit"
-                      (click)="startEdit(row.key)">
+                      (click)="startEdit(row.key)"
+                    >
                       <mat-icon>edit</mat-icon>
                     </button>
                   } @else {
@@ -66,7 +67,8 @@
                           (keydown.enter)="onEnter(row, $event)"
                           (keydown.escape)="cancelEdit(row.key)"
                           [attr.min]="row.meta.min ?? null"
-                          autofocus>
+                          autofocus
+                        />
                         @if (row.meta.unit) {
                           <span matTextSuffix class="edit-suffix">{{ row.meta.unit }}</span>
                         }
@@ -80,7 +82,8 @@
                         class="save-btn"
                         matTooltip="Save"
                         [disabled]="!!row.error || saving() === row.key"
-                        (click)="save(row)">
+                        (click)="save(row)"
+                      >
                         @if (saving() === row.key) {
                           <mat-spinner diameter="18"></mat-spinner>
                         } @else {
@@ -92,7 +95,8 @@
                         class="cancel-btn"
                         matTooltip="Cancel"
                         [disabled]="saving() === row.key"
-                        (click)="cancelEdit(row.key)">
+                        (click)="cancelEdit(row.key)"
+                      >
                         <mat-icon>close</mat-icon>
                       </button>
                     </div>

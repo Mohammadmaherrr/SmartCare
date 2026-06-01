@@ -31,9 +31,27 @@ interface GroupConfig {
 }
 
 const GROUPS: GroupConfig[] = [
-  { id: 'Booking', title: 'Booking',  description: 'Default appointment durations.', icon: 'event_note', tone: 'primary' },
-  { id: 'Fees',    title: 'Fees',     description: 'Charges applied to patients.',   icon: 'payments',   tone: 'accent' },
-  { id: 'Other',   title: 'Other',    description: 'Additional system settings.',    icon: 'tune',       tone: 'amber' },
+  {
+    id: 'Booking',
+    title: 'Booking',
+    description: 'Default appointment durations.',
+    icon: 'event_note',
+    tone: 'primary',
+  },
+  {
+    id: 'Fees',
+    title: 'Fees',
+    description: 'Charges applied to patients.',
+    icon: 'payments',
+    tone: 'accent',
+  },
+  {
+    id: 'Other',
+    title: 'Other',
+    description: 'Additional system settings.',
+    icon: 'tune',
+    tone: 'amber',
+  },
 ];
 
 const META: Record<string, SettingMeta> = {
@@ -122,27 +140,29 @@ export class SettingsComponent {
   }
 
   protected startEdit(key: string): void {
-    this.rows.update(list => list.map(r =>
-      r.key === key ? { ...r, editing: true, draft: r.value, error: null } : r,
-    ));
+    this.rows.update((list) =>
+      list.map((r) => (r.key === key ? { ...r, editing: true, draft: r.value, error: null } : r)),
+    );
   }
 
   protected cancelEdit(key: string): void {
-    this.rows.update(list => list.map(r =>
-      r.key === key ? { ...r, editing: false, draft: r.value, error: null } : r,
-    ));
+    this.rows.update((list) =>
+      list.map((r) => (r.key === key ? { ...r, editing: false, draft: r.value, error: null } : r)),
+    );
   }
 
   protected updateDraft(key: string, value: string): void {
-    this.rows.update(list => list.map(r =>
-      r.key === key ? { ...r, draft: value, error: this.validate(r.meta, value) } : r,
-    ));
+    this.rows.update((list) =>
+      list.map((r) =>
+        r.key === key ? { ...r, draft: value, error: this.validate(r.meta, value) } : r,
+      ),
+    );
   }
 
   protected save(row: SettingRow): void {
     const error = this.validate(row.meta, row.draft);
     if (error) {
-      this.rows.update(list => list.map(r => r.key === row.key ? { ...r, error } : r));
+      this.rows.update((list) => list.map((r) => (r.key === row.key ? { ...r, error } : r)));
       return;
     }
 
@@ -154,12 +174,14 @@ export class SettingsComponent {
 
     this.saving.set(row.key);
     this.admin.updateSetting({ key: row.key, value: trimmed }).subscribe({
-      next: updated => {
-        this.rows.update(list => list.map(r =>
-          r.key === row.key
-            ? { ...r, value: updated.value, draft: updated.value, editing: false, error: null }
-            : r,
-        ));
+      next: (updated) => {
+        this.rows.update((list) =>
+          list.map((r) =>
+            r.key === row.key
+              ? { ...r, value: updated.value, draft: updated.value, editing: false, error: null }
+              : r,
+          ),
+        );
         this.saving.set(null);
         this.toastr.success(`${row.meta.label} updated`);
       },
@@ -185,8 +207,8 @@ export class SettingsComponent {
   private load(): void {
     this.loading.set(true);
     this.admin.getSettings().subscribe({
-      next: list => {
-        this.rows.set(list.map(s => this.toRow(s)));
+      next: (list) => {
+        this.rows.set(list.map((s) => this.toRow(s)));
         this.loading.set(false);
       },
       error: () => {
@@ -214,6 +236,6 @@ export class SettingsComponent {
     return key
       .replace(/([A-Z])/g, ' $1')
       .replace(/^\s+/, '')
-      .replace(/^./, c => c.toUpperCase());
+      .replace(/^./, (c) => c.toUpperCase());
   }
 }

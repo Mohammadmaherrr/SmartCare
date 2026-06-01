@@ -51,7 +51,8 @@
                 mat-stroked-button
                 class="btn btn--ghost"
                 (click)="startEditRecord()"
-                matTooltip="Edit diagnosis and treatment plan">
+                matTooltip="Edit diagnosis and treatment plan"
+              >
                 <mat-icon>edit</mat-icon>
                 Edit
               </button>
@@ -59,11 +60,7 @@
           </header>
 
           @if (editingRecord()) {
-            <form
-              [formGroup]="recordForm"
-              (ngSubmit)="saveRecord()"
-              class="form"
-              @slideForm>
+            <form [formGroup]="recordForm" (ngSubmit)="saveRecord()" class="form" @slideForm>
               <mat-form-field appearance="outline" class="full">
                 <mat-label>Diagnosis</mat-label>
                 <textarea
@@ -71,9 +68,12 @@
                   formControlName="diagnosis"
                   rows="3"
                   maxlength="500"
-                  placeholder="Primary diagnosis and observations..."></textarea>
-                @if (recordForm.controls.diagnosis.hasError('required')
-                     && recordForm.controls.diagnosis.touched) {
+                  placeholder="Primary diagnosis and observations..."
+                ></textarea>
+                @if (
+                  recordForm.controls.diagnosis.hasError('required') &&
+                  recordForm.controls.diagnosis.touched
+                ) {
                   <mat-error>Diagnosis is required</mat-error>
                 }
                 @if (recordForm.controls.diagnosis.hasError('maxlength')) {
@@ -88,7 +88,8 @@
                   formControlName="treatmentPlan"
                   rows="4"
                   maxlength="1000"
-                  placeholder="Treatment approach, medications, follow-ups..."></textarea>
+                  placeholder="Treatment approach, medications, follow-ups..."
+                ></textarea>
                 @if (recordForm.controls.treatmentPlan.hasError('maxlength')) {
                   <mat-error>Treatment plan must be 1000 characters or less</mat-error>
                 }
@@ -101,7 +102,8 @@
                     mat-stroked-button
                     class="btn btn--ghost"
                     (click)="cancelEditRecord()"
-                    [disabled]="savingRecord()">
+                    [disabled]="savingRecord()"
+                  >
                     Cancel
                   </button>
                 }
@@ -109,7 +111,8 @@
                   type="submit"
                   mat-flat-button
                   class="btn btn--primary"
-                  [disabled]="savingRecord() || recordForm.invalid">
+                  [disabled]="savingRecord() || recordForm.invalid"
+                >
                   @if (savingRecord()) {
                     <mat-spinner diameter="18" strokeWidth="3"></mat-spinner>
                   } @else {
@@ -150,7 +153,8 @@
         <mat-tab-group
           class="tabs"
           animationDuration="220ms"
-          (selectedIndexChange)="onTabChange($event)">
+          (selectedIndexChange)="onTabChange($event)"
+        >
           <mat-tab>
             <ng-template mat-tab-label>
               <mat-icon class="tab-icon">medication</mat-icon>
@@ -180,7 +184,8 @@
                     mat-flat-button
                     class="btn btn--primary"
                     (click)="togglePrescriptionForm()"
-                    [disabled]="!record()">
+                    [disabled]="!record()"
+                  >
                     <mat-icon>{{ showPrescriptionForm() ? 'close' : 'add' }}</mat-icon>
                     {{ showPrescriptionForm() ? 'Cancel' : 'New Prescription' }}
                   </button>
@@ -191,7 +196,8 @@
                     [formGroup]="prescriptionForm"
                     (ngSubmit)="submitPrescription()"
                     class="form form--inline"
-                    @slideForm>
+                    @slideForm
+                  >
                     <div class="form__row">
                       <mat-form-field appearance="outline" class="grow-2">
                         <mat-label>Medication name</mat-label>
@@ -199,9 +205,12 @@
                           matInput
                           formControlName="medicationName"
                           maxlength="200"
-                          placeholder="e.g. Amoxicillin" />
-                        @if (prescriptionForm.controls.medicationName.hasError('required')
-                             && prescriptionForm.controls.medicationName.touched) {
+                          placeholder="e.g. Amoxicillin"
+                        />
+                        @if (
+                          prescriptionForm.controls.medicationName.hasError('required') &&
+                          prescriptionForm.controls.medicationName.touched
+                        ) {
                           <mat-error>Medication name is required</mat-error>
                         }
                       </mat-form-field>
@@ -212,9 +221,12 @@
                           matInput
                           formControlName="dosage"
                           maxlength="100"
-                          placeholder="e.g. 500mg, twice daily" />
-                        @if (prescriptionForm.controls.dosage.hasError('required')
-                             && prescriptionForm.controls.dosage.touched) {
+                          placeholder="e.g. 500mg, twice daily"
+                        />
+                        @if (
+                          prescriptionForm.controls.dosage.hasError('required') &&
+                          prescriptionForm.controls.dosage.touched
+                        ) {
                           <mat-error>Dosage is required</mat-error>
                         }
                       </mat-form-field>
@@ -228,7 +240,8 @@
                           formControlName="instructions"
                           rows="2"
                           maxlength="500"
-                          placeholder="Take with food, avoid alcohol..."></textarea>
+                          placeholder="Take with food, avoid alcohol..."
+                        ></textarea>
                       </mat-form-field>
                     </div>
 
@@ -240,11 +253,17 @@
                           [matDatepicker]="rxPicker"
                           [max]="maxIssueDate"
                           formControlName="issueDate"
-                          readonly />
-                        <mat-datepicker-toggle matIconSuffix [for]="rxPicker"></mat-datepicker-toggle>
+                          readonly
+                        />
+                        <mat-datepicker-toggle
+                          matIconSuffix
+                          [for]="rxPicker"
+                        ></mat-datepicker-toggle>
                         <mat-datepicker #rxPicker></mat-datepicker>
-                        @if (prescriptionForm.controls.issueDate.hasError('required')
-                             && prescriptionForm.controls.issueDate.touched) {
+                        @if (
+                          prescriptionForm.controls.issueDate.hasError('required') &&
+                          prescriptionForm.controls.issueDate.touched
+                        ) {
                           <mat-error>Issue date is required</mat-error>
                         }
                         @if (prescriptionForm.controls.issueDate.hasError('future')) {
@@ -258,14 +277,16 @@
                           mat-stroked-button
                           class="btn btn--ghost"
                           (click)="togglePrescriptionForm()"
-                          [disabled]="savingPrescription()">
+                          [disabled]="savingPrescription()"
+                        >
                           Cancel
                         </button>
                         <button
                           type="submit"
                           mat-flat-button
                           class="btn btn--primary"
-                          [disabled]="savingPrescription() || prescriptionForm.invalid">
+                          [disabled]="savingPrescription() || prescriptionForm.invalid"
+                        >
                           @if (savingPrescription()) {
                             <mat-spinner diameter="18" strokeWidth="3"></mat-spinner>
                           } @else {
@@ -280,7 +301,7 @@
 
                 @if (prescriptionsLoading()) {
                   <div class="skeleton skeleton--cards">
-                    @for (i of [1,2,3]; track i) {
+                    @for (i of [1, 2, 3]; track i) {
                       <div class="sk-card">
                         <div class="sk-line sk-line--title"></div>
                         <div class="sk-line"></div>
@@ -292,7 +313,9 @@
                   <div class="empty">
                     <mat-icon class="empty__icon">medication_liquid</mat-icon>
                     <h3 class="empty__title">Create a medical record first</h3>
-                    <p class="empty__sub">A diagnosis must exist before prescriptions can be issued.</p>
+                    <p class="empty__sub">
+                      A diagnosis must exist before prescriptions can be issued.
+                    </p>
                   </div>
                 } @else if (prescriptions().length === 0) {
                   <div class="empty">
@@ -389,7 +412,8 @@
                     type="button"
                     mat-flat-button
                     class="btn btn--primary"
-                    (click)="toggleLabForm()">
+                    (click)="toggleLabForm()"
+                  >
                     <mat-icon>{{ showLabForm() ? 'close' : 'upload' }}</mat-icon>
                     {{ showLabForm() ? 'Cancel' : 'Upload Result' }}
                   </button>
@@ -400,7 +424,8 @@
                     [formGroup]="labForm"
                     (ngSubmit)="submitLabResult()"
                     class="form form--inline"
-                    @slideForm>
+                    @slideForm
+                  >
                     <div class="form__row">
                       <mat-form-field appearance="outline" class="grow-2">
                         <mat-label>Test name</mat-label>
@@ -408,9 +433,12 @@
                           matInput
                           formControlName="testName"
                           maxlength="200"
-                          placeholder="e.g. Complete Blood Count" />
-                        @if (labForm.controls.testName.hasError('required')
-                             && labForm.controls.testName.touched) {
+                          placeholder="e.g. Complete Blood Count"
+                        />
+                        @if (
+                          labForm.controls.testName.hasError('required') &&
+                          labForm.controls.testName.touched
+                        ) {
                           <mat-error>Test name is required</mat-error>
                         }
                       </mat-form-field>
@@ -422,11 +450,17 @@
                           [matDatepicker]="labPicker"
                           [max]="maxIssueDate"
                           formControlName="resultDate"
-                          readonly />
-                        <mat-datepicker-toggle matIconSuffix [for]="labPicker"></mat-datepicker-toggle>
+                          readonly
+                        />
+                        <mat-datepicker-toggle
+                          matIconSuffix
+                          [for]="labPicker"
+                        ></mat-datepicker-toggle>
                         <mat-datepicker #labPicker></mat-datepicker>
-                        @if (labForm.controls.resultDate.hasError('required')
-                             && labForm.controls.resultDate.touched) {
+                        @if (
+                          labForm.controls.resultDate.hasError('required') &&
+                          labForm.controls.resultDate.touched
+                        ) {
                           <mat-error>Result date is required</mat-error>
                         }
                         @if (labForm.controls.resultDate.hasError('future')) {
@@ -443,9 +477,12 @@
                           formControlName="resultValue"
                           rows="2"
                           maxlength="500"
-                          placeholder="e.g. WBC 7.2 K/uL · Hemoglobin 14.1 g/dL · normal range"></textarea>
-                        @if (labForm.controls.resultValue.hasError('required')
-                             && labForm.controls.resultValue.touched) {
+                          placeholder="e.g. WBC 7.2 K/uL · Hemoglobin 14.1 g/dL · normal range"
+                        ></textarea>
+                        @if (
+                          labForm.controls.resultValue.hasError('required') &&
+                          labForm.controls.resultValue.touched
+                        ) {
                           <mat-error>Result value is required</mat-error>
                         }
                       </mat-form-field>
@@ -457,14 +494,16 @@
                         mat-stroked-button
                         class="btn btn--ghost"
                         (click)="toggleLabForm()"
-                        [disabled]="savingLab()">
+                        [disabled]="savingLab()"
+                      >
                         Cancel
                       </button>
                       <button
                         type="submit"
                         mat-flat-button
                         class="btn btn--primary"
-                        [disabled]="savingLab() || labForm.invalid">
+                        [disabled]="savingLab() || labForm.invalid"
+                      >
                         @if (savingLab()) {
                           <mat-spinner diameter="18" strokeWidth="3"></mat-spinner>
                         } @else {
@@ -478,7 +517,7 @@
 
                 @if (labsLoading()) {
                   <div class="skeleton skeleton--cards">
-                    @for (i of [1,2,3]; track i) {
+                    @for (i of [1, 2, 3]; track i) {
                       <div class="sk-card">
                         <div class="sk-line sk-line--title"></div>
                         <div class="sk-line"></div>

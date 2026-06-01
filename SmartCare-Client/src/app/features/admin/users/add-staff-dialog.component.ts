@@ -1,7 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,11 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AdminService } from '../../../_services/admin.service';
-import {
-  CreateStaffRequest,
-  StaffRole,
-  UserSummary,
-} from '../../../_models/admin.model';
+import { CreateStaffRequest, StaffRole, UserSummary } from '../../../_models/admin.model';
 
 @Component({
   selector: 'app-add-staff-dialog',
@@ -40,9 +36,18 @@ export class AddStaffDialogComponent {
   protected showPassword = signal(false);
 
   protected form = this.fb.group({
-    role: this.fb.control<StaffRole>('Doctor', { nonNullable: true, validators: [Validators.required] }),
-    fullName: this.fb.control('', { nonNullable: true, validators: [Validators.required, Validators.maxLength(200)] }),
-    email: this.fb.control('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
+    role: this.fb.control<StaffRole>('Doctor', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    fullName: this.fb.control('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.maxLength(200)],
+    }),
+    email: this.fb.control('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.email],
+    }),
     password: this.fb.control('', {
       nonNullable: true,
       validators: [
@@ -61,7 +66,7 @@ export class AddStaffDialogComponent {
   protected isDoctor = computed(() => this.role() === 'Doctor');
 
   constructor() {
-    this.form.controls.role.valueChanges.subscribe(value => {
+    this.form.controls.role.valueChanges.subscribe((value) => {
       this.role.set(value);
       this.applyRoleValidators(value);
     });
@@ -69,7 +74,7 @@ export class AddStaffDialogComponent {
   }
 
   protected togglePassword(): void {
-    this.showPassword.update(v => !v);
+    this.showPassword.update((v) => !v);
   }
 
   protected cancel(): void {
@@ -97,7 +102,7 @@ export class AddStaffDialogComponent {
 
     this.submitting.set(true);
     this.admin.createStaff(payload).subscribe({
-      next: created => {
+      next: (created) => {
         this.submitting.set(false);
         this.ref.close(created);
       },

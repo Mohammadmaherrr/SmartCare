@@ -1,5 +1,4 @@
 <div class="page" [@stagger]="loading() ? 'loading' : 'ready'">
-
   <header class="page__header">
     <div class="page__title-block">
       <h1 class="page__title">
@@ -25,14 +24,16 @@
           type="text"
           placeholder="Search by patient name"
           [formControl]="searchControl"
-          autocomplete="off" />
+          autocomplete="off"
+        />
         @if (searchControl.value) {
           <button
             type="button"
             matSuffix
             class="clear-btn"
             (click)="clearSearch()"
-            aria-label="Clear search">
+            aria-label="Clear search"
+          >
             <mat-icon>close</mat-icon>
           </button>
         }
@@ -42,7 +43,7 @@
 
   @if (loading()) {
     <div class="skeleton-list">
-      @for (_ of [1,2,3,4]; track $index) {
+      @for (_ of [1, 2, 3, 4]; track $index) {
         <div class="skeleton-row"></div>
       }
     </div>
@@ -52,9 +53,7 @@
         <mat-icon>group</mat-icon>
       </div>
       <h2 class="empty__title">No patients yet</h2>
-      <p class="empty__text">
-        Patients you've seen in appointments will appear here.
-      </p>
+      <p class="empty__text">Patients you've seen in appointments will appear here.</p>
     </div>
   } @else if (hasNoMatches()) {
     <div class="empty" [@fadeIn]>
@@ -75,7 +74,8 @@
           role="button"
           (click)="open(p)"
           (keydown.enter)="open(p)"
-          (keydown.space)="open(p); $event.preventDefault()">
+          (keydown.space)="open(p); $event.preventDefault()"
+        >
           <div class="patient-item__avatar" [attr.data-tone]="avatarTone(p.patientName)">
             {{ initials(p.patientName) }}
           </div>

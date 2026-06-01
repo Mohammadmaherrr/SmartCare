@@ -26,14 +26,14 @@
   <section class="filters card" [formGroup]="range">
     <mat-form-field appearance="outline" class="filter-field">
       <mat-label>From</mat-label>
-      <input matInput [matDatepicker]="fromPicker" formControlName="from" readonly>
+      <input matInput [matDatepicker]="fromPicker" formControlName="from" readonly />
       <mat-datepicker-toggle matIconSuffix [for]="fromPicker"></mat-datepicker-toggle>
       <mat-datepicker #fromPicker></mat-datepicker>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="filter-field">
       <mat-label>To</mat-label>
-      <input matInput [matDatepicker]="toPicker" formControlName="to" readonly>
+      <input matInput [matDatepicker]="toPicker" formControlName="to" readonly />
       <mat-datepicker-toggle matIconSuffix [for]="toPicker"></mat-datepicker-toggle>
       <mat-datepicker #toPicker></mat-datepicker>
     </mat-form-field>
@@ -44,11 +44,7 @@
     </button>
   </section>
 
-  <mat-tab-group
-    class="tabs"
-    animationDuration="200ms"
-    (selectedIndexChange)="onTabChange($event)">
-
+  <mat-tab-group class="tabs" animationDuration="200ms" (selectedIndexChange)="onTabChange($event)">
     <mat-tab label="Appointment Report">
       <div class="tab-body" @fade>
         @if (loadingAppointments()) {

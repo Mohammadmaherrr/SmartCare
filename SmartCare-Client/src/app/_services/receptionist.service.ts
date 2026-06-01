@@ -21,11 +21,11 @@ export class ReceptionistService {
   // schedule for the given range. Backend has no all-clinic endpoint yet.
   getAllAppointments(from?: string, to?: string): Observable<Appointment[]> {
     return this.doctorService.getAll().pipe(
-      switchMap(doctors => {
+      switchMap((doctors) => {
         if (doctors.length === 0) return of<Appointment[][]>([]);
-        return forkJoin(doctors.map(d => this.doctorService.getSchedule(d.id, from, to)));
+        return forkJoin(doctors.map((d) => this.doctorService.getSchedule(d.id, from, to)));
       }),
-      map(lists => {
+      map((lists) => {
         const seen = new Set<string>();
         const out: Appointment[] = [];
         for (const list of lists) {
@@ -44,11 +44,14 @@ export class ReceptionistService {
   searchPatients(query: string): Observable<PatientLookupResult[]> {
     const q = query.trim().toLowerCase();
     return this.api.get<UserSummary[]>('patients').pipe(
-      map(list => list.map(toLookupResult)),
-      map(list => q ? list.filter(p =>
-        p.fullName.toLowerCase().includes(q) ||
-        p.email.toLowerCase().includes(q),
-      ) : list),
+      map((list) => list.map(toLookupResult)),
+      map((list) =>
+        q
+          ? list.filter(
+              (p) => p.fullName.toLowerCase().includes(q) || p.email.toLowerCase().includes(q),
+            )
+          : list,
+      ),
     );
   }
 }

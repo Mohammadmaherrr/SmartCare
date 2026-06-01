@@ -49,7 +49,15 @@
                   "maximumError": "16kB"
                 }
               ],
-              "allowedCommonJsDependencies": ["leaflet"],
+              "allowedCommonJsDependencies": [
+                "leaflet",
+                "papaparse",
+                "html2canvas",
+                "canvg",
+                "core-js",
+                "raf",
+                "rgbcolor"
+              ],
               "outputHashing": "all"
             },
             "development": {

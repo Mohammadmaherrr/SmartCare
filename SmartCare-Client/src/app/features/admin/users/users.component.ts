@@ -60,11 +60,11 @@ export class UsersComponent {
 
   protected readonly displayedColumns = ['name', 'email', 'role', 'status', 'actions'];
   protected readonly roleOptions: { value: RoleFilter; label: string }[] = [
-    { value: '',             label: 'All roles' },
-    { value: 'Admin',        label: 'Admin' },
-    { value: 'Doctor',       label: 'Doctor' },
+    { value: '', label: 'All roles' },
+    { value: 'Admin', label: 'Admin' },
+    { value: 'Doctor', label: 'Doctor' },
     { value: 'Receptionist', label: 'Receptionist' },
-    { value: 'Patient',      label: 'Patient' },
+    { value: 'Patient', label: 'Patient' },
   ];
 
   protected loading = signal(true);
@@ -80,9 +80,8 @@ export class UsersComponent {
     const search = (this.filters.controls.search.value ?? '').trim().toLowerCase();
     const list = this.users();
     if (!search) return list;
-    return list.filter(u =>
-      u.fullName.toLowerCase().includes(search) ||
-      u.email.toLowerCase().includes(search),
+    return list.filter(
+      (u) => u.fullName.toLowerCase().includes(search) || u.email.toLowerCase().includes(search),
     );
   });
 
@@ -124,7 +123,7 @@ export class UsersComponent {
       .afterClosed()
       .subscribe((updated: UserSummary | undefined) => {
         if (updated) {
-          this.users.update(list => list.map(u => (u.id === updated.id ? updated : u)));
+          this.users.update((list) => list.map((u) => (u.id === updated.id ? updated : u)));
           this.toastr.success('User updated');
         }
       });
@@ -144,7 +143,9 @@ export class UsersComponent {
     this.dialog
       .open(ConfirmDialogComponent, { data, width: '440px', autoFocus: false })
       .afterClosed()
-      .subscribe(confirmed => { if (confirmed) this.doDeactivate(user); });
+      .subscribe((confirmed) => {
+        if (confirmed) this.doDeactivate(user);
+      });
   }
 
   private doDeactivate(user: UserSummary): void {
@@ -152,9 +153,9 @@ export class UsersComponent {
     this.acting.set(user.id);
     this.admin.deactivateUser(user.id).subscribe({
       next: () => {
-        this.users.update(list => list.map(u =>
-          u.id === user.id ? { ...u, accountStatus: 'Blocked' } : u,
-        ));
+        this.users.update((list) =>
+          list.map((u) => (u.id === user.id ? { ...u, accountStatus: 'Blocked' } : u)),
+        );
         this.acting.set(null);
         this.toastr.success(`${user.fullName} deactivated`);
       },
@@ -166,7 +167,7 @@ export class UsersComponent {
     this.loading.set(true);
     const role = this.filters.controls.role.value || undefined;
     this.admin.getUsers(role || '').subscribe({
-      next: list => {
+      next: (list) => {
         this.users.set(list);
         this.loading.set(false);
       },

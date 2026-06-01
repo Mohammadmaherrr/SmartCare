@@ -1,13 +1,12 @@
 <section class="emergency">
-
   <!-- ── Idle: Big SOS button ──────────────────────────────────────── -->
   @if (phase() === 'idle') {
     <div class="sos-stage" @phaseEnter>
       <div class="sos-stage__intro">
         <h1 class="sos-stage__title">Emergency Help</h1>
         <p class="sos-stage__subtitle">
-          Tap the button below to alert medical staff and request immediate help.
-          Your location will be shared with the nearest clinics.
+          Tap the button below to alert medical staff and request immediate help. Your location will
+          be shared with the nearest clinics.
         </p>
       </div>
 
@@ -15,7 +14,8 @@
         type="button"
         class="sos-button"
         (click)="triggerSos()"
-        aria-label="Send emergency alert">
+        aria-label="Send emergency alert"
+      >
         <span class="sos-button__ripple"></span>
         <span class="sos-button__ripple sos-button__ripple--delay"></span>
         <span class="sos-button__inner">
@@ -27,7 +27,10 @@
 
       <p class="sos-stage__note">
         <mat-icon>info</mat-icon>
-        <span>In a life-threatening emergency, also call <strong>911</strong> or <strong>999</strong> directly.</span>
+        <span
+          >In a life-threatening emergency, also call <strong>911</strong> or
+          <strong>999</strong> directly.</span
+        >
       </p>
     </div>
   }
@@ -37,8 +40,11 @@
     <div class="progress" @phaseEnter>
       <mat-spinner diameter="56" strokeWidth="4"></mat-spinner>
       <h2 class="progress__title">
-        @if (phase() === 'locating') { Getting your location… }
-        @else { Alerting nearby clinics… }
+        @if (phase() === 'locating') {
+          Getting your location…
+        } @else {
+          Alerting nearby clinics…
+        }
       </h2>
       <p class="progress__sub">Please stay on this screen.</p>
     </div>
@@ -47,30 +53,31 @@
   <!-- ── Success ───────────────────────────────────────────────────── -->
   @if (phase() === 'success' && result(); as r) {
     <div class="success" @phaseEnter>
-
       <header class="success__hero">
         <div class="success__check">
           <mat-icon>check_circle</mat-icon>
         </div>
         <h1 class="success__title">Help is on the way</h1>
-        <p class="success__subtitle">Medical staff have been notified. Stay calm and stay where you are.</p>
+        <p class="success__subtitle">
+          Medical staff have been notified. Stay calm and stay where you are.
+        </p>
         <div class="success__meta">
           <span class="status-badge">{{ r.status }}</span>
-          <span class="success__time">Sent {{ r.requestTime | date:'shortTime' }} · {{ r.requestTime | date:'MMM d' }}</span>
+          <span class="success__time"
+            >Sent {{ r.requestTime | date: 'shortTime' }} ·
+            {{ r.requestTime | date: 'MMM d' }}</span
+          >
         </div>
       </header>
 
       <div class="success__layout">
-
         <section class="card map-card">
           <h3 class="card__title">
             <mat-icon>map</mat-icon>
             Your location & nearest clinics
           </h3>
           <div class="map-card__map">
-            <app-map-view
-              [clinics]="topClinics()"
-              [patientCoords]="patientCoords()" />
+            <app-map-view [clinics]="topClinics()" [patientCoords]="patientCoords()" />
           </div>
         </section>
 
@@ -88,7 +95,9 @@
                   <div class="clinic-item__body">
                     <div class="clinic-item__top">
                       <h4 class="clinic-item__name">{{ clinic.name }}</h4>
-                      <span class="clinic-item__distance">{{ clinic.distanceKm.toFixed(1) }} km</span>
+                      <span class="clinic-item__distance"
+                        >{{ clinic.distanceKm.toFixed(1) }} km</span
+                      >
                     </div>
                     <p class="clinic-item__address">{{ clinic.address }}</p>
                     @if (clinic.phoneNumber) {
@@ -96,7 +105,8 @@
                         type="button"
                         mat-flat-button
                         class="call-btn"
-                        (click)="callClinic(clinic.phoneNumber!, $event)">
+                        (click)="callClinic(clinic.phoneNumber!, $event)"
+                      >
                         <mat-icon>call</mat-icon>
                         <span>Call {{ clinic.phoneNumber }}</span>
                       </button>
@@ -106,7 +116,9 @@
               }
             </ul>
           } @else {
-            <p class="empty-text">No clinics found nearby. Please call <strong>911</strong> immediately.</p>
+            <p class="empty-text">
+              No clinics found nearby. Please call <strong>911</strong> immediately.
+            </p>
           }
         </section>
       </div>
@@ -127,8 +139,8 @@
       <h2 class="error__title">Location access is required</h2>
       <p class="error__message">
         @if (locationFailure()?.reason === 'denied') {
-          We need your location to alert the nearest clinics and dispatch help.
-          Please enable location access for this site in your browser settings, then try again.
+          We need your location to alert the nearest clinics and dispatch help. Please enable
+          location access for this site in your browser settings, then try again.
         } @else {
           {{ locationFailure()?.message }}
         }
@@ -155,8 +167,8 @@
       </div>
       <h2 class="error__title">You already have an active alert</h2>
       <p class="error__message">
-        An emergency request from your account is still being processed.
-        Medical staff have it and will respond as soon as possible.
+        An emergency request from your account is still being processed. Medical staff have it and
+        will respond as soon as possible.
       </p>
       <div class="error__actions">
         <button mat-stroked-button (click)="reset()">
@@ -166,7 +178,10 @@
       </div>
       <div class="error__hotline">
         <mat-icon>phone_in_talk</mat-icon>
-        <span>If your situation has worsened, call <strong>911</strong> or <strong>999</strong> directly.</span>
+        <span
+          >If your situation has worsened, call <strong>911</strong> or
+          <strong>999</strong> directly.</span
+        >
       </div>
     </div>
   }
@@ -184,7 +199,8 @@
         <mat-icon>warning</mat-icon>
         <div>
           <strong>Do not wait.</strong>
-          Call <strong>911</strong> or <strong>999</strong> right now if this is a life-threatening emergency.
+          Call <strong>911</strong> or <strong>999</strong> right now if this is a life-threatening
+          emergency.
         </div>
       </div>
 
@@ -200,5 +216,4 @@
       </div>
     </div>
   }
-
 </section>

@@ -35,7 +35,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         case 400:
         case 409:
           if (errors.length) {
-            errors.forEach(e => toastr.error(e));
+            errors.forEach((e) => toastr.error(e));
           } else {
             toastr.error(message);
           }
@@ -49,6 +49,6 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       }
 
       return throwError(() => err);
-    })
+    }),
   );
 };

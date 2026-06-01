@@ -13,7 +13,7 @@ export interface BookAppointmentRequest {
   patientId?: string;
   doctorId: string;
   appointmentDate: string; // "YYYY-MM-DD"
-  timeSlot: string;        // "HH:mm:ss"
+  timeSlot: string; // "HH:mm:ss"
   visitType: VisitType;
 }
 
