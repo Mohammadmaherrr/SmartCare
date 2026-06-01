@@ -133,7 +133,7 @@ public class AdminService(AppDbContext context) : IAdminService
         var query = context.Appointments.Include(a => a.Doctor).AsQueryable();
 
         if (startDate is not null) query = query.Where(a => a.AppointmentDate >= startDate);
-        if (endDate is not null)   query = query.Where(a => a.AppointmentDate <= endDate);
+        if (endDate is not null) query = query.Where(a => a.AppointmentDate <= endDate);
 
         var appointments = await query.ToListAsync();
 
@@ -141,12 +141,12 @@ public class AdminService(AppDbContext context) : IAdminService
             .GroupBy(a => new { a.DoctorId, a.Doctor.FullName })
             .Select(g => new DoctorAppointmentBreakdownDto
             {
-                DoctorId   = g.Key.DoctorId,
+                DoctorId = g.Key.DoctorId,
                 DoctorName = g.Key.FullName,
-                Total      = g.Count(),
-                Completed  = g.Count(a => a.Status == AppointmentStatus.Completed),
-                NoShows    = g.Count(a => a.Status == AppointmentStatus.NoShow),
-                Cancelled  = g.Count(a => a.Status == AppointmentStatus.Cancelled)
+                Total = g.Count(),
+                Completed = g.Count(a => a.Status == AppointmentStatus.Completed),
+                NoShows = g.Count(a => a.Status == AppointmentStatus.NoShow),
+                Cancelled = g.Count(a => a.Status == AppointmentStatus.Cancelled)
             })
             .OrderByDescending(d => d.Total)
             .ToList();
@@ -154,14 +154,14 @@ public class AdminService(AppDbContext context) : IAdminService
         return new AppointmentReportDto
         {
             StartDate = startDate,
-            EndDate   = endDate,
-            Total     = appointments.Count,
+            EndDate = endDate,
+            Total = appointments.Count,
             Completed = appointments.Count(a => a.Status == AppointmentStatus.Completed),
-            NoShows   = appointments.Count(a => a.Status == AppointmentStatus.NoShow),
+            NoShows = appointments.Count(a => a.Status == AppointmentStatus.NoShow),
             Cancelled = appointments.Count(a => a.Status == AppointmentStatus.Cancelled),
-            Pending   = appointments.Count(a => a.Status == AppointmentStatus.Pending),
+            Pending = appointments.Count(a => a.Status == AppointmentStatus.Pending),
             Confirmed = appointments.Count(a => a.Status == AppointmentStatus.Confirmed),
-            ByDoctor  = byDoctor
+            ByDoctor = byDoctor
         };
     }
 
@@ -175,7 +175,7 @@ public class AdminService(AppDbContext context) : IAdminService
             .AsQueryable();
 
         if (startDate is not null) query = query.Where(a => a.AppointmentDate >= startDate);
-        if (endDate is not null)   query = query.Where(a => a.AppointmentDate <= endDate);
+        if (endDate is not null) query = query.Where(a => a.AppointmentDate <= endDate);
 
         var daily = await query
             .GroupBy(a => a.AppointmentDate)
@@ -186,8 +186,8 @@ public class AdminService(AppDbContext context) : IAdminService
         return new VisitFrequencyReportDto
         {
             StartDate = startDate,
-            EndDate   = endDate,
-            Data      = daily
+            EndDate = endDate,
+            Data = daily
         };
     }
 

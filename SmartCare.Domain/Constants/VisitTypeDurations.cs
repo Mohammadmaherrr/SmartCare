@@ -8,8 +8,8 @@ public static class VisitTypeDurations
         new Dictionary<VisitType, int>
         {
             [VisitType.GeneralConsultation] = 30,
-            [VisitType.FollowUp]            = 15,
-            [VisitType.AnnualCheckup]       = 45,
+            [VisitType.FollowUp] = 15,
+            [VisitType.AnnualCheckup] = 45,
         };
 
     public static int GetMinutes(VisitType visitType) => Minutes[visitType];

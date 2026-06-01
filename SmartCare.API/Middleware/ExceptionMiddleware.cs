@@ -30,11 +30,11 @@ public class ExceptionMiddleware(RequestDelegate next,
 
         var (statusCode, message) = ex switch
         {
-            BadRequestException   => (HttpStatusCode.BadRequest,          ex.Message),
-            UnauthorizedException => (HttpStatusCode.Unauthorized,        ex.Message),
-            ForbiddenException    => (HttpStatusCode.Forbidden,           ex.Message),
-            ConflictException     => (HttpStatusCode.Conflict,            ex.Message),
-            _                     => (HttpStatusCode.InternalServerError,
+            BadRequestException => (HttpStatusCode.BadRequest, ex.Message),
+            UnauthorizedException => (HttpStatusCode.Unauthorized, ex.Message),
+            ForbiddenException => (HttpStatusCode.Forbidden, ex.Message),
+            ConflictException => (HttpStatusCode.Conflict, ex.Message),
+            _ => (HttpStatusCode.InternalServerError,
                                       env.IsDevelopment() ? ex.Message : "Internal server error")
         };
 

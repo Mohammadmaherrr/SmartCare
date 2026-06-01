@@ -128,10 +128,10 @@ public static class Seed
     {
         var defaults = new Dictionary<string, string>
         {
-            ["NoShowFee"]                   = "5",
+            ["NoShowFee"] = "5",
             ["GeneralConsultationDuration"] = "30",
-            ["FollowUpDuration"]            = "15",
-            ["AnnualCheckupDuration"]       = "45"
+            ["FollowUpDuration"] = "15",
+            ["AnnualCheckupDuration"] = "45"
         };
 
         var existingKeys = await context.SystemSettings.Select(s => s.Key).ToListAsync();
@@ -141,8 +141,8 @@ public static class Seed
 
         context.SystemSettings.AddRange(missing.Select(d => new SystemSettings
         {
-            Id    = Guid.NewGuid(),
-            Key   = d.Key,
+            Id = Guid.NewGuid(),
+            Key = d.Key,
             Value = d.Value
         }));
 

@@ -290,15 +290,15 @@ public class AppointmentService(AppDbContext context) : IAppointmentService
         appointment.PaymentStatus = dto.NewStatus switch
         {
             AppointmentStatus.Completed => PaymentStatus.Charged,
-            AppointmentStatus.NoShow    => PaymentStatus.Charged,
-            _                           => appointment.PaymentStatus
+            AppointmentStatus.NoShow => PaymentStatus.Charged,
+            _ => appointment.PaymentStatus
         };
 
         var notificationMessage = dto.NewStatus switch
         {
             AppointmentStatus.Confirmed => $"Your appointment with Dr. {appointment.Doctor.FullName} on {appointment.AppointmentDate} at {appointment.TimeSlot:HH\\:mm} has been confirmed.",
             AppointmentStatus.Completed => $"Your appointment with Dr. {appointment.Doctor.FullName} on {appointment.AppointmentDate} at {appointment.TimeSlot:HH\\:mm} has been completed.",
-            AppointmentStatus.NoShow    => $"You were marked as no-show for your appointment with Dr. {appointment.Doctor.FullName} on {appointment.AppointmentDate} at {appointment.TimeSlot:HH\\:mm}.",
+            AppointmentStatus.NoShow => $"You were marked as no-show for your appointment with Dr. {appointment.Doctor.FullName} on {appointment.AppointmentDate} at {appointment.TimeSlot:HH\\:mm}.",
             _ => null
         };
 
@@ -321,9 +321,9 @@ public class AppointmentService(AppDbContext context) : IAppointmentService
     {
         var allowed = (current, next) switch
         {
-            (AppointmentStatus.Pending,   AppointmentStatus.Confirmed) => true,
+            (AppointmentStatus.Pending, AppointmentStatus.Confirmed) => true,
             (AppointmentStatus.Confirmed, AppointmentStatus.Completed) => true,
-            (AppointmentStatus.Confirmed, AppointmentStatus.NoShow)    => true,
+            (AppointmentStatus.Confirmed, AppointmentStatus.NoShow) => true,
             _ => false
         };
 
@@ -334,17 +334,17 @@ public class AppointmentService(AppDbContext context) : IAppointmentService
 
     private static AppointmentResponseDto ToDto(
         Appointment a, string patientName, string doctorName) => new()
-    {
-        Id = a.Id,
-        PatientId = a.PatientId,
-        PatientName = patientName,
-        DoctorId = a.DoctorId,
-        DoctorName = doctorName,
-        AppointmentDate = a.AppointmentDate,
-        TimeSlot = a.TimeSlot,
-        EndTime = a.TimeSlot.AddMinutes(VisitTypeDurations.GetMinutes(a.VisitType)),
-        VisitType = a.VisitType,
-        Status = a.Status,
-        PaymentStatus = a.PaymentStatus
-    };
+        {
+            Id = a.Id,
+            PatientId = a.PatientId,
+            PatientName = patientName,
+            DoctorId = a.DoctorId,
+            DoctorName = doctorName,
+            AppointmentDate = a.AppointmentDate,
+            TimeSlot = a.TimeSlot,
+            EndTime = a.TimeSlot.AddMinutes(VisitTypeDurations.GetMinutes(a.VisitType)),
+            VisitType = a.VisitType,
+            Status = a.Status,
+            PaymentStatus = a.PaymentStatus
+        };
 }
