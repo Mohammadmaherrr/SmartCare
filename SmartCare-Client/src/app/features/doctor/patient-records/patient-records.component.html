@@ -1,0 +1,521 @@
+<div class="page">
+  <div class="topbar">
+    <button type="button" class="back" (click)="back()">
+      <mat-icon>arrow_back</mat-icon>
+      Back to schedule
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="loading">
+      <mat-spinner diameter="44" strokeWidth="3"></mat-spinner>
+    </div>
+  } @else if (notFound()) {
+    <div class="empty">
+      <mat-icon class="empty__icon">person_off</mat-icon>
+      <h3 class="empty__title">Patient not found</h3>
+      <p class="empty__sub">We couldn't find a patient with that identifier.</p>
+    </div>
+  } @else {
+    <div class="split">
+      <!-- ───────── Left: Patient + Medical Record ───────── -->
+      <aside class="left" @fadeIn>
+        <section class="patient-card">
+          <div class="avatar">{{ patientInitials() }}</div>
+          <div class="info">
+            <h2 class="info__name">{{ patientName() }}</h2>
+            <div class="info__meta">
+              <span class="meta-item">
+                <mat-icon>badge</mat-icon>
+                Patient
+              </span>
+              @if (record(); as r) {
+                <span class="meta-item">
+                  <mat-icon>update</mat-icon>
+                  Updated {{ formatDateTime(r.lastUpdated) }}
+                </span>
+              }
+            </div>
+          </div>
+        </section>
+
+        <section class="card record-card">
+          <header class="card__header">
+            <div class="card__title">
+              <mat-icon>description</mat-icon>
+              Medical Record
+            </div>
+            @if (record() && !editingRecord()) {
+              <button
+                type="button"
+                mat-stroked-button
+                class="btn btn--ghost"
+                (click)="startEditRecord()"
+                matTooltip="Edit diagnosis and treatment plan">
+                <mat-icon>edit</mat-icon>
+                Edit
+              </button>
+            }
+          </header>
+
+          @if (editingRecord()) {
+            <form
+              [formGroup]="recordForm"
+              (ngSubmit)="saveRecord()"
+              class="form"
+              @slideForm>
+              <mat-form-field appearance="outline" class="full">
+                <mat-label>Diagnosis</mat-label>
+                <textarea
+                  matInput
+                  formControlName="diagnosis"
+                  rows="3"
+                  maxlength="500"
+                  placeholder="Primary diagnosis and observations..."></textarea>
+                @if (recordForm.controls.diagnosis.hasError('required')
+                     && recordForm.controls.diagnosis.touched) {
+                  <mat-error>Diagnosis is required</mat-error>
+                }
+                @if (recordForm.controls.diagnosis.hasError('maxlength')) {
+                  <mat-error>Diagnosis must be 500 characters or less</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full">
+                <mat-label>Treatment Plan</mat-label>
+                <textarea
+                  matInput
+                  formControlName="treatmentPlan"
+                  rows="4"
+                  maxlength="1000"
+                  placeholder="Treatment approach, medications, follow-ups..."></textarea>
+                @if (recordForm.controls.treatmentPlan.hasError('maxlength')) {
+                  <mat-error>Treatment plan must be 1000 characters or less</mat-error>
+                }
+              </mat-form-field>
+
+              <div class="form__actions">
+                @if (record()) {
+                  <button
+                    type="button"
+                    mat-stroked-button
+                    class="btn btn--ghost"
+                    (click)="cancelEditRecord()"
+                    [disabled]="savingRecord()">
+                    Cancel
+                  </button>
+                }
+                <button
+                  type="submit"
+                  mat-flat-button
+                  class="btn btn--primary"
+                  [disabled]="savingRecord() || recordForm.invalid">
+                  @if (savingRecord()) {
+                    <mat-spinner diameter="18" strokeWidth="3"></mat-spinner>
+                  } @else {
+                    <mat-icon>{{ record() ? 'save' : 'add' }}</mat-icon>
+                  }
+                  {{ record() ? 'Save changes' : 'Create record' }}
+                </button>
+              </div>
+            </form>
+          } @else if (record(); as r) {
+            <article class="record" @fadeIn>
+              <div class="record__section">
+                <h3 class="record__heading">
+                  <mat-icon>assignment_ind</mat-icon>
+                  Diagnosis
+                </h3>
+                <p class="record__body">{{ r.diagnosis || '—' }}</p>
+              </div>
+              <div class="record__section">
+                <h3 class="record__heading">
+                  <mat-icon>healing</mat-icon>
+                  Treatment Plan
+                </h3>
+                <p class="record__body">{{ r.treatmentPlan || 'No treatment plan recorded.' }}</p>
+              </div>
+            </article>
+          } @else {
+            <div class="empty empty--inline">
+              <mat-icon class="empty__icon">folder_off</mat-icon>
+              <p class="empty__sub">No medical record yet — fill in the form to create one.</p>
+            </div>
+          }
+        </section>
+      </aside>
+
+      <!-- ───────── Right: Tabs ───────── -->
+      <section class="right card" @fadeIn>
+        <mat-tab-group
+          class="tabs"
+          animationDuration="220ms"
+          (selectedIndexChange)="onTabChange($event)">
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="tab-icon">medication</mat-icon>
+              Prescriptions
+            </ng-template>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="tab-icon">science</mat-icon>
+              Lab Results
+            </ng-template>
+          </mat-tab>
+        </mat-tab-group>
+
+        <div class="tab-body">
+          @switch (activeTab()) {
+            <!-- ───────── Prescriptions ───────── -->
+            @case ('prescriptions') {
+              <div @fadeIn>
+                <div class="tab-actions">
+                  <h3 class="tab-actions__title">
+                    {{ prescriptions().length }}
+                    {{ prescriptions().length === 1 ? 'prescription' : 'prescriptions' }}
+                  </h3>
+                  <button
+                    type="button"
+                    mat-flat-button
+                    class="btn btn--primary"
+                    (click)="togglePrescriptionForm()"
+                    [disabled]="!record()">
+                    <mat-icon>{{ showPrescriptionForm() ? 'close' : 'add' }}</mat-icon>
+                    {{ showPrescriptionForm() ? 'Cancel' : 'New Prescription' }}
+                  </button>
+                </div>
+
+                @if (showPrescriptionForm()) {
+                  <form
+                    [formGroup]="prescriptionForm"
+                    (ngSubmit)="submitPrescription()"
+                    class="form form--inline"
+                    @slideForm>
+                    <div class="form__row">
+                      <mat-form-field appearance="outline" class="grow-2">
+                        <mat-label>Medication name</mat-label>
+                        <input
+                          matInput
+                          formControlName="medicationName"
+                          maxlength="200"
+                          placeholder="e.g. Amoxicillin" />
+                        @if (prescriptionForm.controls.medicationName.hasError('required')
+                             && prescriptionForm.controls.medicationName.touched) {
+                          <mat-error>Medication name is required</mat-error>
+                        }
+                      </mat-form-field>
+
+                      <mat-form-field appearance="outline" class="grow-1">
+                        <mat-label>Dosage</mat-label>
+                        <input
+                          matInput
+                          formControlName="dosage"
+                          maxlength="100"
+                          placeholder="e.g. 500mg, twice daily" />
+                        @if (prescriptionForm.controls.dosage.hasError('required')
+                             && prescriptionForm.controls.dosage.touched) {
+                          <mat-error>Dosage is required</mat-error>
+                        }
+                      </mat-form-field>
+                    </div>
+
+                    <div class="form__row">
+                      <mat-form-field appearance="outline" class="full">
+                        <mat-label>Instructions (optional)</mat-label>
+                        <textarea
+                          matInput
+                          formControlName="instructions"
+                          rows="2"
+                          maxlength="500"
+                          placeholder="Take with food, avoid alcohol..."></textarea>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="form__row">
+                      <mat-form-field appearance="outline" class="grow-1">
+                        <mat-label>Issue date</mat-label>
+                        <input
+                          matInput
+                          [matDatepicker]="rxPicker"
+                          [max]="maxIssueDate"
+                          formControlName="issueDate"
+                          readonly />
+                        <mat-datepicker-toggle matIconSuffix [for]="rxPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #rxPicker></mat-datepicker>
+                        @if (prescriptionForm.controls.issueDate.hasError('required')
+                             && prescriptionForm.controls.issueDate.touched) {
+                          <mat-error>Issue date is required</mat-error>
+                        }
+                        @if (prescriptionForm.controls.issueDate.hasError('future')) {
+                          <mat-error>Issue date cannot be in the future</mat-error>
+                        }
+                      </mat-form-field>
+
+                      <div class="form__actions form__actions--inline">
+                        <button
+                          type="button"
+                          mat-stroked-button
+                          class="btn btn--ghost"
+                          (click)="togglePrescriptionForm()"
+                          [disabled]="savingPrescription()">
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          mat-flat-button
+                          class="btn btn--primary"
+                          [disabled]="savingPrescription() || prescriptionForm.invalid">
+                          @if (savingPrescription()) {
+                            <mat-spinner diameter="18" strokeWidth="3"></mat-spinner>
+                          } @else {
+                            <mat-icon>add</mat-icon>
+                          }
+                          Add Prescription
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                }
+
+                @if (prescriptionsLoading()) {
+                  <div class="skeleton skeleton--cards">
+                    @for (i of [1,2,3]; track i) {
+                      <div class="sk-card">
+                        <div class="sk-line sk-line--title"></div>
+                        <div class="sk-line"></div>
+                        <div class="sk-line sk-line--short"></div>
+                      </div>
+                    }
+                  </div>
+                } @else if (!record()) {
+                  <div class="empty">
+                    <mat-icon class="empty__icon">medication_liquid</mat-icon>
+                    <h3 class="empty__title">Create a medical record first</h3>
+                    <p class="empty__sub">A diagnosis must exist before prescriptions can be issued.</p>
+                  </div>
+                } @else if (prescriptions().length === 0) {
+                  <div class="empty">
+                    <mat-icon class="empty__icon">medication_liquid</mat-icon>
+                    <h3 class="empty__title">No prescriptions yet</h3>
+                    <p class="empty__sub">Click "New Prescription" to write the first one.</p>
+                  </div>
+                } @else {
+                  @for (group of groupedPrescriptions(); track group.label) {
+                    @if (group.recent) {
+                      <div class="rx-group">
+                        <h3 class="rx-group__label">{{ group.label }}</h3>
+                        <div class="rx-grid" [@listStagger]="group.items.length">
+                          @for (p of group.items; track p.id) {
+                            <article class="rx-card" @listItem>
+                              <div class="rx-card__head">
+                                <div class="rx-card__icon">
+                                  <mat-icon>medication</mat-icon>
+                                </div>
+                                <div class="rx-card__title">
+                                  <h4>{{ p.medicationName }}</h4>
+                                  <span class="rx-card__dosage">{{ p.dosage }}</span>
+                                </div>
+                              </div>
+                              @if (p.instructions) {
+                                <p class="rx-card__instructions">
+                                  <mat-icon>info</mat-icon>
+                                  {{ p.instructions }}
+                                </p>
+                              }
+                              <div class="rx-card__date">
+                                <mat-icon>event</mat-icon>
+                                Issued {{ formatDate(p.issueDate) }}
+                              </div>
+                            </article>
+                          }
+                        </div>
+                      </div>
+                    } @else {
+                      <mat-accordion class="rx-accordion" multi>
+                        <mat-expansion-panel>
+                          <mat-expansion-panel-header>
+                            <mat-panel-title>
+                              {{ group.label }}
+                            </mat-panel-title>
+                            <mat-panel-description>
+                              {{ group.items.length }}
+                              {{ group.items.length === 1 ? 'prescription' : 'prescriptions' }}
+                            </mat-panel-description>
+                          </mat-expansion-panel-header>
+
+                          <div class="rx-grid">
+                            @for (p of group.items; track p.id) {
+                              <article class="rx-card rx-card--muted">
+                                <div class="rx-card__head">
+                                  <div class="rx-card__icon">
+                                    <mat-icon>medication</mat-icon>
+                                  </div>
+                                  <div class="rx-card__title">
+                                    <h4>{{ p.medicationName }}</h4>
+                                    <span class="rx-card__dosage">{{ p.dosage }}</span>
+                                  </div>
+                                </div>
+                                @if (p.instructions) {
+                                  <p class="rx-card__instructions">
+                                    <mat-icon>info</mat-icon>
+                                    {{ p.instructions }}
+                                  </p>
+                                }
+                                <div class="rx-card__date">
+                                  <mat-icon>event</mat-icon>
+                                  Issued {{ formatDate(p.issueDate) }}
+                                </div>
+                              </article>
+                            }
+                          </div>
+                        </mat-expansion-panel>
+                      </mat-accordion>
+                    }
+                  }
+                }
+              </div>
+            }
+
+            <!-- ───────── Lab Results ───────── -->
+            @case ('labs') {
+              <div @fadeIn>
+                <div class="tab-actions">
+                  <h3 class="tab-actions__title">
+                    {{ labs().length }}
+                    {{ labs().length === 1 ? 'lab result' : 'lab results' }}
+                  </h3>
+                  <button
+                    type="button"
+                    mat-flat-button
+                    class="btn btn--primary"
+                    (click)="toggleLabForm()">
+                    <mat-icon>{{ showLabForm() ? 'close' : 'upload' }}</mat-icon>
+                    {{ showLabForm() ? 'Cancel' : 'Upload Result' }}
+                  </button>
+                </div>
+
+                @if (showLabForm()) {
+                  <form
+                    [formGroup]="labForm"
+                    (ngSubmit)="submitLabResult()"
+                    class="form form--inline"
+                    @slideForm>
+                    <div class="form__row">
+                      <mat-form-field appearance="outline" class="grow-2">
+                        <mat-label>Test name</mat-label>
+                        <input
+                          matInput
+                          formControlName="testName"
+                          maxlength="200"
+                          placeholder="e.g. Complete Blood Count" />
+                        @if (labForm.controls.testName.hasError('required')
+                             && labForm.controls.testName.touched) {
+                          <mat-error>Test name is required</mat-error>
+                        }
+                      </mat-form-field>
+
+                      <mat-form-field appearance="outline" class="grow-1">
+                        <mat-label>Result date</mat-label>
+                        <input
+                          matInput
+                          [matDatepicker]="labPicker"
+                          [max]="maxIssueDate"
+                          formControlName="resultDate"
+                          readonly />
+                        <mat-datepicker-toggle matIconSuffix [for]="labPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #labPicker></mat-datepicker>
+                        @if (labForm.controls.resultDate.hasError('required')
+                             && labForm.controls.resultDate.touched) {
+                          <mat-error>Result date is required</mat-error>
+                        }
+                        @if (labForm.controls.resultDate.hasError('future')) {
+                          <mat-error>Result date cannot be in the future</mat-error>
+                        }
+                      </mat-form-field>
+                    </div>
+
+                    <div class="form__row">
+                      <mat-form-field appearance="outline" class="full">
+                        <mat-label>Result value</mat-label>
+                        <textarea
+                          matInput
+                          formControlName="resultValue"
+                          rows="2"
+                          maxlength="500"
+                          placeholder="e.g. WBC 7.2 K/uL · Hemoglobin 14.1 g/dL · normal range"></textarea>
+                        @if (labForm.controls.resultValue.hasError('required')
+                             && labForm.controls.resultValue.touched) {
+                          <mat-error>Result value is required</mat-error>
+                        }
+                      </mat-form-field>
+                    </div>
+
+                    <div class="form__actions">
+                      <button
+                        type="button"
+                        mat-stroked-button
+                        class="btn btn--ghost"
+                        (click)="toggleLabForm()"
+                        [disabled]="savingLab()">
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        mat-flat-button
+                        class="btn btn--primary"
+                        [disabled]="savingLab() || labForm.invalid">
+                        @if (savingLab()) {
+                          <mat-spinner diameter="18" strokeWidth="3"></mat-spinner>
+                        } @else {
+                          <mat-icon>upload</mat-icon>
+                        }
+                        Save Result
+                      </button>
+                    </div>
+                  </form>
+                }
+
+                @if (labsLoading()) {
+                  <div class="skeleton skeleton--cards">
+                    @for (i of [1,2,3]; track i) {
+                      <div class="sk-card">
+                        <div class="sk-line sk-line--title"></div>
+                        <div class="sk-line"></div>
+                        <div class="sk-line sk-line--short"></div>
+                      </div>
+                    }
+                  </div>
+                } @else if (labs().length === 0) {
+                  <div class="empty">
+                    <mat-icon class="empty__icon">biotech</mat-icon>
+                    <h3 class="empty__title">No lab results</h3>
+                    <p class="empty__sub">Click "Upload Result" to record one.</p>
+                  </div>
+                } @else {
+                  <div class="lab-list" [@listStagger]="labs().length">
+                    @for (l of labs(); track l.id) {
+                      <article class="lab-card" @listItem>
+                        <div class="lab-card__icon">
+                          <mat-icon>science</mat-icon>
+                        </div>
+                        <div class="lab-card__body">
+                          <h4 class="lab-card__name">{{ l.testName }}</h4>
+                          <p class="lab-card__value">{{ l.resultValue }}</p>
+                        </div>
+                        <div class="lab-card__date">
+                          <mat-icon>event</mat-icon>
+                          {{ formatDate(l.resultDate) }}
+                        </div>
+                      </article>
+                    }
+                  </div>
+                }
+              </div>
+            }
+          }
+        </div>
+      </section>
+    </div>
+  }
+</div>

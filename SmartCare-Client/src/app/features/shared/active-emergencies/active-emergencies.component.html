@@ -1,0 +1,210 @@
+<div class="page">
+  <header class="page__header">
+    <div>
+      <h1 class="page__title">Active Emergencies</h1>
+      <p class="page__sub">
+        Live patient alerts. Auto-refreshes every 30 seconds.
+        @if (lastUpdated()) {
+          <span class="page__updated">
+            <mat-icon>refresh</mat-icon>
+            Updated {{ formatTime(lastUpdated()!.toISOString()) }}
+          </span>
+        }
+      </p>
+    </div>
+
+    <div class="stats">
+      <div class="stat-pill stat-pill--total">
+        <span class="stat-pill__value">{{ stats().total }}</span>
+        <span class="stat-pill__label">Active</span>
+      </div>
+      <div class="stat-pill stat-pill--pending">
+        <span class="stat-pill__value">{{ stats().pending }}</span>
+        <span class="stat-pill__label">Pending</span>
+      </div>
+      <div class="stat-pill stat-pill--dispatched">
+        <span class="stat-pill__value">{{ stats().dispatched }}</span>
+        <span class="stat-pill__label">Dispatched</span>
+      </div>
+    </div>
+  </header>
+
+  @if (loading()) {
+    <div class="loading">
+      <mat-spinner diameter="36"></mat-spinner>
+    </div>
+  } @else if (items().length === 0) {
+    <div class="empty card">
+      <mat-icon class="empty__icon">check_circle</mat-icon>
+      <h3 class="empty__title">No active emergencies</h3>
+      <p class="empty__sub">All clear — alerts will appear here in real time.</p>
+    </div>
+  } @else {
+    <div class="layout" [class.layout--split]="selected()">
+      <section class="list card">
+        @if (refreshing()) {
+          <div class="list__refresh">
+            <mat-spinner diameter="14"></mat-spinner>
+            <span>Refreshing…</span>
+          </div>
+        }
+
+        <ul class="list__items" [@listStagger]="items().length">
+          @for (e of items(); track e.requestId) {
+            <li
+              class="row"
+              [class.row--selected]="selectedId() === e.requestId"
+              [class.row--pending]="e.status === 'Pending'"
+              (click)="select(e.requestId)">
+              <div class="row__indicator">
+                <span class="row__pulse" [class.row__pulse--pending]="e.status === 'Pending'"></span>
+              </div>
+
+              <div class="row__body">
+                <div class="row__top">
+                  <span class="row__patient">{{ e.patientName }}</span>
+                  <span [class]="statusClass(e.status)">{{ e.status }}</span>
+                </div>
+                <div class="row__meta">
+                  <span class="row__meta-item">
+                    <mat-icon>schedule</mat-icon>
+                    {{ formatRelative(e.requestTime) }}
+                  </span>
+                  <span class="row__meta-item">
+                    <mat-icon>place</mat-icon>
+                    {{ formatCoords(e.latitude, e.longitude) }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="row__actions" (click)="$event.stopPropagation()">
+                @if (e.status === 'Pending') {
+                  <button
+                    mat-flat-button
+                    class="action-btn action-btn--dispatch"
+                    [disabled]="acting() === e.requestId"
+                    (click)="confirmDispatch(e)">
+                    @if (acting() === e.requestId) {
+                      <mat-spinner diameter="16"></mat-spinner>
+                    } @else {
+                      <mat-icon>local_shipping</mat-icon>
+                    }
+                    Mark Dispatched
+                  </button>
+                } @else if (e.status === 'Dispatched') {
+                  <button
+                    mat-flat-button
+                    class="action-btn action-btn--resolve"
+                    [disabled]="acting() === e.requestId"
+                    (click)="confirmResolve(e)">
+                    @if (acting() === e.requestId) {
+                      <mat-spinner diameter="16"></mat-spinner>
+                    } @else {
+                      <mat-icon>check</mat-icon>
+                    }
+                    Mark Resolved
+                  </button>
+                }
+                <button
+                  mat-stroked-button
+                  class="action-btn action-btn--map"
+                  matTooltip="Open in OpenStreetMap"
+                  (click)="openInMaps(e, $event)">
+                  <mat-icon>map</mat-icon>
+                </button>
+              </div>
+            </li>
+          }
+        </ul>
+      </section>
+
+      @if (selected(); as e) {
+        <aside class="detail card" @detailFade>
+          <header class="detail__header">
+            <div>
+              <h2 class="detail__title">{{ e.patientName }}</h2>
+              <span [class]="statusClass(e.status)">{{ e.status }}</span>
+            </div>
+            <button mat-icon-button class="detail__close" (click)="closeDetail()" aria-label="Close detail">
+              <mat-icon>close</mat-icon>
+            </button>
+          </header>
+
+          <dl class="detail__grid">
+            <div>
+              <dt>Requested</dt>
+              <dd>
+                {{ formatRelative(e.requestTime) }}
+                <span class="detail__muted">· {{ formatTime(e.requestTime) }}</span>
+              </dd>
+            </div>
+            <div>
+              <dt>Location</dt>
+              <dd>{{ formatCoords(e.latitude, e.longitude) }}</dd>
+            </div>
+          </dl>
+
+          <div class="detail__map">
+            <app-map-view
+              [patientCoords]="selectedCoords()"
+              [clinics]="selectedClinics()">
+            </app-map-view>
+          </div>
+
+          @if (selectedClinics().length > 0) {
+            <div class="detail__clinics">
+              <h3 class="detail__section-title">Nearest Clinics</h3>
+              <ul class="clinic-list">
+                @for (c of selectedClinics().slice(0, 3); track c.id) {
+                  <li class="clinic-item">
+                    <div class="clinic-item__main">
+                      <span class="clinic-item__name">{{ c.name }}</span>
+                      <span class="clinic-item__addr">{{ c.address }}</span>
+                    </div>
+                    <span class="clinic-item__dist">{{ c.distanceKm.toFixed(1) }} km</span>
+                  </li>
+                }
+              </ul>
+            </div>
+          } @else {
+            <p class="detail__hint">
+              <mat-icon>info</mat-icon>
+              Nearest clinics are returned by the backend after dispatch.
+            </p>
+          }
+
+          <div class="detail__actions">
+            <button
+              mat-stroked-button
+              class="action-btn action-btn--map-large"
+              (click)="openInMaps(e)">
+              <mat-icon>open_in_new</mat-icon>
+              View on Map
+            </button>
+
+            @if (e.status === 'Pending') {
+              <button
+                mat-flat-button
+                class="action-btn action-btn--dispatch"
+                [disabled]="acting() === e.requestId"
+                (click)="confirmDispatch(e)">
+                <mat-icon>local_shipping</mat-icon>
+                Mark Dispatched
+              </button>
+            }
+            @if (e.status === 'Dispatched') {
+              <button
+                mat-flat-button
+                class="action-btn action-btn--resolve"
+                [disabled]="acting() === e.requestId"
+                (click)="confirmResolve(e)">
+                <mat-icon>check</mat-icon>
+                Mark Resolved
+              </button>
+            }
+          </div>
+        </aside>
+      }
+    </div>
+  }
+</div>

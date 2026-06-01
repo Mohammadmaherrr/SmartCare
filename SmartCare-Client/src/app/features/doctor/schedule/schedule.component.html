@@ -1,0 +1,131 @@
+<div class="schedule">
+
+  <!-- ── Header ───────────────────────────────────────────────────────── -->
+  <section class="header card">
+    <div class="header__title-block">
+      <h1 class="header__title">Full Schedule</h1>
+      <p class="header__period">{{ periodLabel() }}</p>
+    </div>
+
+    <div class="header__controls">
+      <div class="nav">
+        <button
+          type="button"
+          class="nav__btn"
+          (click)="previous()"
+          [attr.aria-label]="view() === 'week' ? 'Previous week' : 'Previous day'"
+          matTooltip="Previous">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <button type="button" class="nav__today" (click)="today()">Today</button>
+        <button
+          type="button"
+          class="nav__btn"
+          (click)="next()"
+          [attr.aria-label]="view() === 'week' ? 'Next week' : 'Next day'"
+          matTooltip="Next">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+
+      <mat-button-toggle-group
+        [value]="view()"
+        (change)="setView($event.value)"
+        class="view-toggle"
+        hideSingleSelectionIndicator>
+        <mat-button-toggle value="week">
+          <mat-icon>calendar_view_week</mat-icon>
+          Week
+        </mat-button-toggle>
+        <mat-button-toggle value="day">
+          <mat-icon>calendar_view_day</mat-icon>
+          Day
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+  </section>
+
+  <!-- ── Calendar ─────────────────────────────────────────────────────── -->
+  <section class="calendar card">
+    @if (loading()) {
+      <div class="calendar__loading">
+        <mat-spinner diameter="32"></mat-spinner>
+      </div>
+    }
+
+    <div class="grid" [class.grid--day]="view() === 'day'">
+      <!-- Header row -->
+      <div class="grid__head">
+        <div class="grid__gutter-head"></div>
+        @for (col of columns(); track col.isoDate) {
+          <button
+            type="button"
+            class="col-head"
+            [class.col-head--today]="col.isToday"
+            [class.col-head--weekend]="col.isWeekend"
+            [disabled]="view() === 'day'"
+            (click)="pickDay(col)">
+            <span class="col-head__weekday">{{ col.weekday }}</span>
+            <span class="col-head__day" [class.col-head__day--today]="col.isToday">
+              {{ col.day }}
+            </span>
+          </button>
+        }
+      </div>
+
+      <!-- Body row -->
+      <div class="grid__body" [style.height.px]="columnHeightPx">
+        <div class="grid__gutter">
+          @for (slot of timeSlots; track slot.hour) {
+            <div class="gutter-row" [style.height.px]="slotPx * 2">
+              <span class="gutter-row__label">{{ slot.label }}</span>
+            </div>
+          }
+        </div>
+
+        @for (col of columns(); track col.isoDate) {
+          <div class="col"
+               [class.col--today]="col.isToday"
+               [class.col--weekend]="col.isWeekend">
+            <!-- Hour grid lines -->
+            @for (slot of timeSlots; track slot.hour) {
+              <div class="col__hour" [style.height.px]="slotPx * 2">
+                <div class="col__half"></div>
+              </div>
+            }
+
+            <!-- Appointment blocks -->
+            @for (p of positionedByColumn().get(col.isoDate) ?? []; track p.appointment.id) {
+              <button
+                type="button"
+                class="block block--{{ p.appointment.status.toLowerCase() }}"
+                [style.top.px]="p.top"
+                [style.height.px]="p.height"
+                [style.width.%]="100 / p.laneCount"
+                [style.left.%]="(100 / p.laneCount) * p.laneIndex"
+                [matTooltip]="blockTooltip(p.appointment)"
+                matTooltipClass="block-tooltip"
+                (click)="open(p.appointment)"
+                [@fadeIn]>
+                <span class="block__time">{{ formatTime(p.appointment.timeSlot) }}</span>
+                <span class="block__name">{{ p.appointment.patientName }}</span>
+                @if (p.height > 50) {
+                  <span class="block__type">{{ visitTypeLabel(p.appointment.visitType) }}</span>
+                }
+              </button>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Legend ───────────────────────────────────────────────────────── -->
+  <section class="legend card">
+    <span class="legend__item"><span class="dot dot--pending"></span>Pending</span>
+    <span class="legend__item"><span class="dot dot--confirmed"></span>Confirmed</span>
+    <span class="legend__item"><span class="dot dot--completed"></span>Completed</span>
+    <span class="legend__item"><span class="dot dot--cancelled"></span>Cancelled</span>
+    <span class="legend__item"><span class="dot dot--noshow"></span>No-show</span>
+  </section>
+</div>

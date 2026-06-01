@@ -1,0 +1,139 @@
+<section class="nearby" @panelEnter>
+
+  <!-- ── Header ─────────────────────────────────────────────────────── -->
+  <header class="nearby__header">
+    <div class="nearby__title-block">
+      <h1 class="nearby__title">
+        <mat-icon class="nearby__title-icon">location_on</mat-icon>
+        Nearby Clinics
+      </h1>
+      <p class="nearby__subtitle">
+        @if (phase() === 'ready' && hasResults()) {
+          {{ sortedClinics().length }} clinics found near you
+        } @else if (phase() === 'ready') {
+          No clinics found nearby
+        } @else {
+          Finding clinics close to your location
+        }
+      </p>
+    </div>
+
+    <button
+      mat-stroked-button
+      class="nearby__refresh"
+      (click)="refresh()"
+      [disabled]="phase() === 'locating' || phase() === 'loading'"
+      matTooltip="Refresh nearby clinics">
+      <mat-icon>refresh</mat-icon>
+      <span>Refresh</span>
+    </button>
+  </header>
+
+  <!-- ── Fallback banner ────────────────────────────────────────────── -->
+  @if (usingFallback() && phase() !== 'locating') {
+    <div class="banner banner--warning">
+      <mat-icon class="banner__icon">info</mat-icon>
+      <div class="banner__body">
+        <div class="banner__title">{{ locationFailure()?.message }}</div>
+        <div class="banner__sub">Showing results near Amman by default.</div>
+      </div>
+      <button mat-stroked-button class="banner__action" (click)="retryLocation()">
+        <mat-icon>my_location</mat-icon>
+        <span>Use my location</span>
+      </button>
+    </div>
+  }
+
+  <!-- ── Locating / Loading ─────────────────────────────────────────── -->
+  @if (phase() === 'locating' || phase() === 'loading') {
+    <div class="nearby__loading">
+      <mat-spinner diameter="36" strokeWidth="3"></mat-spinner>
+      <p>
+        @if (phase() === 'locating') { Getting your location… }
+        @else { Loading nearby clinics… }
+      </p>
+    </div>
+  }
+
+  <!-- ── Error ──────────────────────────────────────────────────────── -->
+  @if (phase() === 'error') {
+    <div class="nearby__error">
+      <mat-icon>error_outline</mat-icon>
+      <h3>Could not load clinics</h3>
+      <p>{{ errorMessage() }}</p>
+      <button mat-flat-button color="primary" (click)="refresh()">
+        <mat-icon>refresh</mat-icon>
+        <span>Try again</span>
+      </button>
+    </div>
+  }
+
+  <!-- ── Ready ──────────────────────────────────────────────────────── -->
+  @if (phase() === 'ready') {
+    <div class="nearby__layout">
+
+      <div class="nearby__map">
+        <app-map-view
+          [clinics]="sortedClinics()"
+          [patientCoords]="coords()"
+          [selectedClinicId]="selectedId()"
+          (clinicSelect)="onClinicSelect($event)" />
+      </div>
+
+      <aside class="nearby__list" @listStagger>
+        @if (hasResults()) {
+          @for (clinic of sortedClinics(); track clinic.id) {
+            <article
+              #clinicCard
+              class="clinic-card"
+              [class.clinic-card--active]="selectedId() === clinic.id"
+              [attr.data-clinic-id]="clinic.id"
+              (click)="selectFromList(clinic)">
+
+              <header class="clinic-card__top">
+                <h3 class="clinic-card__name">{{ clinic.name }}</h3>
+                <span class="clinic-card__distance">{{ clinic.distanceKm.toFixed(1) }} km</span>
+              </header>
+
+              <div class="clinic-card__row">
+                <mat-icon>place</mat-icon>
+                <span>{{ clinic.address }}</span>
+              </div>
+
+              @if (clinic.phoneNumber) {
+                <div class="clinic-card__row">
+                  <mat-icon>call</mat-icon>
+                  <span>{{ clinic.phoneNumber }}</span>
+                </div>
+              }
+
+              @if (clinic.workingHours) {
+                <div class="clinic-card__row">
+                  <mat-icon>schedule</mat-icon>
+                  <span>{{ clinic.workingHours }}</span>
+                </div>
+              }
+
+              <div class="clinic-card__actions">
+                <button
+                  mat-flat-button
+                  class="directions-btn"
+                  (click)="getDirections(clinic, $event)">
+                  <mat-icon>directions</mat-icon>
+                  <span>Get Directions</span>
+                </button>
+              </div>
+            </article>
+          }
+        } @else {
+          <div class="empty">
+            <mat-icon>search_off</mat-icon>
+            <h3>No clinics nearby</h3>
+            <p>We could not find any clinics close to your current location.</p>
+          </div>
+        }
+      </aside>
+    </div>
+  }
+
+</section>

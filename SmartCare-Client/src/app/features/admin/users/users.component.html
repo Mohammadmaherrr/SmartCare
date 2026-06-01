@@ -1,0 +1,111 @@
+<div class="page">
+  <header class="page__header">
+    <div>
+      <h1 class="page__title">User Management</h1>
+      <p class="page__sub">Add staff accounts, edit profiles, or deactivate users.</p>
+    </div>
+    <button mat-flat-button class="primary-btn" (click)="openAddStaff()">
+      <mat-icon>add</mat-icon>
+      Add Staff
+    </button>
+  </header>
+
+  <section class="filters card" [formGroup]="filters">
+    <mat-form-field appearance="outline" class="filter-field filter-field--role">
+      <mat-label>Role</mat-label>
+      <mat-select formControlName="role">
+        @for (opt of roleOptions; track opt.value) {
+          <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field filter-field--search">
+      <mat-label>Search</mat-label>
+      <input matInput formControlName="search" placeholder="Name or email">
+      <mat-icon matPrefix>search</mat-icon>
+    </mat-form-field>
+  </section>
+
+  <div class="card table-card">
+    @if (loading()) {
+      <div class="loading">
+        <mat-spinner diameter="36"></mat-spinner>
+      </div>
+    } @else if (filtered().length === 0) {
+      <div class="empty">
+        <mat-icon class="empty__icon">group_off</mat-icon>
+        <h3 class="empty__title">No users found</h3>
+        <p class="empty__sub">Try a different role or search term.</p>
+      </div>
+    } @else {
+      <div class="result-summary">
+        <span class="result-summary__count">{{ filtered().length }}</span>
+        user{{ filtered().length === 1 ? '' : 's' }}
+      </div>
+
+      <div class="table-wrap">
+        <table mat-table [dataSource]="filtered()" class="users-table">
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <td mat-cell *matCellDef="let u">
+              <div class="person">
+                <div class="person__avatar">{{ initial(u.fullName) }}</div>
+                <span>{{ u.fullName }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>Email</th>
+            <td mat-cell *matCellDef="let u">{{ u.email }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="role">
+            <th mat-header-cell *matHeaderCellDef>Role</th>
+            <td mat-cell *matCellDef="let u">
+              <span [class]="roleClass(u.role)">{{ u.role }}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let u">
+              <span [class]="statusClass(u.accountStatus)">{{ u.accountStatus }}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="actions-col">Actions</th>
+            <td mat-cell *matCellDef="let u" class="actions-col">
+              <button
+                mat-icon-button
+                [matMenuTriggerFor]="menu"
+                [disabled]="acting() === u.id"
+                aria-label="Actions">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="openEdit(u)">
+                  <mat-icon>edit</mat-icon>
+                  <span>Edit</span>
+                </button>
+                <button
+                  mat-menu-item
+                  class="menu-danger"
+                  [disabled]="u.accountStatus === 'Blocked'"
+                  (click)="confirmDeactivate(u)">
+                  <mat-icon>block</mat-icon>
+                  <span>Deactivate</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" @fadeRow></tr>
+        </table>
+      </div>
+    }
+  </div>
+</div>

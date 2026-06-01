@@ -1,0 +1,104 @@
+<div class="page" [@stagger]="loading() ? 'loading' : 'ready'">
+
+  <header class="page__header">
+    <div class="page__title-block">
+      <h1 class="page__title">
+        <mat-icon class="page__title-icon">folder_open</mat-icon>
+        Patient Records
+      </h1>
+      <p class="page__subtitle">
+        @if (loading()) {
+          Loading your patients…
+        } @else if (totalPatients() === 0) {
+          You haven't seen any patients yet.
+        } @else {
+          {{ totalPatients() }} {{ totalPatients() === 1 ? 'patient' : 'patients' }} under your care
+        }
+      </p>
+    </div>
+
+    @if (!loading() && totalPatients() > 0) {
+      <mat-form-field appearance="outline" class="search-field" subscriptSizing="dynamic">
+        <mat-icon matPrefix>search</mat-icon>
+        <input
+          matInput
+          type="text"
+          placeholder="Search by patient name"
+          [formControl]="searchControl"
+          autocomplete="off" />
+        @if (searchControl.value) {
+          <button
+            type="button"
+            matSuffix
+            class="clear-btn"
+            (click)="clearSearch()"
+            aria-label="Clear search">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
+      </mat-form-field>
+    }
+  </header>
+
+  @if (loading()) {
+    <div class="skeleton-list">
+      @for (_ of [1,2,3,4]; track $index) {
+        <div class="skeleton-row"></div>
+      }
+    </div>
+  } @else if (totalPatients() === 0) {
+    <div class="empty" [@fadeIn]>
+      <div class="empty__icon">
+        <mat-icon>group</mat-icon>
+      </div>
+      <h2 class="empty__title">No patients yet</h2>
+      <p class="empty__text">
+        Patients you've seen in appointments will appear here.
+      </p>
+    </div>
+  } @else if (hasNoMatches()) {
+    <div class="empty" [@fadeIn]>
+      <div class="empty__icon">
+        <mat-icon>search_off</mat-icon>
+      </div>
+      <h2 class="empty__title">No matches</h2>
+      <p class="empty__text">
+        No patient matches "{{ searchControl.value }}". Try a different name.
+      </p>
+    </div>
+  } @else {
+    <ul class="patient-list">
+      @for (p of filtered(); track p.patientId) {
+        <li
+          class="patient-item"
+          tabindex="0"
+          role="button"
+          (click)="open(p)"
+          (keydown.enter)="open(p)"
+          (keydown.space)="open(p); $event.preventDefault()">
+          <div class="patient-item__avatar" [attr.data-tone]="avatarTone(p.patientName)">
+            {{ initials(p.patientName) }}
+          </div>
+          <div class="patient-item__body">
+            <div class="patient-item__name">{{ p.patientName }}</div>
+            <div class="patient-item__meta">
+              <span class="meta-chip">
+                <mat-icon>event</mat-icon>
+                Last visit · {{ formatDate(p.lastVisitDate) }}
+              </span>
+              <span class="meta-sep">·</span>
+              <span class="meta-text">{{ visitTypeLabel(p.lastVisitType) }}</span>
+            </div>
+          </div>
+          <div class="patient-item__count">
+            <span class="patient-item__count-num">{{ p.visitCount }}</span>
+            <span class="patient-item__count-label">
+              {{ p.visitCount === 1 ? 'visit' : 'visits' }}
+            </span>
+          </div>
+          <mat-icon class="patient-item__chev">chevron_right</mat-icon>
+        </li>
+      }
+    </ul>
+  }
+</div>

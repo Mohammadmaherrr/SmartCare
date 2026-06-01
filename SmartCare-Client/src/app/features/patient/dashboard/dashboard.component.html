@@ -1,0 +1,137 @@
+<div class="dashboard" [@stagger]="loading() ? 'loading' : 'ready'">
+
+  <!-- ── Greeting ──────────────────────────────────────────────────────── -->
+  <section class="greeting card stagger-item">
+    <div class="greeting__text">
+      <h1 class="greeting__title">Welcome back, {{ user()?.fullName }}</h1>
+      <p class="greeting__date">
+        <mat-icon>calendar_today</mat-icon>
+        {{ today | date:'EEEE, MMMM d, y' }}
+      </p>
+    </div>
+    <div class="greeting__avatar" aria-hidden="true">
+      <mat-icon>waving_hand</mat-icon>
+    </div>
+  </section>
+
+  <!-- ── Quick stats ───────────────────────────────────────────────────── -->
+  <section class="stats">
+    @if (loading()) {
+      @for (_ of [1,2,3]; track $index) {
+        <div class="stat card stagger-item">
+          <div class="skeleton skeleton--icon"></div>
+          <div class="skeleton skeleton--line"></div>
+          <div class="skeleton skeleton--num"></div>
+        </div>
+      }
+    } @else {
+      <div class="stat card stagger-item">
+        <div class="stat__icon stat__icon--blue">
+          <mat-icon>event_available</mat-icon>
+        </div>
+        <div class="stat__label">Upcoming appointments</div>
+        <div class="stat__value">{{ upcomingCount() }}</div>
+      </div>
+
+      <div class="stat card stagger-item">
+        <div class="stat__icon stat__icon--amber">
+          <mat-icon>description</mat-icon>
+        </div>
+        <div class="stat__label">Pending visit summaries</div>
+        <div class="stat__value">{{ pendingSummaries() }}</div>
+      </div>
+
+      <div class="stat card stagger-item">
+        <div class="stat__icon stat__icon--teal">
+          <mat-icon>medication</mat-icon>
+        </div>
+        <div class="stat__label">Latest prescription</div>
+        @if (latestPrescription(); as p) {
+          <div class="stat__value stat__value--text">{{ p.name }}</div>
+          <div class="stat__sub">{{ p.dosage }} · {{ p.date }}</div>
+        } @else {
+          <div class="stat__value stat__value--muted">—</div>
+        }
+      </div>
+    }
+  </section>
+
+  <!-- ── Quick actions ─────────────────────────────────────────────────── -->
+  <section class="actions card stagger-item">
+    <h2 class="section-title">Quick actions</h2>
+    <div class="actions__row">
+      <button mat-flat-button class="action-btn action-btn--primary" (click)="book()">
+        <mat-icon>event_available</mat-icon>
+        Book Appointment
+      </button>
+      <button mat-flat-button class="action-btn action-btn--sos" (click)="sos()">
+        <mat-icon>sos</mat-icon>
+        Emergency SOS
+      </button>
+    </div>
+  </section>
+
+  <!-- Next appointment -->
+  <section class="next card stagger-item">
+      <div class="card-header">
+        <h2 class="section-title">Next appointment</h2>
+        @if (nextAppointment()) {
+          <button mat-button class="link-btn" (click)="viewAppointments()">
+            View all <mat-icon>arrow_forward</mat-icon>
+          </button>
+        }
+      </div>
+
+      @if (loading()) {
+        <div class="skeleton skeleton--block"></div>
+      } @else if (nextAppointment(); as appt) {
+        <div class="next__body">
+          <div class="next__doctor">
+            <div class="avatar">
+              <mat-icon>person</mat-icon>
+            </div>
+            <div>
+              <div class="next__doctor-name">{{ appt.doctorName }}</div>
+              <div class="next__visit-type">{{ visitTypeLabel(appt.visitType) }}</div>
+            </div>
+          </div>
+          <div class="next__meta">
+            <div class="meta-row">
+              <mat-icon>calendar_today</mat-icon>
+              <span>{{ appt.appointmentDate | date:'EEEE, MMM d, y' }}</span>
+            </div>
+            <div class="meta-row">
+              <mat-icon>schedule</mat-icon>
+              <span>{{ formatTime(appt.timeSlot) }} – {{ formatTime(appt.endTime) }}</span>
+            </div>
+            <div class="meta-row">
+              <span class="status status--{{ appt.status.toLowerCase() }}">{{ appt.status }}</span>
+            </div>
+          </div>
+        </div>
+      } @else {
+        <div class="empty">
+          <mat-icon class="empty__icon">event_busy</mat-icon>
+          <p class="empty__title">No upcoming appointments</p>
+          <p class="empty__sub">Book a visit and it will show up here.</p>
+          <button mat-stroked-button color="primary" (click)="book()">
+            <mat-icon>add</mat-icon> Book Appointment
+          </button>
+        </div>
+      }
+  </section>
+
+  <!-- ── Floating Emergency SOS ──────────────────────────────────────────── -->
+  <button
+    type="button"
+    class="sos-fab"
+    (click)="sos()"
+    aria-label="Emergency SOS"
+    matTooltip="Emergency SOS"
+    matTooltipPosition="left">
+    <span class="sos-fab__pulse"></span>
+    <span class="sos-fab__inner">
+      <mat-icon>sos</mat-icon>
+    </span>
+  </button>
+</div>

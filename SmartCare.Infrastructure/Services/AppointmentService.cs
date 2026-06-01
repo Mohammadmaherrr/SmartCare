@@ -240,6 +240,35 @@ public class AppointmentService(AppDbContext context) : IAppointmentService
         return ToDto(appointment, appointment.Patient.FullName, appointment.Doctor.FullName);
     }
 
+    public async Task<PatientProfileDto> GetPatientForAppointmentAsync(
+        Guid appointmentId, Guid requesterId, string requesterRole)
+    {
+        if (requesterRole is not ("Patient" or "Doctor" or "Receptionist" or "Admin"))
+            throw new ForbiddenException("You are not authorized to view this patient.");
+
+        var appointment = await context.Appointments
+            .Include(a => a.Patient)
+            .FirstOrDefaultAsync(a => a.Id == appointmentId)
+            ?? throw new BadRequestException("Appointment not found.");
+
+        if (requesterRole == "Patient" && appointment.PatientId != requesterId)
+            throw new ForbiddenException("You are not authorized to view this patient.");
+
+        if (requesterRole == "Doctor" && appointment.DoctorId != requesterId)
+            throw new ForbiddenException("You are not authorized to view this patient.");
+
+        var patient = appointment.Patient;
+        return new PatientProfileDto
+        {
+            Id = patient.Id,
+            FullName = patient.FullName,
+            DateOfBirth = patient.DateOfBirth,
+            Gender = patient.Gender,
+            ContactNumber = patient.ContactNumber,
+            Address = patient.Address,
+        };
+    }
+
     public async Task<AppointmentResponseDto> UpdateAppointmentStatusAsync(
         UpdateStatusDto dto, Guid requesterId, string requesterRole)
     {

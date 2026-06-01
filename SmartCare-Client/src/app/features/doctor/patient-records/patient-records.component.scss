@@ -1,0 +1,689 @@
+$primary:        #1565C0;
+$primary-dark:   #0D47A1;
+$primary-light:  #E3F2FD;
+$accent:         #00897B;
+$accent-light:   #E0F2F1;
+$amber:          #F57C00;
+$amber-light:    #FFF3E0;
+$danger:         #C62828;
+$gray:           #607D8B;
+$gray-light:     #ECEFF1;
+$surface:        #F4F6F9;
+$card-bg:        #ffffff;
+$text-primary:   #1A1A2E;
+$text-secondary: #546E7A;
+$text-muted:     #90A4AE;
+$divider:        #E0E7EF;
+
+.page {
+  padding: 28px;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+// ── Top bar ──────────────────────────────────────────────────────────────
+.topbar {
+  display: flex;
+  align-items: center;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  color: $text-secondary;
+  font-weight: 600;
+  font-size: 13.5px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: background .14s, color .14s, gap .14s;
+
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+
+  &:hover {
+    background: $primary-light;
+    color: $primary-dark;
+    gap: 8px;
+  }
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 60px 0;
+}
+
+// ── Split layout ─────────────────────────────────────────────────────────
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+  gap: 20px;
+  align-items: start;
+
+  @media (max-width: 1080px) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 16px;
+
+  @media (max-width: 1080px) {
+    position: static;
+  }
+}
+
+// ── Patient summary card ─────────────────────────────────────────────────
+.patient-card {
+  background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+  border-radius: 14px;
+  padding: 22px 24px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  color: #fff;
+  box-shadow:
+    0 1px 3px rgba(15, 23, 42, 0.06),
+    0 8px 24px -6px rgba(21, 101, 192, 0.25);
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  border: 2px solid rgba(255, 255, 255, 0.32);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+
+  &__name {
+    margin: 0 0 6px;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.88);
+  }
+}
+
+.meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    opacity: 0.85;
+  }
+}
+
+// ── Cards ────────────────────────────────────────────────────────────────
+.card {
+  background: $card-bg;
+  border-radius: 14px;
+  box-shadow:
+    0 1px 3px rgba(15, 23, 42, 0.04),
+    0 4px 16px -4px rgba(21, 101, 192, 0.08);
+  overflow: hidden;
+}
+
+.record-card {
+  padding: 20px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.card__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: $text-primary;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    color: $primary;
+  }
+}
+
+// ── Record body ──────────────────────────────────────────────────────────
+.record {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__heading {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: $primary;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  &__body {
+    margin: 0;
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: $text-primary;
+    background: $surface;
+    border-radius: 10px;
+    padding: 12px 14px;
+    border-left: 3px solid $primary-light;
+    white-space: pre-wrap;
+  }
+}
+
+// ── Right side (tabs) ────────────────────────────────────────────────────
+.right {
+  min-height: 540px;
+}
+
+.tabs {
+  border-bottom: 1px solid $divider;
+
+  ::ng-deep .mat-mdc-tab-header {
+    padding: 0 12px;
+  }
+
+  ::ng-deep .mat-mdc-tab .mdc-tab__text-label {
+    color: $text-secondary;
+    font-weight: 600;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  ::ng-deep .mat-mdc-tab--active .mdc-tab__text-label {
+    color: $primary;
+  }
+}
+
+.tab-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.tab-body {
+  padding: 22px 24px 26px;
+}
+
+.tab-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  gap: 12px;
+
+  &__title {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;
+    color: $text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+}
+
+// ── Buttons ──────────────────────────────────────────────────────────────
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 13.5px;
+  letter-spacing: 0.1px;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  ::ng-deep mat-spinner circle {
+    stroke: currentColor;
+  }
+}
+
+.btn--primary {
+  background: $primary;
+  color: #fff;
+
+  &:hover:not([disabled]) {
+    background: $primary-dark;
+  }
+
+  &[disabled] {
+    opacity: 0.6;
+  }
+}
+
+.btn--ghost {
+  color: $text-secondary;
+  border-color: $divider;
+
+  &:hover:not([disabled]) {
+    background: $surface;
+    color: $text-primary;
+  }
+}
+
+// ── Forms ────────────────────────────────────────────────────────────────
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow: hidden;
+
+  &--inline {
+    background: $surface;
+    border: 1px solid $divider;
+    border-radius: 12px;
+    padding: 16px 16px 4px;
+    margin-bottom: 18px;
+  }
+
+  &__row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+
+    .grow-1 { flex: 1; min-width: 200px; }
+    .grow-2 { flex: 2; min-width: 240px; }
+    .full   { flex: 1 1 100%; }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 4px;
+
+    &--inline {
+      flex: 0 0 auto;
+      align-items: flex-start;
+      margin-top: 0;
+      padding-top: 4px;
+    }
+  }
+
+  .full   { flex: 1 1 100%; width: 100%; }
+}
+
+::ng-deep .mat-mdc-form-field {
+  width: 100%;
+}
+
+// ── Prescriptions ────────────────────────────────────────────────────────
+.rx-group {
+  margin-bottom: 22px;
+
+  &:last-child { margin-bottom: 0; }
+
+  &__label {
+    margin: 0 0 12px;
+    font-size: 12px;
+    font-weight: 700;
+    color: $text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+}
+
+.rx-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.rx-card {
+  background: $card-bg;
+  border: 1px solid $divider;
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: $primary-light;
+    box-shadow: 0 6px 18px -8px rgba(21, 101, 192, 0.25);
+  }
+
+  &--muted {
+    background: $surface;
+  }
+
+  &__head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: $accent-light;
+    color: $accent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    mat-icon { font-size: 20px; width: 20px; height: 20px; }
+  }
+
+  &__title {
+    flex: 1;
+    min-width: 0;
+
+    h4 {
+      margin: 0 0 2px;
+      font-size: 14.5px;
+      font-weight: 700;
+      color: $text-primary;
+      letter-spacing: -0.1px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  &__dosage {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: $accent;
+    background: $accent-light;
+    padding: 2px 8px;
+    border-radius: 10px;
+    display: inline-block;
+  }
+
+  &__instructions {
+    margin: 0;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: $text-secondary;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+
+    mat-icon {
+      font-size: 15px;
+      width: 15px;
+      height: 15px;
+      color: $text-muted;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+  }
+
+  &__date {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: $text-muted;
+    padding-top: 8px;
+    border-top: 1px dashed $divider;
+
+    mat-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+    }
+  }
+}
+
+// ── Expansion panels for older prescriptions ─────────────────────────────
+.rx-accordion {
+  display: block;
+  margin-bottom: 16px;
+
+  &:last-child { margin-bottom: 0; }
+
+  ::ng-deep .mat-expansion-panel {
+    background: transparent;
+    box-shadow: none;
+    border: 1px solid $divider;
+    border-radius: 12px !important;
+    overflow: hidden;
+
+    .mat-expansion-panel-header {
+      padding: 0 16px;
+      height: 52px;
+
+      &:hover {
+        background: $surface !important;
+      }
+    }
+
+    .mat-expansion-panel-header-title {
+      color: $text-secondary;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .mat-expansion-panel-header-description {
+      color: $text-muted;
+      font-size: 12.5px;
+    }
+
+    .mat-expansion-panel-body {
+      padding: 0 16px 16px;
+    }
+  }
+}
+
+// ── Lab cards ────────────────────────────────────────────────────────────
+.lab-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lab-card {
+  background: $card-bg;
+  border: 1px solid $divider;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: 14px;
+  align-items: center;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    border-color: $primary-light;
+    box-shadow: 0 4px 14px -8px rgba(21, 101, 192, 0.2);
+  }
+
+  &__icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: $primary-light;
+    color: $primary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    mat-icon { font-size: 20px; width: 20px; height: 20px; }
+  }
+
+  &__body {
+    min-width: 0;
+  }
+
+  &__name {
+    margin: 0 0 4px;
+    font-size: 14.5px;
+    font-weight: 700;
+    color: $text-primary;
+    letter-spacing: -0.1px;
+  }
+
+  &__value {
+    margin: 0;
+    font-size: 13px;
+    color: $text-secondary;
+    line-height: 1.45;
+    white-space: pre-wrap;
+  }
+
+  &__date {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: $text-muted;
+    white-space: nowrap;
+
+    mat-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+    }
+  }
+}
+
+// ── Empty state ──────────────────────────────────────────────────────────
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 56px 24px;
+  text-align: center;
+  gap: 8px;
+
+  &--inline {
+    padding: 28px 16px;
+  }
+
+  &__icon {
+    font-size: 56px;
+    width: 56px;
+    height: 56px;
+    color: $text-muted;
+    opacity: 0.55;
+    margin-bottom: 6px;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: $text-primary;
+  }
+
+  &__sub {
+    margin: 0;
+    font-size: 13.5px;
+    color: $text-secondary;
+    max-width: 360px;
+  }
+}
+
+// ── Skeleton loaders ─────────────────────────────────────────────────────
+@keyframes shimmer {
+  0%   { background-position: -480px 0; }
+  100% { background-position: 480px 0; }
+}
+
+.skeleton--cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.sk-card {
+  background: $card-bg;
+  border: 1px solid $divider;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sk-line {
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    $gray-light 0%,
+    #F5F7FA 50%,
+    $gray-light 100%
+  );
+  background-size: 960px 100%;
+  animation: shimmer 1.4s linear infinite;
+
+  &--title { height: 16px; width: 60%; }
+  &--short { width: 45%; }
+}

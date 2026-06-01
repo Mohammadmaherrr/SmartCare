@@ -1,0 +1,77 @@
+$primary:        #1565C0;
+$primary-dark:   #0D47A1;
+$text-primary:   #1A1A2E;
+$text-secondary: #546E7A;
+
+.dlg {
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+}
+
+.dlg__head {
+  padding: 0 0 12px;
+}
+
+.dlg__title {
+  margin: 0 0 4px !important;
+  font-size: 19px;
+  font-weight: 700;
+  color: $text-primary;
+  padding: 0 !important;
+}
+
+.dlg__sub {
+  margin: 0;
+  font-size: 13px;
+  color: $text-secondary;
+}
+
+.dlg__body {
+  padding: 8px 0 0 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.full {
+  width: 100%;
+
+  --mdc-outlined-text-field-focus-outline-color: #{$primary};
+  --mdc-outlined-text-field-focus-label-text-color: #{$primary};
+}
+
+.dlg__actions {
+  padding: 16px 0 0 !important;
+  gap: 8px;
+}
+
+.primary {
+  background: $primary;
+  color: #fff;
+  border-radius: 10px;
+  height: 40px;
+  padding: 0 18px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  &:not([disabled]):hover { background: $primary-dark; }
+  &[disabled] { opacity: .55; }
+
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+}
+
+.btn-spinner {
+  ::ng-deep circle { stroke: #fff !important; }
+}
+
+.role-note {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: $text-secondary;
+  padding: 12px 14px;
+  background: #F4F6F9;
+  border-radius: 10px;
+}

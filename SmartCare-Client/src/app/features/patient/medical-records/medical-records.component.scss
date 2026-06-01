@@ -1,0 +1,562 @@
+$primary:        #1565C0;
+$primary-dark:   #0D47A1;
+$primary-light:  #E3F2FD;
+$accent:         #00897B;
+$accent-light:   #E0F2F1;
+$amber:          #F57C00;
+$amber-light:    #FFF3E0;
+$danger:         #C62828;
+$gray:           #607D8B;
+$gray-light:     #ECEFF1;
+$surface:        #F4F6F9;
+$card-bg:        #ffffff;
+$text-primary:   #1A1A2E;
+$text-secondary: #546E7A;
+$text-muted:     #90A4AE;
+$divider:        #E0E7EF;
+
+.page {
+  padding: 28px;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  &__title {
+    margin: 0 0 4px;
+    font-size: 24px;
+    font-weight: 700;
+    color: $text-primary;
+    letter-spacing: -0.3px;
+  }
+
+  &__sub {
+    margin: 0;
+    color: $text-secondary;
+    font-size: 14px;
+  }
+}
+
+.print-btn {
+  height: 44px;
+  padding: 0 18px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  color: $primary;
+  border-color: $primary-light;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  mat-icon { font-size: 20px; width: 20px; height: 20px; }
+
+  &:hover {
+    background: $primary-light;
+  }
+}
+
+// ── Patient summary card ─────────────────────────────────────────────────
+.patient-card {
+  background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+  border-radius: 14px;
+  padding: 22px 24px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  color: #fff;
+  box-shadow:
+    0 1px 3px rgba(15, 23, 42, 0.06),
+    0 8px 24px -6px rgba(21, 101, 192, 0.25);
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  border: 2px solid rgba(255, 255, 255, 0.32);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+
+  &__name {
+    margin: 0 0 6px;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.88);
+  }
+}
+
+.meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    opacity: 0.85;
+  }
+}
+
+// ── Card / tabs ──────────────────────────────────────────────────────────
+.card {
+  background: $card-bg;
+  border-radius: 14px;
+  box-shadow:
+    0 1px 3px rgba(15, 23, 42, 0.04),
+    0 4px 16px -4px rgba(21, 101, 192, 0.08);
+  overflow: hidden;
+}
+
+.tabs {
+  border-bottom: 1px solid $divider;
+
+  ::ng-deep .mat-mdc-tab-header {
+    padding: 0 12px;
+  }
+
+  ::ng-deep .mat-mdc-tab .mdc-tab__text-label {
+    color: $text-secondary;
+    font-weight: 600;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  ::ng-deep .mat-mdc-tab--active .mdc-tab__text-label {
+    color: $primary;
+  }
+}
+
+.tab-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.tab-body {
+  padding: 24px;
+  min-height: 360px;
+}
+
+// ── Medical Record tab ───────────────────────────────────────────────────
+.record {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__heading {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: $primary;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  &__body {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: $text-primary;
+    background: $surface;
+    border-radius: 10px;
+    padding: 14px 16px;
+    border-left: 3px solid $primary-light;
+    white-space: pre-wrap;
+  }
+
+  &__footer {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: $text-muted;
+    padding-top: 8px;
+    border-top: 1px dashed $divider;
+    margin-top: 4px;
+
+    mat-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+    }
+  }
+}
+
+// ── Prescriptions tab ────────────────────────────────────────────────────
+.rx-group {
+  margin-bottom: 24px;
+
+  &:last-child { margin-bottom: 0; }
+
+  &__label {
+    margin: 0 0 12px;
+    font-size: 12px;
+    font-weight: 700;
+    color: $text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+}
+
+.rx-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.rx-card {
+  background: $card-bg;
+  border: 1px solid $divider;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: $primary-light;
+    box-shadow: 0 6px 18px -8px rgba(21, 101, 192, 0.25);
+  }
+
+  &__head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: $accent-light;
+    color: $accent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    mat-icon { font-size: 22px; width: 22px; height: 22px; }
+  }
+
+  &__title {
+    flex: 1;
+    min-width: 0;
+
+    h4 {
+      margin: 0 0 2px;
+      font-size: 15px;
+      font-weight: 700;
+      color: $text-primary;
+      letter-spacing: -0.1px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  &__dosage {
+    font-size: 12px;
+    font-weight: 600;
+    color: $accent;
+    background: $accent-light;
+    padding: 2px 8px;
+    border-radius: 10px;
+    display: inline-block;
+  }
+
+  &__instructions {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: $text-secondary;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+      color: $text-muted;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+  }
+
+  &__date {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: $text-muted;
+    padding-top: 8px;
+    border-top: 1px dashed $divider;
+
+    mat-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+    }
+  }
+}
+
+// ── Lab Results tab ──────────────────────────────────────────────────────
+.table-wrap { overflow-x: auto; }
+
+.labs-table {
+  width: 100%;
+  background: $card-bg;
+
+  ::ng-deep .mat-mdc-header-row {
+    background: $surface;
+  }
+
+  ::ng-deep .mat-mdc-header-cell {
+    color: $text-secondary;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    border-bottom: 1px solid $divider;
+  }
+
+  ::ng-deep .mat-mdc-cell {
+    color: $text-primary;
+    font-size: 14px;
+    border-bottom: 1px solid $divider;
+    padding: 14px 16px;
+  }
+
+  ::ng-deep .mat-mdc-row:hover {
+    background: rgba(21, 101, 192, 0.025);
+  }
+}
+
+.lab-test {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  &__icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: $primary-light;
+    color: $primary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    mat-icon { font-size: 18px; width: 18px; height: 18px; }
+  }
+}
+
+.lab-value {
+  font-weight: 600;
+  color: $primary-dark;
+  background: $primary-light;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+// ── Empty state ──────────────────────────────────────────────────────────
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 56px 24px;
+  text-align: center;
+  gap: 8px;
+
+  &__icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: $text-muted;
+    opacity: 0.55;
+    margin-bottom: 8px;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+    color: $text-primary;
+  }
+
+  &__sub {
+    margin: 0;
+    font-size: 14px;
+    color: $text-secondary;
+    max-width: 360px;
+  }
+}
+
+// ── Skeleton loaders ─────────────────────────────────────────────────────
+@keyframes shimmer {
+  0%   { background-position: -480px 0; }
+  100% { background-position: 480px 0; }
+}
+
+.sk-line,
+.sk-block,
+.sk-card,
+.sk-row {
+  background: linear-gradient(
+    90deg,
+    $gray-light 0%,
+    #F5F7FA 50%,
+    $gray-light 100%
+  );
+  background-size: 960px 100%;
+  animation: shimmer 1.4s linear infinite;
+  border-radius: 6px;
+}
+
+.sk-line {
+  height: 12px;
+  margin-bottom: 10px;
+  width: 100%;
+
+  &--title { height: 16px; width: 38%; margin-bottom: 14px; }
+  &--meta  { width: 60%; }
+  &--short { width: 55%; }
+  &--col   { height: 14px; width: 70%; margin: 0; }
+}
+
+.sk-block {
+  height: 72px;
+  margin-bottom: 22px;
+  border-radius: 10px;
+
+  &--short { height: 48px; }
+}
+
+.skeleton--cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+
+  .sk-card {
+    background: $card-bg;
+    border: 1px solid $divider;
+    border-radius: 12px;
+    padding: 16px;
+    animation: none;
+
+    .sk-line:last-child { margin-bottom: 0; }
+  }
+}
+
+.skeleton--table {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: $divider;
+  border-radius: 8px;
+  overflow: hidden;
+
+  .sk-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 16px;
+    padding: 16px;
+    background: $card-bg;
+    animation: none;
+    border-radius: 0;
+  }
+}
+
+// ── Print styles ─────────────────────────────────────────────────────────
+@media print {
+  .no-print { display: none !important; }
+
+  .page {
+    padding: 0;
+    max-width: none;
+  }
+
+  .patient-card {
+    background: $card-bg;
+    color: $text-primary;
+    border: 1px solid $divider;
+    box-shadow: none;
+    page-break-inside: avoid;
+
+    .avatar {
+      background: $primary-light;
+      color: $primary;
+      border-color: $primary;
+    }
+
+    .info__meta { color: $text-secondary; }
+  }
+
+  .card {
+    box-shadow: none;
+    border: 1px solid $divider;
+  }
+
+  .tab-body { padding: 16px; min-height: 0; }
+
+  // Hide non-active tab content during print
+  .tab-body[data-tab="record"] :not([data-tab="record"] *) { /* placeholder */ }
+
+  .rx-card,
+  .record__section,
+  .rx-group { page-break-inside: avoid; }
+
+  .rx-card:hover { transform: none; box-shadow: none; }
+}

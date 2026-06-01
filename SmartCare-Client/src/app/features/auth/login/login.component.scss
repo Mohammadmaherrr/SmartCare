@@ -1,0 +1,135 @@
+// Design tokens
+$primary:        #1565C0;
+$primary-dark:   #0D47A1;
+$accent:         #00897B;
+$surface:        #F4F6F9;
+$text-primary:   #1A1A2E;
+$text-secondary: #546E7A;
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #E3F2FD 0%, #F4F6F9 50%, #E8F5E9 100%);
+  padding: 24px 16px;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.07),
+    0 10px 40px -5px rgba(21, 101, 192, 0.12);
+  padding: 48px 40px 40px;
+  width: 100%;
+  max-width: 440px;
+}
+
+// ── Brand ──────────────────────────────────────────────────────────────────
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+.brand-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+  color: $primary;
+}
+
+.brand-name {
+  font-size: 26px;
+  font-weight: 700;
+  color: $primary-dark;
+  letter-spacing: -0.5px;
+}
+
+// ── Headings ───────────────────────────────────────────────────────────────
+
+.title {
+  font-size: 22px;
+  font-weight: 600;
+  color: $text-primary;
+  margin: 0 0 6px;
+  text-align: center;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: $text-secondary;
+  margin: 0 0 28px;
+  text-align: center;
+}
+
+// ── Form ───────────────────────────────────────────────────────────────────
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field {
+  width: 100%;
+
+  // Tint the focused outline with brand primary
+  --mdc-outlined-text-field-focus-outline-color: #{$primary};
+  --mdc-outlined-text-field-focus-label-text-color: #{$primary};
+}
+
+.submit-btn {
+  margin-top: 8px;
+  height: 48px;
+  width: 100%;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 8px;
+  background-color: $primary;
+  color: #ffffff;
+  letter-spacing: 0.3px;
+
+  &[disabled] {
+    opacity: 0.55;
+  }
+
+  // Hover lift
+  &:not([disabled]):hover {
+    background-color: $primary-dark;
+  }
+}
+
+.btn-spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  // Force spinner to white to match button text color
+  ::ng-deep circle {
+    stroke: #ffffff !important;
+  }
+}
+
+// ── Footer link ────────────────────────────────────────────────────────────
+
+.register-link {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 14px;
+  color: $text-secondary;
+
+  a {
+    color: $primary;
+    font-weight: 600;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

@@ -1,0 +1,258 @@
+$primary:        #1565C0;
+$primary-dark:   #0D47A1;
+$primary-light:  #E3F2FD;
+$accent:         #00897B;
+$accent-light:   #E0F2F1;
+$amber:          #F57C00;
+$amber-light:    #FFF3E0;
+$danger:         #C62828;
+$danger-light:   #FFEBEE;
+$success:        #2E7D32;
+$success-light:  #E8F5E9;
+$surface:        #F4F6F9;
+$card-bg:        #ffffff;
+$text-primary:   #1A1A2E;
+$text-secondary: #546E7A;
+$text-muted:     #90A4AE;
+$divider:        #E0E7EF;
+
+.page {
+  padding: 28px;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  &__title {
+    margin: 0 0 4px;
+    font-size: 24px;
+    font-weight: 700;
+    color: $text-primary;
+    letter-spacing: -0.3px;
+  }
+
+  &__sub {
+    margin: 0;
+    color: $text-secondary;
+    font-size: 14px;
+  }
+}
+
+.card {
+  background: $card-bg;
+  border-radius: 14px;
+  box-shadow:
+    0 1px 3px rgba(15, 23, 42, 0.04),
+    0 4px 16px -4px rgba(21, 101, 192, 0.08);
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  text-align: center;
+  gap: 8px;
+
+  &__icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: $text-muted;
+    opacity: 0.6;
+    margin-bottom: 8px;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+    color: $text-primary;
+  }
+
+  &__sub {
+    margin: 0;
+    font-size: 14px;
+    color: $text-secondary;
+  }
+}
+
+.group {
+  padding: 22px 24px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 18px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid $divider;
+  }
+
+  &__icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    mat-icon { font-size: 24px; width: 24px; height: 24px; }
+
+    &--primary { background: $primary-light; color: $primary; }
+    &--accent  { background: $accent-light;  color: $accent; }
+    &--amber   { background: $amber-light;   color: $amber; }
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: $text-primary;
+  }
+
+  &__sub {
+    margin: 0;
+    font-size: 13px;
+    color: $text-secondary;
+  }
+}
+
+.setting-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 18px 4px;
+  border-bottom: 1px solid $divider;
+
+  &:last-child { border-bottom: none; }
+
+  &__info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__label {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: $text-primary;
+  }
+
+  &__desc {
+    font-size: 13px;
+    color: $text-secondary;
+    margin-top: 2px;
+  }
+
+  &__value {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: 240px;
+    justify-content: flex-end;
+  }
+}
+
+.value-display {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 6px 12px;
+  background: $surface;
+  border-radius: 8px;
+  font-weight: 600;
+
+  &__num {
+    font-size: 15px;
+    color: $text-primary;
+  }
+
+  &__unit {
+    font-size: 12px;
+    color: $text-muted;
+    font-weight: 500;
+    text-transform: lowercase;
+  }
+}
+
+.edit-btn {
+  color: $primary;
+}
+
+.edit-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.edit-field {
+  width: 160px;
+  --mdc-outlined-text-field-focus-outline-color: #{$primary};
+  --mdc-outlined-text-field-focus-label-text-color: #{$primary};
+
+  ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+    margin-top: 0;
+  }
+
+  ::ng-deep .mat-mdc-form-field-infix {
+    min-height: 44px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}
+
+.edit-suffix {
+  font-size: 12px;
+  color: $text-muted;
+  margin-left: 6px;
+}
+
+.save-btn {
+  color: $success;
+
+  &[disabled] { color: $text-muted; }
+}
+
+.cancel-btn {
+  color: $text-secondary;
+}
+
+@media (max-width: 720px) {
+  .setting-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+
+    &__value {
+      min-width: 0;
+      justify-content: flex-start;
+    }
+  }
+
+  .edit-field { width: 100%; }
+}

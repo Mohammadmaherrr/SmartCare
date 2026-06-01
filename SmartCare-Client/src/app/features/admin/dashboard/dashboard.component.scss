@@ -1,0 +1,233 @@
+$primary:        #1565C0;
+$primary-dark:   #0D47A1;
+$primary-light:  #E3F2FD;
+$accent:         #00897B;
+$accent-light:   #E0F2F1;
+$amber:          #F57C00;
+$amber-light:    #FFF3E0;
+$danger:         #C62828;
+$danger-light:   #FFEBEE;
+$gray:           #607D8B;
+$gray-light:     #ECEFF1;
+$surface:        #F4F6F9;
+$card-bg:        #ffffff;
+$text-primary:   #1A1A2E;
+$text-secondary: #546E7A;
+$text-muted:     #90A4AE;
+$divider:        #E0E7EF;
+
+.dashboard {
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.card {
+  background: $card-bg;
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(15,23,42,.04), 0 4px 16px -4px rgba(21,101,192,.08);
+  padding: 22px 24px;
+}
+
+.section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: $text-primary;
+  margin: 0;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.header-sub {
+  font-size: 12px;
+  font-weight: 600;
+  color: $text-muted;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+}
+
+.greeting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg,#0D47A1 0%,#1565C0 50%,#00897B 100%);
+  color: #fff;
+  padding: 28px 32px;
+
+  &__title {
+    margin: 0 0 6px;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -.3px;
+  }
+
+  &__date {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    opacity: .92;
+    mat-icon { font-size: 16px; width: 16px; height: 16px; }
+  }
+
+  &__avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.18);
+    mat-icon { font-size: 28px; width: 28px; height: 28px; color: #fff; }
+  }
+}
+
+// ── Stat cards ───────────────────────────────────────────────────────────
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+
+  @media (max-width: 1080px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 540px)  { grid-template-columns: 1fr; }
+}
+
+.stat-card {
+  background: $card-bg;
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(15,23,42,.04), 0 4px 16px -4px rgba(21,101,192,.08);
+  padding: 22px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  &__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    mat-icon { font-size: 26px; width: 26px; height: 26px; }
+  }
+
+  &__body { min-width: 0; }
+
+  &__label {
+    font-size: 12px;
+    font-weight: 600;
+    color: $text-secondary;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+  }
+
+  &__value {
+    font-size: 30px;
+    font-weight: 700;
+    color: $text-primary;
+    margin-top: 4px;
+    line-height: 1.1;
+    letter-spacing: -.5px;
+  }
+
+  &__skeleton {
+    margin-top: 8px;
+    width: 60px;
+    height: 28px;
+    border-radius: 6px;
+    background: linear-gradient(90deg,#ECEFF1 0%,#F5F7FA 50%,#ECEFF1 100%);
+    background-size: 800px 100%;
+    animation: shimmer 1.4s linear infinite;
+  }
+
+  &--primary &__icon { background: $primary-light; color: $primary; }
+  &--accent  &__icon { background: $accent-light;  color: $accent; }
+  &--danger  &__icon { background: $danger-light;  color: $danger; }
+  &--amber   &__icon { background: $amber-light;   color: $amber; }
+}
+
+// ── Quick actions ────────────────────────────────────────────────────────
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+
+  @media (max-width: 1080px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 540px)  { grid-template-columns: 1fr; }
+}
+
+.action-tile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  background: $surface;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: background .16s, border-color .16s, transform .16s, box-shadow .16s;
+  width: 100%;
+
+  &:hover {
+    background: $card-bg;
+    border-color: $primary-light;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px -8px rgba(21,101,192,.25);
+
+    .action-tile__arrow { transform: translateX(4px); }
+  }
+
+  &__icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: $primary-light;
+    color: $primary;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    mat-icon { font-size: 22px; width: 22px; height: 22px; }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__label {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: $text-primary;
+  }
+
+  &__sub {
+    font-size: 12.5px;
+    color: $text-secondary;
+    margin-top: 2px;
+  }
+
+  &__arrow {
+    color: $primary;
+    transition: transform .16s ease;
+  }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}

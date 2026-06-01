@@ -1,0 +1,112 @@
+<div class="page">
+  <header class="page__header">
+    <button mat-icon-button class="back" (click)="cancel()" aria-label="Back">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div>
+      <h1 class="page__title">Submit Visit Summary</h1>
+      <p class="page__sub">Help your doctor prepare by sharing what's been going on before your appointment.</p>
+    </div>
+  </header>
+
+  @if (loadingAppointment()) {
+    <div class="card card--center">
+      <mat-spinner diameter="36"></mat-spinner>
+    </div>
+  } @else if (appointment(); as a) {
+    <div class="card card--meta" @fadeIn>
+      <div class="meta__icon">
+        <mat-icon>event</mat-icon>
+      </div>
+      <div class="meta__body">
+        <div class="meta__doctor">{{ a.doctorName }}</div>
+        <div class="meta__sub">
+          {{ visitTypeLabel(a.visitType) }} · {{ formatDate(a.appointmentDate) }} · {{ formatTime(a.timeSlot) }}
+        </div>
+      </div>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="card form" @fadeIn>
+      <section class="form__section">
+        <label class="form__label" for="symptoms">
+          Symptoms <span class="req">*</span>
+        </label>
+        <p class="form__hint">Briefly list the symptoms you've been experiencing.</p>
+        <mat-form-field appearance="outline" class="full">
+          <textarea
+            matInput
+            id="symptoms"
+            rows="3"
+            maxlength="1000"
+            formControlName="symptoms"
+            placeholder="e.g. Headache, mild fever, sore throat">
+          </textarea>
+          @if (form.controls.symptoms.touched && form.controls.symptoms.hasError('required')) {
+            <mat-error>Please describe your symptoms.</mat-error>
+          }
+        </mat-form-field>
+      </section>
+
+      <section class="form__section">
+        <label class="form__label" for="description">Description</label>
+        <p class="form__hint">Any additional details that might help your doctor (optional).</p>
+        <mat-form-field appearance="outline" class="full">
+          <textarea
+            matInput
+            id="description"
+            rows="4"
+            maxlength="2000"
+            formControlName="description"
+            placeholder="Describe when it started, what makes it better or worse, prior treatments...">
+          </textarea>
+        </mat-form-field>
+      </section>
+
+      <section class="form__section">
+        <label class="form__label">
+          Pain Level
+          <span class="pain-tag" [attr.data-severity]="painSeverity()">{{ painLevel() }} / 10</span>
+        </label>
+        <p class="form__hint">Slide to indicate how intense the pain is.</p>
+        <div class="slider-row">
+          <span class="slider-end">No pain</span>
+          <mat-slider min="1" max="10" step="1" discrete showTickMarks class="slider">
+            <input matSliderThumb formControlName="painLevel" />
+          </mat-slider>
+          <span class="slider-end">Severe</span>
+        </div>
+      </section>
+
+      <section class="form__section">
+        <label class="form__label" for="duration">Symptom Duration</label>
+        <p class="form__hint">How long have you been experiencing these symptoms? (optional)</p>
+        <mat-form-field appearance="outline" class="full">
+          <input
+            matInput
+            id="duration"
+            maxlength="200"
+            formControlName="symptomDuration"
+            placeholder="e.g. 3 days, 2 weeks, since Monday" />
+        </mat-form-field>
+      </section>
+
+      <div class="form__actions">
+        <button mat-button type="button" (click)="cancel()" [disabled]="submitting()">Cancel</button>
+        <button mat-flat-button type="submit" class="primary-btn"
+                [disabled]="submitting() || form.invalid">
+          @if (submitting()) {
+            <ng-container>
+              <mat-spinner diameter="18"></mat-spinner>
+              <span>Submitting…</span>
+            </ng-container>
+          } @else {
+            <ng-container>
+              <mat-icon>check</mat-icon>
+              <span>Submit Summary</span>
+            </ng-container>
+          }
+        </button>
+      </div>
+    </form>
+  }
+</div>

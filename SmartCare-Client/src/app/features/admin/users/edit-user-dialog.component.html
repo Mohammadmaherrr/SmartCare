@@ -1,0 +1,99 @@
+<div class="dlg" [formGroup]="form">
+  <header class="dlg__head">
+    <h2 class="dlg__title" mat-dialog-title>Edit {{ role }}</h2>
+    <p class="dlg__sub">{{ user.fullName }} · {{ user.email }}</p>
+  </header>
+
+  <mat-dialog-content class="dlg__body">
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Full name</mat-label>
+      <input matInput formControlName="fullName">
+      @if (form.controls.fullName.hasError('required') && form.controls.fullName.touched) {
+        <mat-error>Full name is required.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" formControlName="email">
+      @if (form.controls.email.hasError('required') && form.controls.email.touched) {
+        <mat-error>Email is required.</mat-error>
+      }
+      @if (form.controls.email.hasError('email') && form.controls.email.touched) {
+        <mat-error>Enter a valid email address.</mat-error>
+      }
+    </mat-form-field>
+
+    @if (role === 'Doctor') {
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Specialization</mat-label>
+        <input matInput formControlName="specialization">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>License number</mat-label>
+        <input matInput formControlName="licenseNumber">
+      </mat-form-field>
+    }
+
+    @if (role === 'Receptionist') {
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Employee ID</mat-label>
+        <input matInput formControlName="employeeId">
+      </mat-form-field>
+    }
+
+    @if (role === 'Patient') {
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Date of birth</mat-label>
+        <input matInput [matDatepicker]="dobPicker" formControlName="dateOfBirth" readonly>
+        <mat-datepicker-toggle matIconSuffix [for]="dobPicker"></mat-datepicker-toggle>
+        <mat-datepicker #dobPicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Gender</mat-label>
+        <mat-select formControlName="gender">
+          <mat-option value="">—</mat-option>
+          <mat-option value="Male">Male</mat-option>
+          <mat-option value="Female">Female</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Contact number</mat-label>
+        <input matInput formControlName="contactNumber">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Address</mat-label>
+        <input matInput formControlName="address">
+      </mat-form-field>
+    }
+
+    @if (role === 'Admin') {
+      <p class="role-note">
+        Admin-level fields cannot be edited from this dialog.
+      </p>
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="dlg__actions" align="end">
+    <button mat-button type="button" (click)="cancel()">Cancel</button>
+    <button
+      mat-flat-button
+      type="button"
+      class="primary"
+      [disabled]="form.invalid || submitting()"
+      (click)="submit()">
+      @if (submitting()) {
+        <mat-spinner diameter="20" class="btn-spinner"></mat-spinner>
+      } @else {
+        <ng-container>
+          <mat-icon>save</mat-icon>
+          Save changes
+        </ng-container>
+      }
+    </button>
+  </mat-dialog-actions>
+</div>

@@ -1,0 +1,140 @@
+<div class="page">
+  <header class="page__header">
+    <div>
+      <h1 class="page__title">Reports</h1>
+      <p class="page__sub">Track appointment outcomes and patient visit trends.</p>
+    </div>
+
+    <div class="page__actions">
+      <button mat-stroked-button class="export-btn" [matMenuTriggerFor]="exportMenu">
+        <mat-icon>download</mat-icon>
+        Export
+      </button>
+      <mat-menu #exportMenu="matMenu">
+        <button mat-menu-item (click)="exportPdf()">
+          <mat-icon>picture_as_pdf</mat-icon>
+          <span>Export PDF</span>
+        </button>
+        <button mat-menu-item (click)="exportCsv()">
+          <mat-icon>table_chart</mat-icon>
+          <span>Export CSV</span>
+        </button>
+      </mat-menu>
+    </div>
+  </header>
+
+  <section class="filters card" [formGroup]="range">
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>From</mat-label>
+      <input matInput [matDatepicker]="fromPicker" formControlName="from" readonly>
+      <mat-datepicker-toggle matIconSuffix [for]="fromPicker"></mat-datepicker-toggle>
+      <mat-datepicker #fromPicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>To</mat-label>
+      <input matInput [matDatepicker]="toPicker" formControlName="to" readonly>
+      <mat-datepicker-toggle matIconSuffix [for]="toPicker"></mat-datepicker-toggle>
+      <mat-datepicker #toPicker></mat-datepicker>
+    </mat-form-field>
+
+    <button mat-flat-button class="apply-btn" type="button" (click)="applyRange()">
+      <mat-icon>filter_list</mat-icon>
+      Apply
+    </button>
+  </section>
+
+  <mat-tab-group
+    class="tabs"
+    animationDuration="200ms"
+    (selectedIndexChange)="onTabChange($event)">
+
+    <mat-tab label="Appointment Report">
+      <div class="tab-body" @fade>
+        @if (loadingAppointments()) {
+          <div class="loading">
+            <mat-spinner diameter="36"></mat-spinner>
+          </div>
+        } @else if (!appointmentReport()) {
+          <div class="empty card">
+            <mat-icon class="empty__icon">bar_chart</mat-icon>
+            <h3 class="empty__title">No data</h3>
+            <p class="empty__sub">Adjust the date range and apply.</p>
+          </div>
+        } @else {
+          <div class="stat-grid">
+            @for (s of summaryStats; track s.key) {
+              <div class="stat-card" [class]="'stat-card--' + s.tone">
+                <div class="stat-card__icon">
+                  <mat-icon>{{ s.icon }}</mat-icon>
+                </div>
+                <div class="stat-card__body">
+                  <div class="stat-card__label">{{ s.label }}</div>
+                  <div class="stat-card__value">{{ stats()[s.key] }}</div>
+                </div>
+              </div>
+            }
+          </div>
+
+          <div class="chart-card card">
+            <div class="chart-card__header">
+              <div>
+                <h3 class="chart-card__title">Appointments per Doctor</h3>
+                <p class="chart-card__sub">
+                  Attendance rate: <strong>{{ attendanceRate() }}%</strong>
+                </p>
+              </div>
+            </div>
+            @if (appointmentReport()!.byDoctor.length === 0) {
+              <div class="chart-empty">
+                <mat-icon>insights</mat-icon>
+                <span>No doctor activity in this range.</span>
+              </div>
+            } @else {
+              <div class="chart-wrap">
+                <canvas #doctorChart></canvas>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Visit Frequency">
+      <div class="tab-body" @fade>
+        @if (loadingVisits()) {
+          <div class="loading">
+            <mat-spinner diameter="36"></mat-spinner>
+          </div>
+        } @else if (!visitReport()) {
+          <div class="empty card">
+            <mat-icon class="empty__icon">show_chart</mat-icon>
+            <h3 class="empty__title">No data</h3>
+            <p class="empty__sub">Adjust the date range and apply.</p>
+          </div>
+        } @else {
+          <div class="chart-card card">
+            <div class="chart-card__header">
+              <div>
+                <h3 class="chart-card__title">Visits per Day</h3>
+                <p class="chart-card__sub">
+                  Total visits in range: <strong>{{ visitTotal() }}</strong>
+                </p>
+              </div>
+            </div>
+            @if (visitReport()!.data.length === 0) {
+              <div class="chart-empty">
+                <mat-icon>insights</mat-icon>
+                <span>No visits recorded in this range.</span>
+              </div>
+            } @else {
+              <div class="chart-wrap chart-wrap--tall">
+                <canvas #visitsChart></canvas>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

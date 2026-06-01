@@ -1,0 +1,200 @@
+// ── Tokens ────────────────────────────────────────────────────────────────
+$sidebar-bg:       #0D47A1;
+$sidebar-hover:    rgba(255, 255, 255, 0.08);
+$sidebar-active:   rgba(255, 255, 255, 0.15);
+$sidebar-border:   #64B5F6;   // active left-border accent
+$sidebar-sos:      #EF9A9A;   // SOS item tint
+$sidebar-sos-bg:   rgba(239, 83, 80, 0.15);
+$topbar-bg:        #ffffff;
+$topbar-border:    #E0E7EF;
+$surface:          #F4F6F9;
+$text-secondary:   #546E7A;
+$primary:          #1565C0;
+
+// ── Shell ─────────────────────────────────────────────────────────────────
+
+.shell {
+  height: 100vh;
+  width: 100%;
+}
+
+// ── Sidebar ───────────────────────────────────────────────────────────────
+
+.sidenav {
+  width: 240px;
+  background: $sidebar-bg;
+  border-right: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 22px 20px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.brand-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+  color: #90CAF9;
+}
+
+.brand-name {
+  font-size: 19px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.3px;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 20px;
+  margin: 1px 8px;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease;
+  border-left: 3px solid transparent;
+
+  &:hover {
+    background: $sidebar-hover;
+    color: #ffffff;
+  }
+
+  &--active {
+    background: $sidebar-active;
+    color: #ffffff;
+    border-left-color: $sidebar-border;
+  }
+
+  // Emergency SOS — always stands out
+  &--sos {
+    color: $sidebar-sos;
+    margin-top: auto; // push to bottom
+
+    &:hover {
+      background: $sidebar-sos-bg;
+      color: #FF5252;
+    }
+
+    &.nav-item--active {
+      background: $sidebar-sos-bg;
+      border-left-color: #FF5252;
+      color: #FF5252;
+    }
+  }
+
+  &__icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  &__label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+// ── Main area ─────────────────────────────────────────────────────────────
+
+.main {
+  display: flex;
+  flex-direction: column;
+  background: $surface;
+}
+
+// ── TopBar ────────────────────────────────────────────────────────────────
+
+.topbar {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  background: $topbar-bg;
+  border-bottom: 1px solid $topbar-border;
+  flex-shrink: 0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-align: right;
+  }
+
+  &__name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1A1A2E;
+    white-space: nowrap;
+  }
+
+  &__badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    white-space: nowrap;
+
+    // Role-specific colors
+    &[data-role="Admin"]        { background: #FFF3E0; color: #E65100; }
+    &[data-role="Doctor"]       { background: #E0F2F1; color: #00695C; }
+    &[data-role="Receptionist"] { background: #F3E5F5; color: #6A1B9A; }
+    &[data-role="Patient"]      { background: #E3F2FD; color: #1565C0; }
+  }
+
+  &__logout {
+    color: $text-secondary;
+
+    &:hover {
+      color: #C62828;
+    }
+  }
+}
+
+// ── Content ───────────────────────────────────────────────────────────────
+
+.content-wrap {
+  flex: 1;
+  overflow-y: auto;
+  position: relative;
+}
+
+.outlet-shell {
+  min-height: 100%;
+}

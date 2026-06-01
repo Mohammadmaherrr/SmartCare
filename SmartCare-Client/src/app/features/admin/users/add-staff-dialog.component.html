@@ -1,0 +1,107 @@
+<div class="dlg" [formGroup]="form">
+  <header class="dlg__head">
+    <h2 class="dlg__title" mat-dialog-title>Add Staff Account</h2>
+    <p class="dlg__sub">Create a new Doctor or Receptionist login.</p>
+  </header>
+
+  <mat-dialog-content class="dlg__body">
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Role</mat-label>
+      <mat-select formControlName="role">
+        <mat-option value="Doctor">Doctor</mat-option>
+        <mat-option value="Receptionist">Receptionist</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Full name</mat-label>
+      <input matInput formControlName="fullName" placeholder="Dr. Jane Doe">
+      @if (form.controls.fullName.hasError('required') && form.controls.fullName.touched) {
+        <mat-error>Full name is required.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" formControlName="email" placeholder="jane.doe@clinic.com">
+      @if (form.controls.email.hasError('required') && form.controls.email.touched) {
+        <mat-error>Email is required.</mat-error>
+      }
+      @if (form.controls.email.hasError('email') && form.controls.email.touched) {
+        <mat-error>Enter a valid email address.</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        [type]="showPassword() ? 'text' : 'password'"
+        formControlName="password"
+        autocomplete="new-password">
+      <button
+        type="button"
+        matSuffix
+        mat-icon-button
+        (click)="togglePassword()"
+        [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'">
+        <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      <mat-hint>Min 8 chars, one uppercase letter, one number.</mat-hint>
+      @if (form.controls.password.hasError('required') && form.controls.password.touched) {
+        <mat-error>Password is required.</mat-error>
+      }
+      @if (form.controls.password.hasError('minlength') && form.controls.password.touched) {
+        <mat-error>Must be at least 8 characters.</mat-error>
+      }
+      @if (form.controls.password.hasError('pattern') && form.controls.password.touched) {
+        <mat-error>Need at least one uppercase letter and one number.</mat-error>
+      }
+    </mat-form-field>
+
+    @if (isDoctor()) {
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Specialization</mat-label>
+        <input matInput formControlName="specialization" placeholder="Cardiology">
+        @if (form.controls.specialization.hasError('required') && form.controls.specialization.touched) {
+          <mat-error>Specialization is required.</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>License number</mat-label>
+        <input matInput formControlName="licenseNumber" placeholder="MED-2024-00123">
+        @if (form.controls.licenseNumber.hasError('required') && form.controls.licenseNumber.touched) {
+          <mat-error>License number is required.</mat-error>
+        }
+      </mat-form-field>
+    } @else {
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Employee ID</mat-label>
+        <input matInput formControlName="employeeId" placeholder="EMP-00045">
+        @if (form.controls.employeeId.hasError('required') && form.controls.employeeId.touched) {
+          <mat-error>Employee ID is required.</mat-error>
+        }
+      </mat-form-field>
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="dlg__actions" align="end">
+    <button mat-button type="button" (click)="cancel()">Cancel</button>
+    <button
+      mat-flat-button
+      type="button"
+      class="primary"
+      [disabled]="form.invalid || submitting()"
+      (click)="submit()">
+      @if (submitting()) {
+        <mat-spinner diameter="20" class="btn-spinner"></mat-spinner>
+      } @else {
+        <ng-container>
+          <mat-icon>add</mat-icon>
+          Create staff
+        </ng-container>
+      }
+    </button>
+  </mat-dialog-actions>
+</div>

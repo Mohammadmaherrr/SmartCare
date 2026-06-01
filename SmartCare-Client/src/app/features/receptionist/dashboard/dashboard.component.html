@@ -1,0 +1,96 @@
+<div class="dashboard" [@stagger]="loading() ? 'loading' : 'ready'">
+
+  <!-- Greeting -->
+  <section class="greeting card stagger-item">
+    <div class="greeting__text">
+      <h1 class="greeting__title">{{ greeting() }}, {{ firstName() }}</h1>
+      <p class="greeting__date">
+        <mat-icon>calendar_today</mat-icon>
+        {{ today | date:'EEEE, MMMM d, y' }}
+      </p>
+    </div>
+    <div class="greeting__avatar" aria-hidden="true">
+      <mat-icon>support_agent</mat-icon>
+    </div>
+  </section>
+
+  <!-- Top row: total today + quick action + emergencies -->
+  <section class="top-grid">
+    <div class="kpi kpi--primary stagger-item">
+      <div class="kpi__icon">
+        <mat-icon>today</mat-icon>
+      </div>
+      <div class="kpi__body">
+        <div class="kpi__label">Today's appointments</div>
+        @if (loading()) {
+          <div class="kpi__skeleton"></div>
+        } @else {
+          <div class="kpi__value">{{ totalToday() }}</div>
+        }
+      </div>
+    </div>
+
+    <button type="button" class="quick-action stagger-item" (click)="bookForPatient()">
+      <div class="quick-action__icon">
+        <mat-icon>event_available</mat-icon>
+      </div>
+      <div class="quick-action__body">
+        <div class="quick-action__title">Book for a patient</div>
+        <div class="quick-action__sub">Schedule on behalf of any patient</div>
+      </div>
+      <mat-icon class="quick-action__arrow">arrow_forward</mat-icon>
+    </button>
+
+    <div
+      class="kpi kpi--emergency stagger-item"
+      [class.kpi--emergency-active]="activeEmergencyCount() > 0">
+      <div class="kpi__icon">
+        <mat-icon>sos</mat-icon>
+      </div>
+      <div class="kpi__body">
+        <div class="kpi__label">Active emergencies</div>
+        @if (emergencyLoading()) {
+          <div class="kpi__skeleton"></div>
+        } @else {
+          <div class="kpi__value">{{ activeEmergencyCount() }}</div>
+        }
+      </div>
+      @if (!emergencyLoading() && activeEmergencyCount() > 0) {
+        <div class="kpi__pulse" aria-hidden="true"></div>
+      }
+    </div>
+  </section>
+
+  <!-- Status breakdown -->
+  <section class="card stagger-item">
+    <div class="card-header">
+      <h2 class="section-title">Today's status breakdown</h2>
+      <button
+        mat-button
+        type="button"
+        class="view-all"
+        (click)="viewAllAppointments()">
+        View all
+        <mat-icon iconPositionEnd>arrow_forward</mat-icon>
+      </button>
+    </div>
+
+    <div class="status-grid">
+      @for (card of statusCards; track card.status) {
+        <div class="status-card status-card--{{ card.tone }}">
+          <div class="status-card__icon">
+            <mat-icon>{{ card.icon }}</mat-icon>
+          </div>
+          <div class="status-card__body">
+            <div class="status-card__label">{{ card.label }}</div>
+            @if (loading()) {
+              <div class="status-card__skeleton"></div>
+            } @else {
+              <div class="status-card__value">{{ statusCounts()[card.status] }}</div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+</div>

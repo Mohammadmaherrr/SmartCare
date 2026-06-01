@@ -1,0 +1,108 @@
+<div class="page">
+  <header class="page__header">
+    <div>
+      <h1 class="page__title">System Settings</h1>
+      <p class="page__sub">Configure booking durations, fees, and other clinic-wide values.</p>
+    </div>
+  </header>
+
+  @if (loading()) {
+    <div class="loading">
+      <mat-spinner diameter="36"></mat-spinner>
+    </div>
+  } @else if (rows().length === 0) {
+    <div class="empty card">
+      <mat-icon class="empty__icon">tune</mat-icon>
+      <h3 class="empty__title">No settings to display</h3>
+      <p class="empty__sub">The backend has not exposed any system settings.</p>
+    </div>
+  } @else {
+    @for (group of groups; track group.id) {
+      @if (groupedRows()[group.id].length > 0) {
+        <section class="group card">
+          <header class="group__header">
+            <div class="group__icon" [class]="'group__icon--' + group.tone">
+              <mat-icon>{{ group.icon }}</mat-icon>
+            </div>
+            <div>
+              <h2 class="group__title">{{ group.title }}</h2>
+              <p class="group__sub">{{ group.description }}</p>
+            </div>
+          </header>
+
+          <ul class="setting-list">
+            @for (row of groupedRows()[group.id]; track row.key) {
+              <li class="setting-row" @fadeRow>
+                <div class="setting-row__info">
+                  <div class="setting-row__label">{{ row.meta.label }}</div>
+                  @if (row.meta.description) {
+                    <div class="setting-row__desc">{{ row.meta.description }}</div>
+                  }
+                </div>
+
+                <div class="setting-row__value">
+                  @if (!row.editing) {
+                    <span class="value-display">
+                      <span class="value-display__num">{{ row.value }}</span>
+                      @if (row.meta.unit) {
+                        <span class="value-display__unit">{{ row.meta.unit }}</span>
+                      }
+                    </span>
+                    <button
+                      mat-icon-button
+                      class="edit-btn"
+                      matTooltip="Edit"
+                      (click)="startEdit(row.key)">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                  } @else {
+                    <div class="edit-group">
+                      <mat-form-field appearance="outline" class="edit-field">
+                        <input
+                          matInput
+                          [type]="row.meta.numeric ? 'number' : 'text'"
+                          [value]="row.draft"
+                          (input)="updateDraft(row.key, $any($event.target).value)"
+                          (keydown.enter)="onEnter(row, $event)"
+                          (keydown.escape)="cancelEdit(row.key)"
+                          [attr.min]="row.meta.min ?? null"
+                          autofocus>
+                        @if (row.meta.unit) {
+                          <span matTextSuffix class="edit-suffix">{{ row.meta.unit }}</span>
+                        }
+                        @if (row.error) {
+                          <mat-error>{{ row.error }}</mat-error>
+                        }
+                      </mat-form-field>
+
+                      <button
+                        mat-icon-button
+                        class="save-btn"
+                        matTooltip="Save"
+                        [disabled]="!!row.error || saving() === row.key"
+                        (click)="save(row)">
+                        @if (saving() === row.key) {
+                          <mat-spinner diameter="18"></mat-spinner>
+                        } @else {
+                          <mat-icon>check</mat-icon>
+                        }
+                      </button>
+                      <button
+                        mat-icon-button
+                        class="cancel-btn"
+                        matTooltip="Cancel"
+                        [disabled]="saving() === row.key"
+                        (click)="cancelEdit(row.key)">
+                        <mat-icon>close</mat-icon>
+                      </button>
+                    </div>
+                  }
+                </div>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+    }
+  }
+</div>

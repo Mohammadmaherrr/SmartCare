@@ -1,0 +1,206 @@
+<div class="detail">
+
+  <!-- ── Top bar ──────────────────────────────────────────────────────── -->
+  <div class="topbar">
+    <button type="button" class="back" (click)="back()" aria-label="Back to schedule">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Back to Schedule</span>
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="loading">
+      <mat-spinner diameter="36"></mat-spinner>
+    </div>
+  } @else if (!appointment()) {
+    <div class="empty card">
+      <mat-icon class="empty__icon">error_outline</mat-icon>
+      <h2 class="empty__title">Appointment not found</h2>
+      <p class="empty__sub">The appointment may have been removed or you don't have access.</p>
+      <button mat-flat-button class="btn-primary" (click)="back()">Back to Schedule</button>
+    </div>
+  } @else {
+    @let a = appointment()!;
+
+    <!-- ── Header card ────────────────────────────────────────────────── -->
+    <section class="hero card" [@fadeIn]>
+      <div class="hero__avatar">{{ initials() }}</div>
+      <div class="hero__info">
+        <h1 class="hero__name">{{ a.patientName }}</h1>
+        <p class="hero__sub">
+          <mat-icon>medical_services</mat-icon>
+          {{ visitTypeLabel(a.visitType) }}
+        </p>
+      </div>
+      <div class="hero__chips">
+        <span [class]="statusClass(a.status)">{{ statusLabel(a.status) }}</span>
+        <span [class]="paymentClass(a.paymentStatus)">
+          <mat-icon class="chip__icon">payments</mat-icon>
+          {{ paymentLabel(a.paymentStatus) }}
+        </span>
+      </div>
+    </section>
+
+    <!-- ── Grid: patient + visit info ─────────────────────────────────── -->
+    <div class="grid">
+
+      <!-- Patient info -->
+      <section class="card section" [@fadeIn]>
+        <h2 class="section__title">
+          <mat-icon>person</mat-icon>
+          Patient Information
+        </h2>
+        @let p = patient();
+        <dl class="info-list">
+          <div class="info-row">
+            <dt>Full Name</dt>
+            <dd>{{ p?.fullName ?? a.patientName }}</dd>
+          </div>
+          <div class="info-row">
+            <dt>Age</dt>
+            @if (patientAge() !== null) {
+              <dd>{{ patientAge() }}</dd>
+            } @else {
+              <dd class="info-row__muted">—</dd>
+            }
+          </div>
+          <div class="info-row">
+            <dt>Contact</dt>
+            @if (p?.contactNumber) {
+              <dd>{{ p?.contactNumber }}</dd>
+            } @else {
+              <dd class="info-row__muted">—</dd>
+            }
+          </div>
+          <div class="info-row">
+            <dt>Address</dt>
+            @if (p?.address) {
+              <dd>{{ p?.address }}</dd>
+            } @else {
+              <dd class="info-row__muted">—</dd>
+            }
+          </div>
+        </dl>
+      </section>
+
+      <!-- Appointment info -->
+      <section class="card section" [@fadeIn]>
+        <h2 class="section__title">
+          <mat-icon>event</mat-icon>
+          Appointment Details
+        </h2>
+        <dl class="info-list">
+          <div class="info-row">
+            <dt>Visit Type</dt>
+            <dd>{{ visitTypeLabel(a.visitType) }}</dd>
+          </div>
+          <div class="info-row">
+            <dt>Scheduled</dt>
+            <dd>{{ appointmentDateLabel() }}</dd>
+          </div>
+          <div class="info-row">
+            <dt>Time</dt>
+            <dd>{{ timeRangeLabel() }}</dd>
+          </div>
+          <div class="info-row">
+            <dt>Status</dt>
+            <dd><span [class]="statusClass(a.status)">{{ statusLabel(a.status) }}</span></dd>
+          </div>
+          <div class="info-row">
+            <dt>Payment</dt>
+            <dd><span [class]="paymentClass(a.paymentStatus)">{{ paymentLabel(a.paymentStatus) }}</span></dd>
+          </div>
+        </dl>
+      </section>
+
+      <!-- Visit summary -->
+      <section class="card section section--wide" [@fadeIn]>
+        <h2 class="section__title">
+          <mat-icon>description</mat-icon>
+          Patient Visit Summary
+        </h2>
+
+        @if (summary(); as s) {
+          <div class="summary">
+            <div class="summary-field">
+              <h4>Symptoms</h4>
+              <p>{{ s.symptoms }}</p>
+            </div>
+
+            @if (s.description) {
+              <div class="summary-field">
+                <h4>Description</h4>
+                <p>{{ s.description }}</p>
+              </div>
+            }
+
+            <div class="summary-row">
+              <div class="summary-field">
+                <h4>Pain Level</h4>
+                <div class="pain">
+                  <span class="pain__value">{{ s.painLevel }}</span>
+                  <span class="pain__scale">/ 10</span>
+                </div>
+                <div class="pain__bar">
+                  <div class="pain__fill"
+                       [style.width.%]="s.painLevel * 10"
+                       [style.background]="painColor(s.painLevel)"></div>
+                </div>
+              </div>
+              @if (s.symptomDuration) {
+                <div class="summary-field">
+                  <h4>Duration</h4>
+                  <p>{{ s.symptomDuration }}</p>
+                </div>
+              }
+            </div>
+          </div>
+        } @else {
+          <div class="summary-empty">
+            <mat-icon>info</mat-icon>
+            <p>The patient has not submitted a visit summary for this appointment.</p>
+          </div>
+        }
+      </section>
+    </div>
+
+    <!-- ── Action bar ─────────────────────────────────────────────────── -->
+    <section class="actions card" [@fadeIn]>
+      <button
+        mat-flat-button
+        class="btn-secondary"
+        (click)="viewPatientRecords()">
+        <mat-icon>folder_open</mat-icon>
+        View Patient Records
+      </button>
+
+      <div class="actions__spacer"></div>
+
+      <button
+        mat-stroked-button
+        class="btn-noshow"
+        [disabled]="!canMarkNoShow() || acting() !== null"
+        (click)="markNoShow()">
+        @if (acting() === 'NoShow') {
+          <mat-spinner diameter="16"></mat-spinner>
+        } @else {
+          <mat-icon>person_off</mat-icon>
+        }
+        Mark No-show
+      </button>
+
+      <button
+        mat-flat-button
+        class="btn-complete"
+        [disabled]="!canMarkCompleted() || acting() !== null"
+        (click)="markCompleted()">
+        @if (acting() === 'Completed') {
+          <mat-spinner diameter="16"></mat-spinner>
+        } @else {
+          <mat-icon>check_circle</mat-icon>
+        }
+        Mark Completed
+      </button>
+    </section>
+  }
+</div>

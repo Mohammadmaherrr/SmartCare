@@ -1,0 +1,238 @@
+$primary:        #1565C0;
+$primary-dark:   #0D47A1;
+$primary-light:  #E3F2FD;
+$accent:         #00897B;
+$accent-light:   #E0F2F1;
+$amber:          #F57C00;
+$amber-light:    #FFF3E0;
+$purple:         #6A1B9A;
+$purple-light:   #F3E5F5;
+$danger:         #C62828;
+$danger-light:   #FFEBEE;
+$success:        #2E7D32;
+$success-light:  #E8F5E9;
+$gray:           #607D8B;
+$gray-light:     #ECEFF1;
+$surface:        #F4F6F9;
+$card-bg:        #ffffff;
+$text-primary:   #1A1A2E;
+$text-secondary: #546E7A;
+$text-muted:     #90A4AE;
+$divider:        #E0E7EF;
+
+.page {
+  padding: 28px;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  &__title {
+    margin: 0 0 4px;
+    font-size: 24px;
+    font-weight: 700;
+    color: $text-primary;
+    letter-spacing: -0.3px;
+  }
+
+  &__sub {
+    margin: 0;
+    color: $text-secondary;
+    font-size: 14px;
+  }
+}
+
+.primary-btn {
+  height: 44px;
+  padding: 0 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  background: $primary;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  &:hover { background: $primary-dark; }
+
+  mat-icon { font-size: 20px; width: 20px; height: 20px; }
+}
+
+.card {
+  background: $card-bg;
+  border-radius: 14px;
+  box-shadow:
+    0 1px 3px rgba(15, 23, 42, 0.04),
+    0 4px 16px -4px rgba(21, 101, 192, 0.08);
+}
+
+.filters {
+  padding: 18px 20px;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 14px;
+  align-items: start;
+
+  @media (max-width: 720px) { grid-template-columns: 1fr; }
+}
+
+.filter-field {
+  width: 100%;
+  --mdc-outlined-text-field-focus-outline-color: #{$primary};
+  --mdc-outlined-text-field-focus-label-text-color: #{$primary};
+
+  ::ng-deep .mat-mdc-form-field-icon-prefix mat-icon {
+    color: $text-muted;
+    margin-right: 8px;
+  }
+}
+
+.table-card { overflow: hidden; }
+
+.result-summary {
+  padding: 14px 20px;
+  font-size: 13px;
+  color: $text-secondary;
+  border-bottom: 1px solid $divider;
+
+  &__count {
+    color: $text-primary;
+    font-weight: 700;
+    margin-right: 4px;
+  }
+}
+
+.table-wrap { overflow-x: auto; }
+
+.users-table {
+  width: 100%;
+  background: $card-bg;
+
+  ::ng-deep .mat-mdc-header-row { background: $surface; }
+
+  ::ng-deep .mat-mdc-header-cell {
+    color: $text-secondary;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    border-bottom: 1px solid $divider;
+  }
+
+  ::ng-deep .mat-mdc-cell {
+    color: $text-primary;
+    font-size: 14px;
+    border-bottom: 1px solid $divider;
+    padding: 14px 16px;
+  }
+
+  ::ng-deep .mat-mdc-row:hover { background: rgba(21, 101, 192, 0.025); }
+}
+
+.actions-col {
+  width: 64px;
+  text-align: right;
+}
+
+.person {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  &__avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: $primary-light;
+    color: $primary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-weight: 700;
+    font-size: 13px;
+  }
+}
+
+.role-pill {
+  display: inline-block;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  letter-spacing: .3px;
+  white-space: nowrap;
+
+  &--admin        { background: $purple-light;  color: $purple; }
+  &--doctor       { background: $primary-light; color: $primary; }
+  &--receptionist { background: $accent-light;  color: $accent; }
+  &--patient      { background: $amber-light;   color: $amber; }
+}
+
+.chip {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+
+  &--active  { background: $success-light; color: $success; }
+  &--blocked { background: $danger-light;  color: $danger; }
+}
+
+.menu-danger {
+  color: $danger !important;
+  ::ng-deep mat-icon { color: $danger; }
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  text-align: center;
+  gap: 8px;
+
+  &__icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: $text-muted;
+    opacity: 0.6;
+    margin-bottom: 8px;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+    color: $text-primary;
+  }
+
+  &__sub {
+    margin: 0;
+    font-size: 14px;
+    color: $text-secondary;
+  }
+}

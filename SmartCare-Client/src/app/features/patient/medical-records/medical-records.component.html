@@ -1,0 +1,220 @@
+<div class="page">
+  <header class="page__header no-print">
+    <div>
+      <h1 class="page__title">Medical Records</h1>
+      <p class="page__sub">Your medical history, prescriptions, and lab results in one place.</p>
+    </div>
+    <button mat-stroked-button class="print-btn" (click)="print()" matTooltip="Print current tab">
+      <mat-icon>print</mat-icon>
+      Print
+    </button>
+  </header>
+
+  <section class="patient-card" @fadeIn>
+    <div class="avatar">{{ patientInitials() }}</div>
+    <div class="info">
+      <h2 class="info__name">{{ user()?.fullName }}</h2>
+      <div class="info__meta">
+        <span class="meta-item">
+          <mat-icon>badge</mat-icon>
+          Patient
+        </span>
+        <span class="meta-item">
+          <mat-icon>mail</mat-icon>
+          {{ user()?.email }}
+        </span>
+        @if (record(); as r) {
+          <span class="meta-item">
+            <mat-icon>update</mat-icon>
+            Last updated {{ formatDateTime(r.lastUpdated) }}
+          </span>
+        }
+      </div>
+    </div>
+  </section>
+
+  <div class="card">
+    <mat-tab-group
+      class="tabs no-print"
+      animationDuration="220ms"
+      (selectedIndexChange)="onTabChange($event)">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">description</mat-icon>
+          Medical Record
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">medication</mat-icon>
+          Prescriptions
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">science</mat-icon>
+          Lab Results
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+
+    <div class="tab-body" [attr.data-tab]="activeTab()">
+      @switch (activeTab()) {
+        @case ('record') {
+          <div @fadeIn>
+            @if (recordLoading()) {
+              <div class="skeleton skeleton--record">
+                <div class="sk-line sk-line--title"></div>
+                <div class="sk-line sk-line--meta"></div>
+                <div class="sk-block"></div>
+                <div class="sk-line sk-line--title"></div>
+                <div class="sk-block sk-block--short"></div>
+              </div>
+            } @else if (record(); as r) {
+              <article class="record">
+                <div class="record__section">
+                  <h3 class="record__heading">
+                    <mat-icon>assignment_ind</mat-icon>
+                    Diagnosis
+                  </h3>
+                  <p class="record__body">{{ r.diagnosis || '—' }}</p>
+                </div>
+                <div class="record__section">
+                  <h3 class="record__heading">
+                    <mat-icon>healing</mat-icon>
+                    Treatment Plan
+                  </h3>
+                  <p class="record__body">{{ r.treatmentPlan || 'No treatment plan recorded.' }}</p>
+                </div>
+                <div class="record__footer">
+                  <mat-icon>schedule</mat-icon>
+                  Last updated {{ formatDateTime(r.lastUpdated) }}
+                </div>
+              </article>
+            } @else {
+              <div class="empty">
+                <mat-icon class="empty__icon">folder_off</mat-icon>
+                <h3 class="empty__title">No medical record yet</h3>
+                <p class="empty__sub">
+                  Your doctor will create a record after your first consultation.
+                </p>
+              </div>
+            }
+          </div>
+        }
+
+        @case ('prescriptions') {
+          <div @fadeIn>
+            @if (prescriptionsLoading()) {
+              <div class="skeleton skeleton--cards">
+                @for (i of [1,2,3]; track i) {
+                  <div class="sk-card">
+                    <div class="sk-line sk-line--title"></div>
+                    <div class="sk-line"></div>
+                    <div class="sk-line sk-line--short"></div>
+                  </div>
+                }
+              </div>
+            } @else if (!record()) {
+              <div class="empty">
+                <mat-icon class="empty__icon">medication_liquid</mat-icon>
+                <h3 class="empty__title">No prescriptions available</h3>
+                <p class="empty__sub">A medical record is required before prescriptions can be issued.</p>
+              </div>
+            } @else if (prescriptions().length === 0) {
+              <div class="empty">
+                <mat-icon class="empty__icon">medication_liquid</mat-icon>
+                <h3 class="empty__title">No prescriptions yet</h3>
+                <p class="empty__sub">Prescriptions issued by your doctor will appear here.</p>
+              </div>
+            } @else {
+              @for (group of groupedPrescriptions(); track group.label) {
+                <div class="rx-group">
+                  <h3 class="rx-group__label">{{ group.label }}</h3>
+                  <div class="rx-grid">
+                    @for (p of group.items; track p.id) {
+                      <article class="rx-card">
+                        <div class="rx-card__head">
+                          <div class="rx-card__icon">
+                            <mat-icon>medication</mat-icon>
+                          </div>
+                          <div class="rx-card__title">
+                            <h4>{{ p.medicationName }}</h4>
+                            <span class="rx-card__dosage">{{ p.dosage }}</span>
+                          </div>
+                        </div>
+                        @if (p.instructions) {
+                          <p class="rx-card__instructions">
+                            <mat-icon>info</mat-icon>
+                            {{ p.instructions }}
+                          </p>
+                        }
+                        <div class="rx-card__date">
+                          <mat-icon>event</mat-icon>
+                          Issued {{ formatDate(p.issueDate) }}
+                        </div>
+                      </article>
+                    }
+                  </div>
+                </div>
+              }
+            }
+          </div>
+        }
+
+        @case ('labs') {
+          <div @fadeIn>
+            @if (labsLoading()) {
+              <div class="skeleton skeleton--table">
+                @for (i of [1,2,3,4]; track i) {
+                  <div class="sk-row">
+                    <div class="sk-line sk-line--col"></div>
+                    <div class="sk-line sk-line--col"></div>
+                    <div class="sk-line sk-line--col"></div>
+                  </div>
+                }
+              </div>
+            } @else if (labs().length === 0) {
+              <div class="empty">
+                <mat-icon class="empty__icon">biotech</mat-icon>
+                <h3 class="empty__title">No lab results</h3>
+                <p class="empty__sub">Your lab results will appear here once they're recorded.</p>
+              </div>
+            } @else {
+              <div class="table-wrap">
+                <table mat-table [dataSource]="labs()" class="labs-table">
+                  <ng-container matColumnDef="testName">
+                    <th mat-header-cell *matHeaderCellDef>Test Name</th>
+                    <td mat-cell *matCellDef="let l">
+                      <div class="lab-test">
+                        <div class="lab-test__icon">
+                          <mat-icon>science</mat-icon>
+                        </div>
+                        <span>{{ l.testName }}</span>
+                      </div>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="value">
+                    <th mat-header-cell *matHeaderCellDef>Result</th>
+                    <td mat-cell *matCellDef="let l">
+                      <span class="lab-value">{{ l.resultValue }}</span>
+                    </td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="date">
+                    <th mat-header-cell *matHeaderCellDef>Date</th>
+                    <td mat-cell *matCellDef="let l">{{ formatDate(l.resultDate) }}</td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="labColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: labColumns;"></tr>
+                </table>
+              </div>
+            }
+          </div>
+        }
+      }
+    </div>
+  </div>
+</div>
