@@ -30,6 +30,9 @@ project.fragment.lock.json
 *.swp
 *.*~
 
+# Claude Code (local tooling config)
+.claude/
+
 # macOS
 .DS_Store
 .AppleDouble
